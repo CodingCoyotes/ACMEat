@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xs="http://www.w3.org/2001/XMLSchema" id="_tTv5YOycEeiHGOQ2NkJZNQ" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn2:message id="Message_0shmzg4" name="Conferma" />
   <bpmn2:message id="Message_0suik5g" name="Merce" />
   <bpmn2:message id="Message_1kt1biz" name="Merce" />
   <bpmn2:message id="Message_1tpu1ag" />
@@ -17,7 +18,7 @@
   <bpmn2:message id="Message_0r2z9be" name="Non disponibile" />
   <bpmn2:message id="Message_1i0m7s2" name="Richiesta preventivo" />
   <bpmn2:message id="Message_0cp5x8t" />
-  <bpmn2:message id="Message_0rd79pv" name="Merce" />
+  <bpmn2:message id="Message_0rd79pv" name="Conferma" />
   <bpmn2:message id="Message_1foknvh" name="Notifica di pagamento" />
   <bpmn2:message id="Message_0k8sezv" name="Annullamento" />
   <bpmn2:message id="Message_0kqqwu5" name="ACK" />
@@ -1040,6 +1041,7 @@
     <bpmn2:participant id="Participant_08mdi39" name="Banca" />
     <bpmn2:participant id="Participant_1rkflfo" name="Ristorante" />
     <bpmn2:participant id="Participant_05fncn1" name="Cliente" />
+    <bpmn2:messageFlow id="MessageFlow_1e9d2pa" sourceRef="Participant_1r7ol63" targetRef="Participant_1rkflfo" messageRef="Message_0shmzg4" />
     <bpmn2:messageFlow id="MessageFlow_18d1o6f" sourceRef="Participant_1r7ol63" targetRef="Participant_05fncn1" messageRef="Message_0suik5g" />
     <bpmn2:messageFlow id="MessageFlow_1tlleec" sourceRef="Participant_1rkflfo" targetRef="Participant_1r7ol63" messageRef="Message_1kt1biz" />
     <bpmn2:messageFlow id="MessageFlow_1gzb5f4" sourceRef="Participant_1r7ol63" targetRef="Participant_1rkflfo" messageRef="Message_1tpu1ag" />
@@ -1195,7 +1197,7 @@
     <bpmn2:sequenceFlow id="Flow_1bij4hl" sourceRef="Gateway_0ofsrdg" targetRef="ChoreographyTask_1t53r1l" />
     <bpmn2:parallelGateway id="Gateway_17m2tf8">
       <bpmn2:incoming>Flow_0vckrz4</bpmn2:incoming>
-      <bpmn2:incoming>Flow_0fsk9iz</bpmn2:incoming>
+      <bpmn2:incoming>Flow_1tp2d9y</bpmn2:incoming>
       <bpmn2:outgoing>Flow_16vd0o5</bpmn2:outgoing>
     </bpmn2:parallelGateway>
     <bpmn2:sequenceFlow id="Flow_0vckrz4" sourceRef="ChoreographyTask_1t53r1l" targetRef="Gateway_17m2tf8" />
@@ -1216,11 +1218,19 @@
       <bpmn2:messageFlowRef>MessageFlow_18d1o6f</bpmn2:messageFlowRef>
     </bpmn2:choreographyTask>
     <bpmn2:sequenceFlow id="Flow_00x6opt" sourceRef="ChoreographyTask_06hczf6" targetRef="ChoreographyTask_0riqd1e" />
-    <bpmn2:sequenceFlow id="Flow_0fsk9iz" sourceRef="ChoreographyTask_0riqd1e" targetRef="Gateway_17m2tf8" />
+    <bpmn2:sequenceFlow id="Flow_0fsk9iz" sourceRef="ChoreographyTask_0riqd1e" targetRef="ChoreographyTask_172pqwv" />
     <bpmn2:endEvent id="Event_0llsn5k">
       <bpmn2:incoming>Flow_16vd0o5</bpmn2:incoming>
     </bpmn2:endEvent>
     <bpmn2:sequenceFlow id="Flow_16vd0o5" sourceRef="Gateway_17m2tf8" targetRef="Event_0llsn5k" />
+    <bpmn2:choreographyTask id="ChoreographyTask_172pqwv" name="Confermaricevuta spedizione" initiatingParticipantRef="Participant_1r7ol63">
+      <bpmn2:incoming>Flow_0fsk9iz</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1tp2d9y</bpmn2:outgoing>
+      <bpmn2:participantRef>Participant_1r7ol63</bpmn2:participantRef>
+      <bpmn2:participantRef>Participant_1rkflfo</bpmn2:participantRef>
+      <bpmn2:messageFlowRef>MessageFlow_1e9d2pa</bpmn2:messageFlowRef>
+    </bpmn2:choreographyTask>
+    <bpmn2:sequenceFlow id="Flow_1tp2d9y" sourceRef="ChoreographyTask_172pqwv" targetRef="Gateway_17m2tf8" />
   </bpmn2:choreography>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_Choreography_1" bpmnElement="PizzaDelivery">
@@ -2709,11 +2719,11 @@
         <di:waypoint x="909" y="1420" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Gateway_17m2tf8_di" bpmnElement="Gateway_17m2tf8">
-        <dc:Bounds x="1225" y="1395" width="50" height="50" />
+        <dc:Bounds x="1405" y="1395" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0vckrz4_di" bpmnElement="Flow_0vckrz4">
         <di:waypoint x="1011" y="1420" />
-        <di:waypoint x="1225" y="1420" />
+        <di:waypoint x="1405" y="1420" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ChoreographyTask_06hczf6_di" bpmnElement="ChoreographyTask_06hczf6">
         <dc:Bounds x="820" y="1550" width="100" height="80" />
@@ -2744,15 +2754,28 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0fsk9iz_di" bpmnElement="Flow_0fsk9iz">
         <di:waypoint x="1121" y="1590" />
-        <di:waypoint x="1250" y="1590" />
-        <di:waypoint x="1250" y="1445" />
+        <di:waypoint x="1209" y="1590" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_0llsn5k_di" bpmnElement="Event_0llsn5k">
         <dc:Bounds x="1492" y="1402" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_16vd0o5_di" bpmnElement="Flow_16vd0o5">
-        <di:waypoint x="1275" y="1420" />
+        <di:waypoint x="1455" y="1420" />
         <di:waypoint x="1492" y="1420" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ChoreographyTask_172pqwv_di" bpmnElement="ChoreographyTask_172pqwv">
+        <dc:Bounds x="1210" y="1550" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0cczko2" bpmnElement="Participant_1r7ol63" isMessageVisible="true" participantBandKind="top_initiating" choreographyActivityShape="ChoreographyTask_172pqwv_di">
+        <dc:Bounds x="1210" y="1550" width="100" height="20" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_02e345l" bpmnElement="Participant_1rkflfo" isMessageVisible="false" participantBandKind="bottom_non_initiating" choreographyActivityShape="ChoreographyTask_172pqwv_di">
+        <dc:Bounds x="1210" y="1610" width="100" height="20" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1tp2d9y_di" bpmnElement="Flow_1tp2d9y">
+        <di:waypoint x="1311" y="1590" />
+        <di:waypoint x="1430" y="1590" />
+        <di:waypoint x="1430" y="1445" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="TextAnnotation_0d12uca_di" bpmnElement="TextAnnotation_0d12uca">
         <dc:Bounds x="-120" y="430" width="99.99305040770942" height="40.7709414381023" />

@@ -12,6 +12,7 @@ from acmeat.database import models
 from acmeat.schemas import *
 from acmeat.crud import *
 from acmeat.dependencies import dep_dbsession
+import acmeat.errors as errors
 
 router = APIRouter(
     prefix="/api/user/v1",
@@ -38,9 +39,9 @@ async def create_user(user: acmeat.schemas.edit.UserNew, db: Session = Depends(d
     return quick_create(db, models.User(name=user.name, surname=user.surname, password=h, email=user.email))
 
 
-# Can't update password, i'd better fix this.
 @router.put("/{user_id}", response_model=acmeat.schemas.read.UserRead)
-async def read_users_me(edits: acmeat.schemas.edit.UserEdit, user_id: UUID, current_user: models.User = Depends(get_current_user),
+async def read_users_me(edits: acmeat.schemas.edit.UserNew, user_id: UUID,
+                        current_user: models.User = Depends(get_current_user),
                         db: Session = Depends(dep_dbsession)):
     """
     Updates the account of the logged in user
@@ -50,5 +51,10 @@ async def read_users_me(edits: acmeat.schemas.edit.UserEdit, user_id: UUID, curr
     :param db: the database session
     :return: the representation of the updated profile
     """
-    u = quick_update(db, quick_retrieve(db, models.User, id=user_id), edits)
-    return u
+    intermediate_model = acmeat.schemas.edit.UserEdit(name=edits.name, surname=edits.surname,
+                                                      password=bcrypt.hashpw(bytes(edits.password, encoding="utf-8"),
+                                                                             bcrypt.gensalt()),
+
+                                                      email=edits.email)
+    target = quick_retrieve(db, models.User, id=user_id)
+    return quick_update(db, target, intermediate_model)

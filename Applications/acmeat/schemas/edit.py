@@ -17,6 +17,25 @@ class UserEdit(base.ACMEORMModel):
 
     name: str
     surname: str
+    password: bytes
+    email: str
+
+    class Config(base.ACMEORMModel.Config):
+        schema_extra = {
+            "example": {
+                "name": "John",
+                "surname": "Doe"
+            },
+        }
+
+
+class UserBase(base.ACMEORMModel):
+    """
+    **Edit** model for :class:`.database.tables.User`.
+    """
+
+    name: str
+    surname: str
 
     class Config(base.ACMEORMModel.Config):
         schema_extra = {

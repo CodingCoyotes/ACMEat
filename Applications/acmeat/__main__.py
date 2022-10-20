@@ -16,6 +16,8 @@ from acmeat.database.db import Session, engine
 from acmeat.routers.api.users.v1 import users
 from acmeat.configuration import setting_required
 from acmeat.services.test_services import echo_task
+from acmeat.errors import *
+from acmeat.handlers import *
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -32,6 +34,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.add_exception_handler(AcmeatException, handle_acme_error)
+app.add_exception_handler(sqlalchemy.exc.NoResultFound, handle_sqlalchemy_not_found)
+app.add_exception_handler(sqlalchemy.exc.MultipleResultsFound, handle_sqlalchemy_multiple_results)
+app.add_exception_handler(Exception, handle_generic_error)
+
 
 camunda_config = {
     "maxTasks": 100,

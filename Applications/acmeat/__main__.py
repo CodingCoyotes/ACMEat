@@ -14,6 +14,7 @@ from acmeat.crud import *
 from acmeat.database import models
 from acmeat.database.db import Session, engine
 from acmeat.routers.api.users.v1 import users
+from acmeat.routers.api.restaurants.v1 import restaurants
 from acmeat.configuration import setting_required
 from acmeat.services.test_services import echo_task
 from acmeat.errors import *
@@ -24,6 +25,7 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 app.include_router(users.router)
+app.include_router(restaurants.router)
 
 origins = ["http://localhost:3000"]
 
@@ -38,7 +40,6 @@ app.add_middleware(
 app.add_exception_handler(AcmeatException, handle_acme_error)
 app.add_exception_handler(sqlalchemy.exc.NoResultFound, handle_sqlalchemy_not_found)
 app.add_exception_handler(sqlalchemy.exc.MultipleResultsFound, handle_sqlalchemy_multiple_results)
-app.add_exception_handler(Exception, handle_generic_error)
 
 
 camunda_config = {

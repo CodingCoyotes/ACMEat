@@ -55,6 +55,12 @@ class ResourceNotFound(AcmeatException):
     REASON = "The requested resource was not found. Either it does not exist, or you are not authorized to view it."
 
 
+class Forbidden(AcmeatException):
+    STATUS_CODE = 403
+    ERROR_CODE = "FORBIDDEN"
+    REASON = "You don't have access to the requested resource."
+
+
 class MultipleResultsFound(AcmeatException):
     STATUS_CODE = 500
     ERROR_CODE = "MULTIPLE_FOUND"

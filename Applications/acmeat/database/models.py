@@ -17,7 +17,7 @@ class User(Base):
     surname = Column(String, nullable=False)
     email = Column(String, nullable=False, unique=False)
     password = Column(LargeBinary, nullable=False)
-    kind = Column(Enum(UserType))
+    kind = Column(Enum(UserType), default=UserType.customer)
 
     restaurants = relationship("Restaurant", back_populates="owner")
     orders = relationship("Order", back_populates="user")
@@ -33,10 +33,10 @@ class Restaurant(Base):
     open_times = Column(JSON, nullable=False)
     closed = Column(Boolean, default=False, nullable=False)
 
-    owner_id = Column(UUID, ForeignKey("user.id"))
+    owner_id = Column(UUID(as_uuid=True), ForeignKey("user.id"))
     owner = relationship("User", back_populates="restaurants")
     menus = relationship("Menu", back_populates="restaurant")
-    city_id = Column(UUID, ForeignKey("city.id"))
+    city_id = Column(UUID(as_uuid=True), ForeignKey("city.id"))
     city = relationship("City", back_populates="restaurants")
 
 
@@ -49,7 +49,7 @@ class Menu(Base):
     cost = Column(Float, nullable=False)
     hidden = Column(Boolean, default=False, nullable=False)
 
-    restaurant_id = Column(UUID, ForeignKey("restaurant.id"))
+    restaurant_id = Column(UUID(as_uuid=True), ForeignKey("restaurant.id"))
     restaurant = relationship("Restaurant", back_populates="menus")
     requests = relationship("Content", back_populates="menu")
 
@@ -63,20 +63,20 @@ class Order(Base):
     total = Column(Float, nullable=False)
     status = Column(Enum(OrderStatus), nullable=False)
 
-    user_id = Column(UUID, ForeignKey("user.id"))
+    user_id = Column(UUID(as_uuid=True), ForeignKey("user.id"))
     user = relationship("User", back_populates="orders")
     contents = relationship("Content", back_populates="order")
-    deliverer_id = Column(UUID, ForeignKey("deliverer.id"))
+    deliverer_id = Column(UUID(as_uuid=True), ForeignKey("deliverer.id"))
     deliverer = relationship("Deliverer", back_populates="orders")
 
 
 class Content(Base):
     __tablename__ = "content"
 
-    order_id = Column(UUID, ForeignKey("order.id"), primary_key=True)
+    order_id = Column(UUID(as_uuid=True), ForeignKey("order.id"), primary_key=True)
     order = relationship("Order", back_populates="contents")
-    menu_id = Column(UUID, ForeignKey("menu.id"), primary_key=True)
-    menu = relationship("Menu", back_populates="contents")
+    menu_id = Column(UUID(as_uuid=True), ForeignKey("menu.id"), primary_key=True)
+    menu = relationship("Menu", back_populates="requests")
     qty = Column(Integer, nullable=False)
 
 

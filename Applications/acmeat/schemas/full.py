@@ -19,7 +19,7 @@ class UserFull(read.UserRead):
 class RestaurantFull(read.RestaurantRead):
     owner: read.UserRead
     city: read.CityRead
-    menus: read.MenuRead
+    menus: t.List[read.MenuRead]
 
 
 class MenuFull(read.MenuRead):

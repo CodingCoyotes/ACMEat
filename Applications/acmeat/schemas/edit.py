@@ -69,10 +69,16 @@ class Coords(base.ACMEModel):
     latitude: float
     longitude: float
 
+    def jsonify(self):
+        return {"latitude":self.latitude, "longitude": self.longitude}
+
 
 class Time(base.ACMEModel):
     day: str
     time: str
+
+    def jsonify(self):
+        return {"day": self.day, "time": self.time}
 
 
 class RestaurantEdit(base.ACMEORMModel):
@@ -81,6 +87,13 @@ class RestaurantEdit(base.ACMEORMModel):
     coords: Coords
     open_times: t.List[Time]
     closed: bool
+    city_id: UUID
+
+    def jsonify_time(self):
+        res = []
+        for entry in self.open_times:
+            res.append(entry.jsonify())
+        return res
 
 
 class MenuEntry(base.ACMEModel):

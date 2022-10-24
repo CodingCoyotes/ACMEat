@@ -24,7 +24,6 @@ class UserRead(edit.UserBase):
 class RestaurantRead(edit.RestaurantEdit):
     id: UUID
     owner_id: UUID
-    city_id: UUID
 
 
 class MenuRead(edit.MenuEdit):

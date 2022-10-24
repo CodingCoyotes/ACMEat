@@ -40,7 +40,7 @@ async def create_user(user: acmeat.schemas.edit.UserNew, db: Session = Depends(d
 
 
 @router.put("/{user_id}", response_model=acmeat.schemas.read.UserRead)
-async def read_users_me(edits: acmeat.schemas.edit.UserNew, user_id: UUID,
+async def edit_user(edits: acmeat.schemas.edit.UserNew, user_id: UUID,
                         current_user: models.User = Depends(get_current_user),
                         db: Session = Depends(dep_dbsession)):
     """

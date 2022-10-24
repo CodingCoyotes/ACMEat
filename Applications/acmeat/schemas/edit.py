@@ -70,7 +70,7 @@ class Coords(base.ACMEModel):
     longitude: float
 
     def jsonify(self):
-        return {"latitude":self.latitude, "longitude": self.longitude}
+        return {"latitude": self.latitude, "longitude": self.longitude}
 
 
 class Time(base.ACMEModel):
@@ -100,12 +100,21 @@ class MenuEntry(base.ACMEModel):
     name: str
     desc: str
 
+    def jsonify(self):
+        return {"name": self.name, "desc": self.desc}
+
 
 class MenuEdit(base.ACMEORMModel):
     name: str
     contents: t.List[MenuEntry]
     cost: float
     hidden: bool
+
+    def jsonify_contents(self):
+        res = []
+        for entry in self.contents:
+            res.append(entry.jsonify())
+        return res
 
 
 class OrderEdit(base.ACMEORMModel):

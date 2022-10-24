@@ -24,14 +24,11 @@ router = APIRouter(
 
 
 @router.get("/{restaurant_id}", response_model=acmeat.schemas.full.RestaurantFull)
-async def read_restaurant(restaurant_id: UUID, db: Session = Depends(dep_dbsession),
-                          current_user: models.User = Depends(get_current_user)):
+async def read_restaurant(restaurant_id: UUID, db: Session = Depends(dep_dbsession)):
     """
     Returns data about the current user.
     """
     restaurant = quick_retrieve(db, models.Restaurant, id=restaurant_id)
-    if restaurant.owner.id != current_user.id:
-        raise errors.Forbidden
     return restaurant
 
 

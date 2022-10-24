@@ -22,12 +22,12 @@ router = APIRouter(
 )
 
 
-@router.get("/me", response_model=acmeat.schemas.read.UserRead)
-async def read_users_me(current_user: models.User = Depends(get_current_user)):
+@router.get("/me", response_model=acmeat.schemas.full.UserFull)
+async def read_users_me(current_user: models.User = Depends(get_current_user), db: Session = Depends(dep_dbsession)):
     """
     Returns data about the current user.
     """
-    return current_user
+    return quick_retrieve(db, models.User, id=current_user.id)
 
 
 @router.post("/", response_model=acmeat.schemas.read.UserRead)
@@ -41,8 +41,8 @@ async def create_user(user: acmeat.schemas.edit.UserNew, db: Session = Depends(d
 
 @router.put("/{user_id}", response_model=acmeat.schemas.read.UserRead)
 async def edit_user(edits: acmeat.schemas.edit.UserNew, user_id: UUID,
-                        current_user: models.User = Depends(get_current_user),
-                        db: Session = Depends(dep_dbsession)):
+                    current_user: models.User = Depends(get_current_user),
+                    db: Session = Depends(dep_dbsession)):
     """
     Updates the account of the logged in user
     :param user_id:

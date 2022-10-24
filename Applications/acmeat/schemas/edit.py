@@ -1,5 +1,7 @@
 import typing as t
 from uuid import UUID
+from datetime import datetime
+from acmeat.database.enums import OrderStatus
 
 from acmeat.database import models
 from acmeat.schemas import base
@@ -61,3 +63,57 @@ class UserNew(base.ACMEORMModel):
                 "password": "password"
             },
         }
+
+
+class Coords(base.ACMEModel):
+    latitude: float
+    longitude: float
+
+
+class Time(base.ACMEModel):
+    day: str
+    time: str
+
+
+class RestaurantEdit(base.ACMEORMModel):
+    name: str
+    address: str
+    coords: Coords
+    open_times: t.List[Time]
+    closed: bool
+
+
+class MenuEntry(base.ACMEModel):
+    name: str
+    desc: str
+
+
+class MenuEdit(base.ACMEORMModel):
+    name: str
+    contents: t.List[MenuEntry]
+    cost: float
+    hidden: bool
+
+
+class OrderEdit(base.ACMEORMModel):
+    date_order: datetime
+    delivery_time: datetime
+    total: float
+    status: OrderStatus
+    deliverer_id: t.Optional[UUID]
+
+
+class ContentEdit(base.ACMEORMModel):
+    order_id = UUID
+    menu_id = UUID
+    qty = int
+
+
+class CityEdit(base.ACMEORMModel):
+    name: str
+    nation: str
+
+
+class DelivererEdit(base.ACMEORMModel):
+    name: str
+    api_url: str

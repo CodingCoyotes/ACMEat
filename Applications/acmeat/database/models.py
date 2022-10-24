@@ -51,7 +51,7 @@ class Menu(Base):
 
     restaurant_id = Column(UUID, ForeignKey("restaurant.id"))
     restaurant = relationship("Restaurant", back_populates="menus")
-    contents = relationship("Content", back_populates="menu")
+    requests = relationship("Content", back_populates="menu")
 
 
 class Order(Base):

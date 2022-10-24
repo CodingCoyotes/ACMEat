@@ -1,3 +1,4 @@
+import typing
 import uuid
 from uuid import UUID
 from typing import Optional
@@ -21,6 +22,11 @@ router = APIRouter(
         "Restaurants v1",
     ],
 )
+
+
+@router.get("/", response_model=typing.List[acmeat.schemas.read.RestaurantRead])
+async def read_restaurants(db: Session = Depends(dep_dbsession)):
+    return db.query(models.Restaurant).all()
 
 
 @router.get("/{restaurant_id}", response_model=acmeat.schemas.full.RestaurantFull)

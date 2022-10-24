@@ -16,6 +16,7 @@ from acmeat.database.db import Session, engine
 from acmeat.routers.api.users.v1 import users
 from acmeat.routers.api.restaurants.v1 import restaurants
 from acmeat.routers.api.menus.v1 import menus
+from acmeat.routers.api.cities.v1 import cities
 from acmeat.configuration import setting_required
 from acmeat.services.test_services import echo_task
 from acmeat.errors import *
@@ -28,6 +29,7 @@ app = FastAPI()
 app.include_router(users.router)
 app.include_router(restaurants.router)
 app.include_router(menus.router)
+app.include_router(cities.router)
 
 origins = ["http://localhost:3000"]
 

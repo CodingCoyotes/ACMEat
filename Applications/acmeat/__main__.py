@@ -13,10 +13,13 @@ from acmeat.authentication import Token, authenticate_user, create_token, get_ha
 from acmeat.crud import *
 from acmeat.database import models
 from acmeat.database.db import Session, engine
+
 from acmeat.routers.api.users.v1 import users
 from acmeat.routers.api.restaurants.v1 import restaurants
 from acmeat.routers.api.menus.v1 import menus
 from acmeat.routers.api.cities.v1 import cities
+from acmeat.routers.api.deliverers.v1 import deliverers
+
 from acmeat.configuration import setting_required
 from acmeat.services.test_services import echo_task
 from acmeat.errors import *
@@ -30,6 +33,7 @@ app.include_router(users.router)
 app.include_router(restaurants.router)
 app.include_router(menus.router)
 app.include_router(cities.router)
+app.include_router(deliverers.router)
 
 origins = ["http://localhost:3000"]
 
@@ -69,10 +73,5 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
 if __name__ == "__main__":
     BIND_IP = setting_required("BIND_IP")
     BIND_PORT = setting_required("BIND_PORT")
-
-    #with Session(future=True) as db:
-    #    if not db.query(models.User).first():
-    #        quick_create(db, models.User(email="admin@admin.com", password=get_hash(bytes("password", encoding="utf-8")), name="admin",
-    #                                     surname="admin"))
     uvicorn.run(app, host=BIND_IP, port=int(BIND_PORT), debug=True)
 

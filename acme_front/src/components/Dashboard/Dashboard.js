@@ -11,19 +11,19 @@ export default function Dashboard() {
     e.preventDefault();
     console.log("handleLogout");
     removeToken();
-    return (
-      <Login />
-      // <BrowserRouter>
-      //   <Routes>
-      //     <Route path="./App/App" element={<App />}></Route>
-      //   </Routes>
-      // </BrowserRouter>
-    );
+    // return (
+    //   <Login />
+    //   // <BrowserRouter>
+    //   //   <Routes>
+    //   //     <Route path="./App/App" element={<App />}></Route>
+    //   //   </Routes>
+    //   // </BrowserRouter>
+    // );
   }
 
   return(
-    <nav className='navbar navbar-expand-lg navbar-light bg-light'>
-      <h2>Dashboard</h2>
+    <nav className='navbar navbar-expand-lg navbar-light bg-light justify-content-between'>
+      <h2>ACMEat</h2>
       <button type='button' className='btn btn-secondary' onClick={handleLogout}>Logout</button>
     </nav>
   );

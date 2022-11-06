@@ -1,5 +1,7 @@
 import React, { useState }from "react"
 import PropTypes from 'prop-types';
+import {useNavigate} from "react-router-dom";
+import {useAppContext} from "../../Context";
 
 // async function loginUser(credentials) {
 //   localStorage.setItem('token', credentials)
@@ -14,29 +16,32 @@ import PropTypes from 'prop-types';
 // }
 
  
-export default function Login({ setToken }) {
+export default function Login() {
   console.log("Sono in Login");
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [choose, setChoose] = useState(false);
+  const {token, setToken} = useAppContext()
+
+  const navigate = useNavigate()
 
   const handleSubmit = async e => {
     e.preventDefault();
     console.log("handleSubmit");
-    const token = {
-      token: email
-    };
+
     // await loginUser({
     //   email,
     //   password
     // });
-    setToken(token);
+
+    setToken("token")
+    navigate("/dashboard")
   }
 
   const handleChoose = async e => {
     e.preventDefault();
     //console.log(e.target.id);
-    if(e.target.id == "ristorante")
+    if(e.target.id === "ristorante")
       console.log("ristorante");
     else 
       console.log("cliente");
@@ -97,8 +102,4 @@ export default function Login({ setToken }) {
         </form>
       </div>
     )
-}
-
-Login.propTypes = {
-  setToken: PropTypes.func.isRequired
 }

@@ -1,24 +1,23 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { removeToken } from '../Login/Token';
-import App from '../App/App';
-import Login from '../Login/Login';
+import React, {useEffect} from 'react';
+import {useNavigate} from "react-router-dom";
+import {useAppContext} from "../../Context";
 
 export default function Dashboard() {
   console.log("Sono in Dashboard");
+  const {token, setToken} = useAppContext();
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if(token===null){
+      navigate("/")
+    }
+  }, [])
 
   const handleLogout = async e => {
     e.preventDefault();
     console.log("handleLogout");
-    removeToken();
-    // return (
-    //   <Login />
-    //   // <BrowserRouter>
-    //   //   <Routes>
-    //   //     <Route path="./App/App" element={<App />}></Route>
-    //   //   </Routes>
-    //   // </BrowserRouter>
-    // );
+    setToken(null)
+    navigate("/")
   }
 
   return(

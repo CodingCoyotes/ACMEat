@@ -60,7 +60,8 @@ class Order(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     date_order = Column(DateTime, default=datetime.datetime.now, nullable=False)
     delivery_time = Column(DateTime, nullable=False)
-    total = Column(Float, nullable=False)
+    restaurant_total = Column(Float, nullable=False)
+    deliverer_total = Column(Float, nullable=False)
     status = Column(Enum(OrderStatus), nullable=False)
 
     user_id = Column(UUID(as_uuid=True), ForeignKey("user.id"))

@@ -1,5 +1,6 @@
 import os
 
+import bcrypt
 import uvicorn
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -15,17 +16,22 @@ from acmedeliver.database import models
 from acmedeliver.database.db import Session, engine
 
 from acmedeliver.routers.api.users.v1 import users
+from acmedeliver.routers.api.clients.v1 import clients
+from acmedeliver.routers.api.deliveries.v1 import deliveries
 
 from acmedeliver.configuration import setting_required
 from acmedeliver.services.test_services import echo_task
 from acmedeliver.errors import *
 from acmedeliver.handlers import *
+from acmedeliver.database.enums import UserType
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
 app.include_router(users.router)
+app.include_router(clients.router)
+app.include_router(deliveries.router)
 
 origins = ["http://localhost:3000"]
 
@@ -65,5 +71,12 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
 if __name__ == "__main__":
     BIND_IP = setting_required("BIND_IP")
     BIND_PORT = setting_required("BIND_PORT")
+    with Session(future=True) as db:
+        user = db.query(models.User).filter_by(kind=UserType.admin).first()
+        if not user:
+            h = bcrypt.hashpw(bytes("password", encoding="utf-8"), bcrypt.gensalt())
+            db.add(models.User(name="Admin", surname="Admin", email="admin@admin.com", kind=UserType.admin,
+                               password=h))
+            db.commit()
     uvicorn.run(app, host=BIND_IP, port=int(BIND_PORT), debug=True)
 

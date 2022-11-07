@@ -13,6 +13,7 @@ from acmedeliver.schemas import *
 from acmedeliver.crud import *
 from acmedeliver.dependencies import dep_dbsession
 import acmedeliver.errors as errors
+from acmedeliver.database.enums import UserType
 
 router = APIRouter(
     prefix="/api/user/v1",
@@ -31,10 +32,13 @@ async def read_users_me(current_user: models.User = Depends(get_current_user), d
 
 
 @router.post("/", response_model=acmedeliver.schemas.read.UserRead)
-async def create_user(user: acmedeliver.schemas.edit.UserNew, db: Session = Depends(dep_dbsession)):
+async def create_user(user: acmedeliver.schemas.edit.UserNew, db: Session = Depends(dep_dbsession),
+                      current_user: models.User = Depends(get_current_user)):
     """
     Creates an account for a new user.
     """
+    if current_user.kind.value < UserType.admin.value:
+        raise errors.Forbidden
     h = bcrypt.hashpw(bytes(user.password, encoding="utf-8"), bcrypt.gensalt())
     return quick_create(db, models.User(name=user.name, surname=user.surname, password=h, email=user.email))
 

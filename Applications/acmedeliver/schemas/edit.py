@@ -62,3 +62,18 @@ class UserNew(base.ACMEORMModel):
                 "password": "password"
             },
         }
+
+
+class DeliveryEdit(base.ACMEORMModel):
+    cost: float
+    receiver: float
+    delivery_time: datetime
+
+
+class ClientDeliveryRequest(base.ACMEORMModel):
+    api_key: str
+    request: DeliveryEdit
+
+
+class ClientEdit(base.ACMEORMModel):
+    name: str

@@ -12,4 +12,15 @@ class UserFull(read.UserRead):
     **Full** model (with expanded relationships) for :class:`.database.tables.User`.
     """
 
-    pass
+    deliveries: t.List[read.DeliveryRead]
+
+
+class DeliveryFull(read.DeliveryRead):
+    deliverer: t.Optional[read.UserRead]
+    client: t.Optional[read.ClientRead]
+
+
+class ClientFull(read.ClientRead):
+    api_key: str
+    deliveries: t.List[read.DeliveryRead]
+

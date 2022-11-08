@@ -5,7 +5,7 @@ description = ""
 authors = ["Nemesis <lorenzo.balugani@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.8"
 lxml = "^4.9.1"
 uvicorn = "^0.18.3"
 fastapi = "^0.85.0"
@@ -13,10 +13,10 @@ python-jose = "^3.3.0"
 passlib = "^1.7.4"
 bcrypt = "^4.0.0"
 SQLAlchemy = "^1.4.41"
-psycopg2 = "^2.9.3"
 python-multipart = "^0.0.5"
 camunda-external-task-client-python3 = "^4.3.0"
 lazy-object-proxy = "^1.7.1"
+psycopg2-binary = "^2.9.5"
 
 [tool.poetry.dev-dependencies]
 

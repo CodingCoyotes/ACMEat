@@ -3,17 +3,17 @@ import PropTypes from 'prop-types';
 import {useNavigate} from "react-router-dom";
 import {useAppContext} from "../../Context";
 
-// async function loginUser(credentials) {
-//   localStorage.setItem('token', credentials)
-//   return fetch('http://localhost:8080/login', {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json'
-//     },
-//     body: JSON.stringify(credentials)
-//   })
-//     .then(data => data.json())
-// }
+async function loginUser(credentials) {
+  localStorage.setItem('token', credentials)
+  return fetch('http://localhost:8000/api/user/v1/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(credentials)
+  })
+    .then(data => data.json())
+}
 
  
 export default function Login() {
@@ -33,9 +33,15 @@ export default function Login() {
     //   email,
     //   password
     // });
-
-    setToken("token")
-    navigate("/dashboard")
+    
+    loginUser({
+      "name": "NameTest",
+      "surname": "SurnameTest",
+      "email": "mailtest@who.us",
+      "password": "pass"
+    });
+    setToken("token");
+    navigate("/dashboard");
   }
 
   const handleChoose = async e => {
@@ -48,25 +54,6 @@ export default function Login() {
     setChoose(true);
   }
 
-  if(!choose)
-    return (
-      <div className="Auth-form-container">
-        <form className="Auth-form">
-          <div className="Auth-form-content">
-            <h3 className="Auth-form-title">Tipo di accesso</h3>
-            <div className="d-grid gap-2 mt-3">
-              <button id="ristorante" onClick={handleChoose} className="btn btn-primary">
-                Per ristoranti
-              </button>
-              <button id="ciao" onClick={handleChoose} className="btn btn-primary">
-                Per clienti
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-    )
-  else
     return (
       <div className="Auth-form-container">
         <form className="Auth-form" onSubmit={handleSubmit}>

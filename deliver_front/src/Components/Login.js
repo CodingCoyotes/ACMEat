@@ -5,8 +5,8 @@ import schema from "../config";
 import {Heading, Panel, Form, Button, Chapter} from "@steffo/bluelib-react";
 
 export default function Login() {
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const {token, setToken} = useAppContext()
     const {address, setAddress} = useAppContext()
 

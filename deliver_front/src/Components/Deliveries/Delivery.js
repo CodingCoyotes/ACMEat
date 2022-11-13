@@ -1,24 +1,46 @@
-import React, {useState} from 'react';
-import {Heading, Chapter, Panel, Button} from "@steffo/bluelib-react";
+import React, {useEffect, useState} from 'react';
+import {Box, Chapter, Panel, Button} from "@steffo/bluelib-react";
 
 export default function Delivery(props) {
 
     const [hidden, setHidden] = useState(false)
+    const [date, setDate] = useState(null)
+    const [status, setStatus] = useState("???")
+
+    useEffect((e)=>{
+        let d = new Date(props.delivery.delivery_time)
+        setDate(`${d.getDate()}/${d.getMonth()+1}/${d.getUTCFullYear()} - ${d.getHours()}:${d.getMinutes()}`)
+        console.debug(props.delivery)
+        switch (props.delivery.status){
+            case 1:
+                setStatus("In attesa")
+                break;
+            case 2:
+                setStatus("In lavorazione")
+                break;
+            case 3:
+                setStatus("Consegnata")
+                break;
+            case 4:
+                setStatus("Pagata")
+                break;
+            default:
+                setStatus("???")
+        }
+    }, [props.delivery])
 
     return (
-        <Panel>
+        <Box>
             <Chapter>
+
                 <div>
-                    {props.delivery.id}
+                    {date}
                 </div>
                 <div>
-                    {props.delivery.delivery_time}
+                    {status}
                 </div>
                 <div>
-                    {props.delivery.status}
-                </div>
-                <div>
-                    <Button onClick={event => {
+                    <Button style={{padding:"0px"}} onClick={event => {
                         setHidden(!hidden)
                     }}>
                         ...
@@ -27,9 +49,17 @@ export default function Delivery(props) {
             </Chapter>
             {hidden ? (
                 <Panel>
-                    Indirizzo consegna: {props.delivery.receiver}
+                    <p>
+                        Indirizzo consegna: {props.delivery.receiver}
+                    </p>
+                    <p>
+                        Indirizzo mittente: {props.delivery.source}
+                    </p>
+                    <p>
+                        ID: {props.delivery.id}
+                    </p>
                 </Panel>
             ) : (<></>)}
-        </Panel>
+        </Box>
     );
 }

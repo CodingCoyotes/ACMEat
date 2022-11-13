@@ -1,5 +1,5 @@
 from uuid import UUID
-from typing import Optional
+from typing import Optional, List
 
 import bcrypt
 from fastapi import APIRouter, Depends, Request, HTTPException
@@ -29,6 +29,28 @@ async def read_users_me(current_user: models.User = Depends(get_current_user), d
     Returns data about the current user.
     """
     return quick_retrieve(db, models.User, id=current_user.id)
+
+
+@router.get("/", response_model=List[acmedeliver.schemas.read.UserRead])
+async def get_users(db: Session = Depends(dep_dbsession),
+                      current_user: models.User = Depends(get_current_user)):
+    """
+    Returns all users.
+    """
+    if current_user.kind.value < UserType.admin.value:
+        raise errors.Forbidden
+    return db.query(models.User).all()
+
+
+@router.get("/{user_id}", response_model=acmedeliver.schemas.full.UserFull)
+async def get_user(user_id: UUID, db: Session = Depends(dep_dbsession),
+                    current_user: models.User = Depends(get_current_user)):
+    """
+    Returns all users.
+    """
+    if current_user.kind.value < UserType.admin.value:
+        raise errors.Forbidden
+    return quick_retrieve(db, models.User, id=user_id)
 
 
 @router.post("/", response_model=acmedeliver.schemas.read.UserRead)

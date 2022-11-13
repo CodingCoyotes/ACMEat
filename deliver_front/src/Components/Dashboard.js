@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Style from "./Landing.module.css";
-import {Button, Heading, Panel,} from "@steffo/bluelib-react";
+import {Button, Heading, Chapter,} from "@steffo/bluelib-react";
 import {useAppContext} from "../Context";
 import {useNavigate} from "react-router-dom";
 import schema from "../config";
@@ -50,17 +50,17 @@ export default function Dashboard() {
         <div className={Style.Landing}>
             <div className={Style.lander} style={{minWidth: "unset"}}>
                 <Heading level={1}>Dashboard</Heading>
+                <Chapter>
                 <p className="text-muted">
                     Salve {user ? (<>{user.name}</>) : (<>...</>)}
                 </p>
                 <Button children={"Logout"} onClick={e => exit()}></Button>
+                </Chapter>
             </div>
-            <Panel style={{minWidth: "unset"}}>
-                {user ? (<>
-                    {user.kind == 2 ? (
-                        <AdminPanel/>) : (<DeliveryPanel deliveries = {user.deliveries}/>)}
-                </>) : (<>Caricamento...</>)}
-            </Panel>
+            {user ? (<>
+                {user.kind == 2 ? (
+                    <AdminPanel/>) : (<DeliveryPanel deliveries={user.deliveries}/>)}
+            </>) : (<>Caricamento...</>)}
         </div>
     );
 }

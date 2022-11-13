@@ -8,7 +8,7 @@ export default function DeliveryPanel(props) {
         <div>
             <div style={{minWidth: "unset"}}>
                 <Heading level={3}>Consegne assegnate</Heading>
-                {props.deliveries.map(delivery => <Delivery delivery={delivery}/>)}
+                {props.deliveries.map(delivery => <Delivery delivery={delivery} key={delivery.id}/>)}
             </div>
         </div>
     );

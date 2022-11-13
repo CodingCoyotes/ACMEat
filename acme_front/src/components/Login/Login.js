@@ -3,17 +3,6 @@ import PropTypes from 'prop-types';
 import {useNavigate} from "react-router-dom";
 import {useAppContext} from "../../Context";
 
-async function loginUser(credentials) {
-  localStorage.setItem('token', credentials)
-  return fetch('http://localhost:8000/api/user/v1/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(credentials)
-  })
-    .then(data => data.json())
-}
 
  
 export default function Login() {
@@ -25,33 +14,47 @@ export default function Login() {
 
   const navigate = useNavigate()
 
+  async function loginUser() {
+    let body = {
+      "grant_type":"password",
+      "username":email,
+      "password":password
+
+    }
+    var formB = []
+    for (var property in body) {
+      var encodedKey = encodeURIComponent(property);
+      var encodedValue = encodeURIComponent(body[property]);
+      formB.push(encodedKey + "=" + encodedValue);
+    }
+    formB = formB.join("&");
+
+    const response = await fetch("http://127.0.0.1:8000" + "/token", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+        'Access-Control-Allow-Origin': process.env.DOMAIN
+      },
+      body: formB
+    });
+    if (response.status === 200) {
+      let values = await response.json()
+      console.debug(values)
+      setToken(values.access_token)
+      navigate("/dashboard")
+    }
+    else{
+      alert("Credenziali non corrette.")
+    }
+  }
+
+
   const handleSubmit = async e => {
     e.preventDefault();
     console.log("handleSubmit");
-
-    // await loginUser({
-    //   email,
-    //   password
-    // });
-    
-    loginUser({
-      "name": "NameTest",
-      "surname": "SurnameTest",
-      "email": "mailtest@who.us",
-      "password": "pass"
-    });
-    setToken("token");
-    navigate("/dashboard");
-  }
-
-  const handleChoose = async e => {
-    e.preventDefault();
-    //console.log(e.target.id);
-    if(e.target.id === "ristorante")
-      console.log("ristorante");
-    else 
-      console.log("cliente");
-    setChoose(true);
+    loginUser()
   }
 
     return (

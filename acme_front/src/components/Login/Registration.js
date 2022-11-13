@@ -25,7 +25,7 @@ export default function Registration() {
     console.log("handleSubmit");
 
     // bisogna aggiungere dei controlli visivi sugli input
-    if(password == repassword){
+    if(password === repassword){
         console.log("pass uguali");
         registerNewUser({
           "name": name,
@@ -34,8 +34,7 @@ export default function Registration() {
           "password": password,
         //   "kind": usertype
         });
-        setToken("token");
-        navigate("/dashboard");
+        navigate("/login");
     }
     console.log("pass diverse");
   }

@@ -66,7 +66,8 @@ class UserNew(base.ACMEORMModel):
 
 class DeliveryEdit(base.ACMEORMModel):
     cost: float
-    receiver: float
+    receiver: str
+    source: str
     delivery_time: datetime
 
 

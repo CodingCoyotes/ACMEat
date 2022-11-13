@@ -29,6 +29,7 @@ class Delivery(Base):
     status = Column(Enum(DeliveryStatus), default=DeliveryStatus.waiting)
     cost = Column(Float, nullable=False)
     receiver = Column(String, nullable=False)
+    source = Column(String, nullable=False)
     date = Column(DateTime, default=datetime.datetime.now)
     delivery_time = Column(DateTime, nullable=False)
 

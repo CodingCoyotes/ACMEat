@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {useAppContext} from "../../Context";
+import { getUserInfo } from '../Database/DBacmeat';
 
 export default function Dashboard() {
     console.log("Sono in Dashboard");
@@ -19,16 +20,7 @@ export default function Dashboard() {
 
     async function getInfo() {
         console.debug(token)
-        let response = await fetch("http://localhost:8000" + "/api/user/v1/me", {
-            method: "GET",
-            credentials: "include",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': "Bearer " + token,
-                'Access-Control-Allow-Origin': process.env.DOMAIN
-            },
-        });
+        let response = await getUserInfo(token);
         if (response.status === 200) {
             let values = await response.json()
             setUser(values)
@@ -51,6 +43,9 @@ export default function Dashboard() {
             {user ? (
                 <h2>Salve {user.name}.</h2>
             ) : (<div>...</div>)}
+            <button type="button" className="btn btn-secondary" onClick={event => {navigate("/restaurantregistration")}}>
+                Crea un ristorante
+            </button>
         </div>
     );
 }

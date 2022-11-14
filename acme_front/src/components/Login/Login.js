@@ -1,15 +1,15 @@
 import React, { useState }from "react"
-import PropTypes from 'prop-types';
+//import PropTypes from 'prop-types';
 import {useNavigate} from "react-router-dom";
 import {useAppContext} from "../../Context";
-
+import { loginUser as LUser}  from "../Database/DBacmeat" ;
 
  
 export default function Login() {
   console.log("Sono in Login");
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  const [choose, setChoose] = useState(false);
+  //const [choose, setChoose] = useState(false);
   const {token, setToken} = useAppContext()
 
   const navigate = useNavigate()
@@ -29,16 +29,7 @@ export default function Login() {
     }
     formB = formB.join("&");
 
-    const response = await fetch("http://127.0.0.1:8000" + "/token", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-        'Access-Control-Allow-Origin': process.env.DOMAIN
-      },
-      body: formB
-    });
+    const response = await LUser(formB);
     if (response.status === 200) {
       let values = await response.json()
       console.debug(values)

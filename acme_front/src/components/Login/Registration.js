@@ -1,22 +1,16 @@
 import React, { useState }from "react"
-import PropTypes from 'prop-types';
 import {useNavigate} from "react-router-dom";
 import {useAppContext} from "../../Context";
-import { roles } from "../Utils/Lists";
 import { registerNewUser } from "../Database/DBacmeat";
 
-
-
- 
 export default function Registration() {
-  console.log("Sono in Login");
   const [name, setName] = useState();
   const [surname, setSurname] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [repassword, setRepassword] = useState();
-//   const [usertype, setUsertype] = useState(false);
-  const {token, setToken} = useAppContext()
+  //   const [usertype, setUsertype] = useState(false);
+  //const {token, setToken} = useAppContext()
 
   const navigate = useNavigate()
 

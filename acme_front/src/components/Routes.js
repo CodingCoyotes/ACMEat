@@ -1,7 +1,9 @@
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import Dashboard from "./Dashboard/Dashboard";
+import DashRistorante from "./Dashboard/DashRistorante";
+import DashUtente from "./Dashboard/DashUtente";
 import Landing from "./Landing/Landing";
 import Login from "./Login/Login";
-import Dashboard from "./Dashboard/Dashboard";
 import RestaurantRegistration from "./Restaurant/RestaurantRegistration";
 
 export default function Routing(){
@@ -11,6 +13,8 @@ export default function Routing(){
                 <Route path="/" element={<Landing/>}/>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/dashboard" element={<Dashboard/>}/>
+                <Route path="/dashutente" element={<DashUtente/>}/>
+                <Route path="/dashristorante" element={<DashRistorante/>}/>
                 <Route path="/restaurantregistration" element={<RestaurantRegistration/>}/>
             </Routes>
         </Router>

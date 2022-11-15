@@ -40,22 +40,24 @@ export default function RestaurantRegistration() {
     e.preventDefault();
     console.log("Token: "+ token);
 
-    const response = await registerNewRestaurant({
+    const response = await registerNewRestaurant(token,{
+      
         "name": name,
         "address": address,
         "coords": {
-            "latitude": 0,
-            "longitude": 0
+          "latitude": 0,
+          "longitude": 0
         },
         "open_times": [
-            {
-            "day": "string",
-            "time": "string"
-            }
+          {
+            "day": "",
+            "time": ""
+          }
         ],
-        "closed": false,
-        "city_id": city,
-        "token": token
+        "closed": true,
+        "city_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        // "city_id": city
+      
     });
     if (response.status === 200) {
         let values = await response.json()

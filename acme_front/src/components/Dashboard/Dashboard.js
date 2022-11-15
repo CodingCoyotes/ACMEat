@@ -2,36 +2,39 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {useAppContext} from "../../Context";
 import { getUserInfo } from '../Database/DBacmeat';
+import DashRistorante from './DashRistorante';
+import DashUtente from './DashUtente';
 
 export default function Dashboard() {
     console.log("Sono in Dashboard");
     const {token, setToken} = useAppContext();
-    const [user, setUser] = useState(null);
+    const [tab, setTab] = useState("personale");
     const navigate = useNavigate()
 
     useEffect(() => {
         if (token === null) {
             navigate("/")
         }
-        else if (user===null){
-            getInfo()
-        }
+        document.getElementById(tab).classList.add('active');
     }, [])
 
-    async function getInfo() {
-        console.debug(token)
-        let response = await getUserInfo(token);
-        if (response.status === 200) {
-            let values = await response.json()
-            setUser(values)
-        }
-    }
 
     const handleLogout = async e => {
         e.preventDefault();
-        console.log("handleLogout");
         setToken(null)
         navigate("/")
+    }
+
+    const handleDashTab = e =>{
+        e.preventDefault();
+        setTab(e.target.id);
+      
+        // for (var i = 0; i < document.getElementById("tab").length; ++i) {
+        //     var items = i.getElementsByTagName("li");
+        //     items.classList.remove('active');
+        // }
+        // document.getElementById(tab).classList.add('active');
+        
     }
 
     return (
@@ -40,12 +43,18 @@ export default function Dashboard() {
                 <h2>ACMEat</h2>
                 <button type='button' className='btn btn-secondary' onClick={handleLogout}>Logout</button>
             </nav>
-            {user ? (
-                <h2>Salve {user.name}.</h2>
-            ) : (<div>...</div>)}
-            <button type="button" className="btn btn-secondary" onClick={event => {navigate("/restaurantregistration")}}>
-                Crea un ristorante
-            </button>
+            <ul className="nav nav-tabs nav-fill" id='tab'>
+                <li className="nav-item">
+                    <a className="nav-link " aria-current="page" id='personale' onClick={handleDashTab}>Profilo personale</a>
+                </li>
+                <li className="nav-item">
+                    <a className="nav-link" aria-current="page" id='ristorante' onClick={handleDashTab}>Ristorante</a>
+                </li>
+            </ul>
+            {(tab === "personale") ? (
+                <DashUtente></DashUtente>
+            ) : (<DashRistorante></DashRistorante>)}
+           
         </div>
     );
 }

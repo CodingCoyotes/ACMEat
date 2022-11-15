@@ -48,11 +48,15 @@ export async function getUserInfo(token, domain){
 // ---------------------------------------------------------------------------------------------
 
 //registra un nuovo ristorante date le informazioni
-export async function registerNewRestaurant(info) {
+export async function registerNewRestaurant(token, info) {
   return fetch('http://localhost:8000/api/restaurants/v1/', {
     method: 'POST',
+    
     headers: {
-      'Content-Type': 'application/json'
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer " + token,
+      'Access-Control-Allow-Origin': process.env.DOMAIN
     },
     body: JSON.stringify(info)
   })

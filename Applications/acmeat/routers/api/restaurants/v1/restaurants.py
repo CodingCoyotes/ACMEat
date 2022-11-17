@@ -48,7 +48,7 @@ async def create_restaurant(restaurant: acmeat.schemas.edit.RestaurantEdit, db: 
         usr = quick_retrieve(db, models.User, id=current_user.id)
         usr.kind = acmeat.database.enums.UserType.owner
         db.commit()
-        db.refresh(current_user)
+        db.refresh(usr)
     return quick_create(db, models.Restaurant(name=restaurant.name, address=restaurant.address,
                                               coords=restaurant.coords.jsonify(), open_times=restaurant.jsonify_time(),
                                               closed=restaurant.closed,

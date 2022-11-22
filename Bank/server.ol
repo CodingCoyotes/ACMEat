@@ -1,6 +1,7 @@
 include "console.iol"
 include "interface.iol"
 include "database.iol"
+include "string_utils.iol"
 
 inputPort Bank {
 	Location: "socket://localhost:2000"
@@ -23,7 +24,7 @@ main
 	login( lrequest )( lresponse ) {
 		// connect to DB
 		with ( connectionInfo ) {
-			.username = "bank_service";
+			.username = "postgres";
 			.password = "password";
 			.host = "";
 			.database = "bank_database";
@@ -45,6 +46,7 @@ main
 			lresponse.message = "An error has occured.\tUser " + username + " not found."
 			lresponse.successfull = false
 		} else {
+			fromUserId = int(queryResponse.id);
 			lresponse.message = "You are logged in."
 			lresponse.successfull = true
 			println@Console("User " + username + " logged in.")() // DEBUG
@@ -123,6 +125,7 @@ main
 					presponse.successfull = false
 					presponse.message = "An error has occured.\tUser " + toUser + " not found."
 				} else {
+					toUserId = int(queryResponse.id);
 					presponse.successfull = true
 					// withdraw from fromUser
 					queryRequest =
@@ -152,7 +155,17 @@ main
 					)(dbresponse.status)
 					println@Console( "Moved " + prequest.amount + " from " + username +" to " + toUser )() // DEBUG
 					// TODO generate token and store in transaction database
-					presponse.token = "token"
+					// https://docs.jolie-lang.org/v1.10.x/language-tools-and-standard-library/standard-library-api/string_utils.html#getRandomUUID
+					getRandomUUID@StringUtils()( token )
+					update@Database(
+						"insert into bank_transactions(from_user, to_user, amount, transaction_token) values (:fromUser, :toUser, :amount, :token)" {
+							.fromUser = fromUserId,
+							.toUser = toUserId,
+							.amount = prequest.amount,
+							.token = token
+						}
+					)(dbresponse.status);
+					presponse.token = token
 				}
 			}
 		} ]

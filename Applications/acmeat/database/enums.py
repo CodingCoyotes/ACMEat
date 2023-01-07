@@ -13,3 +13,5 @@ class OrderStatus(enum.Enum):
     w_payment = 3
     w_transport = 4
     w_kitchen = 5
+    delivering = 6
+    delivered = 7

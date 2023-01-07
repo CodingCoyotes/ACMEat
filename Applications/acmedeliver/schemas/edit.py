@@ -68,7 +68,12 @@ class DeliveryEdit(base.ACMEORMModel):
     cost: float
     receiver: str
     source: str
+    source_id: UUID
     delivery_time: datetime
+
+
+class DeliveryPreviewCost(base.ACMEORMModel):
+    cost: float
 
 
 class ClientDeliveryRequest(base.ACMEORMModel):

@@ -97,5 +97,7 @@ class Deliverer(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String, unique=True, nullable=False)
     api_url = Column(String, unique=True, nullable=False)
+    api_key = Column(UUID(as_uuid=True), nullable=False, unique=True, default=uuid.uuid4)
+    address = Column(String, nullable=False)
 
     orders = relationship("Order", back_populates="deliverer")

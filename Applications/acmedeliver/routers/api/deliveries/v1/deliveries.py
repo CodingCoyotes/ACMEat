@@ -56,14 +56,25 @@ async def create_delivery(delivery_request: acmedeliver.schemas.edit.ClientDeliv
     target = quick_retrieve(db, models.Client, api_key=delivery_request.api_key)
     if not target:
         raise errors.Forbidden
-    # Todo: Aggiungi funzione calcolo costo, logica selezione utente
+    # Todo: Aggiungi funzione calcolo costo, logica selezione utente che deve consegnare il tutto
     user = db.query(models.User).first()
     return quick_create(db, models.Delivery(cost=0.1, receiver=delivery_request.request.receiver,
                                             delivery_time=delivery_request.request.delivery_time,
-                                            deliverer_id=user.id, client_id=target.id))
+                                            deliverer_id=user.id, client_id=target.id,
+                                            source_id=delivery_request.request.source_id))
 
 
-# Todo: aggiungi funzione preventivo
+@router.post("/preview", response_model=acmedeliver.schemas.edit.DeliveryPreviewCost)
+async def create_delivery(delivery_request: acmedeliver.schemas.edit.ClientDeliveryRequest,
+                          db: Session = Depends(dep_dbsession)):
+    """
+    Creates an account for a new client.
+    """
+    target = quick_retrieve(db, models.Client, api_key=delivery_request.api_key)
+    if not target:
+        raise errors.Forbidden
+    # Todo: Aggiungi funzione calcolo costo, logica selezione utente che deve consegnare il tutto
+    return acmedeliver.schemas.edit.DeliveryPreviewCost(cost=1.0)
 
 
 @router.put("/{client_id}", response_model=acmedeliver.schemas.read.ClientRead)
@@ -78,5 +89,5 @@ async def edit_delivery(edits: acmedeliver.schemas.edit.ClientEdit, client_id: U
     :param db: the database session
     :return: the representation of the updated profile
     """
-    # Todo: scrivi questa funzione
+    # Todo: scrivi questa funzione che aggiorna lo stato di consegna
     return None

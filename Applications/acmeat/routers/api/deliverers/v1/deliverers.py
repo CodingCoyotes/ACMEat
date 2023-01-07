@@ -7,6 +7,7 @@ import bcrypt
 from fastapi import APIRouter, Depends, Request, HTTPException
 from sqlalchemy.orm import Session
 from camunda.client.engine_client import EngineClient
+from acmeat.database.enums import OrderStatus
 
 import acmeat.schemas.read
 from acmeat.authentication import get_current_user
@@ -43,7 +44,8 @@ async def create_deliverer(deliverer: acmeat.schemas.edit.DelivererEdit,
     """
     if current_user.kind != acmeat.database.enums.UserType.admin:
         raise errors.Forbidden
-    return quick_create(db, models.Deliverer(name=deliverer.name, api_url=deliverer.api_url))
+    return quick_create(db, models.Deliverer(name=deliverer.name, api_url=deliverer.api_url,
+                                             address=acmeat.schemas.read.DelivererRead.address))
 
 
 @router.put("/{deliverer_id}", response_model=acmeat.schemas.read.DelivererRead)
@@ -54,3 +56,33 @@ async def edit_deliverer(edits: acmeat.schemas.edit.DelivererEdit, deliverer_id:
     if current_user.kind != acmeat.database.enums.UserType.admin:
         raise errors.Forbidden
     return quick_update(db, target, edits)
+
+
+@router.put("/delivery/{order_id}", response_model=acmeat.schemas.read.OrderRead)
+async def edit_deliverer(edits: acmeat.schemas.edit.DelivererDeliveryEdit,
+                         order_id: UUID,
+                         db: Session = Depends(dep_dbsession)):
+    target = quick_retrieve(db, models.Deliverer, api_key=edits.api_key)
+    if not target:
+        raise errors.Forbidden
+    target_order = quick_retrieve(db, models.Order, id=order_id)
+    if not target_order:
+        raise errors.ResourceNotFound
+    if target_order.deliverer_id != target.id or target_order.status != OrderStatus.delivering:
+        raise errors.Forbidden
+    target_order.status = OrderStatus.delivered
+    db.commit()
+    return target_order
+
+
+@router.get("/delivery/{order_id}", response_model=acmeat.schemas.read.OrderRead)
+async def edit_deliverer(edits: acmeat.schemas.edit.DelivererDeliveryEdit,
+                         order_id: UUID,
+                         db: Session = Depends(dep_dbsession)):
+    target = quick_retrieve(db, models.Deliverer, api_key=edits.api_key)
+    if not target:
+        raise errors.Forbidden
+    target_order = quick_retrieve(db, models.Order, id=order_id)
+    if not target_order:
+        raise errors.ResourceNotFound
+    return target_order

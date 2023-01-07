@@ -125,6 +125,11 @@ class OrderEdit(base.ACMEORMModel):
     deliverer_id: t.Optional[UUID]
 
 
+class DelivererDeliveryEdit(base.ACMEModel):
+    api_key: UUID
+
+
+
 class ContentEdit(base.ACMEORMModel):
     order_id = UUID
     menu_id = UUID
@@ -139,3 +144,4 @@ class CityEdit(base.ACMEORMModel):
 class DelivererEdit(base.ACMEORMModel):
     name: str
     api_url: str
+    address: str

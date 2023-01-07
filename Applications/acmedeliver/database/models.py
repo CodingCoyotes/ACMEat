@@ -26,6 +26,7 @@ class Delivery(Base):
     __tablename__ = "delivery"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    source_id = Column(UUID(as_uuid=True), nullable=False, unique=True, default=uuid.uuid4)
     status = Column(Enum(DeliveryStatus), default=DeliveryStatus.waiting)
     cost = Column(Float, nullable=False)
     receiver = Column(String, nullable=False)

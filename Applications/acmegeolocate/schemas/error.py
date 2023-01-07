@@ -1,4 +1,4 @@
-from acmedeliver.schemas import base
+from acmegeolocate.schemas import base
 
 __all__ = (
     "AcmegeolocateErrorModel",

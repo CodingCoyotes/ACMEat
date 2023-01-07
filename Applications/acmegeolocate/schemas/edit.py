@@ -6,7 +6,7 @@ __all__ = (
     "DistanceRequest",
     "DistanceResponse",
     "CoordsRequest",
-    "CoordsResponse"
+    "CoordsResponse",
 )
 
 
@@ -16,10 +16,13 @@ class Address(base.ACMEModel):
     roadname: str
     number: int
 
+    def __repr__(self):
+        return f"{self.number},{self.roadname},{self.city},{self.nation}"
+
 
 class DistanceRequest(base.ACMEModel):
-    address1: Address
-    address2: Address
+    source: Address
+    destination: Address
 
 
 class DistanceResponse(base.ACMEModel):

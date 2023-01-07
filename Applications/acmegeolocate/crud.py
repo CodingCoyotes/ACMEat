@@ -14,7 +14,7 @@ import pydantic
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import select
 
-import acmerestaurant.errors as errors
+import acmegeolocate.errors as errors
 
 DatabaseObject = t.TypeVar("DatabaseObject")
 PydanticObject = t.TypeVar("PydanticObject")

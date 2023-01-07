@@ -7,11 +7,11 @@ import typing as t
 import fastapi
 import sqlalchemy.exc
 
-from acmerestaurant import errors
+from acmegeolocate import errors
 
 
 # noinspection PyUnusedLocal
-async def handle_acme_error(request: fastapi.Request, exc: errors.AcmerestaurantException) -> fastapi.Response:
+async def handle_acme_error(request: fastapi.Request, exc: errors.AcmegeolocateException) -> fastapi.Response:
     return exc.to_response()
 
 
@@ -27,4 +27,4 @@ async def handle_sqlalchemy_multiple_results(request: fastapi.Request, exc: sqla
 
 # noinspection PyUnusedLocal
 async def handle_generic_error(request: fastapi.Request, exc: Exception) -> fastapi.Response:
-    raise errors.AcmerestaurantException()
+    raise errors.AcmegeolocateException()

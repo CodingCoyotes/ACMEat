@@ -4,7 +4,7 @@ This module contains the possible errors that can be raised by :mod:`impressive_
 
 import fastapi
 
-from acmerestaurant import schemas
+from acmegeolocate import schemas
 
 __all__ = (
     "AcmegeolocateException",
@@ -22,8 +22,8 @@ class AcmegeolocateException(Exception):
     REASON: str = "Unknown error, please report this as a bug to the Impressive Strawberry developers."
 
     @classmethod
-    def to_model(cls) -> schemas.error.AcmerestaurantErrorModel:
-        return schemas.error.AcmerestaurantErrorModel(error_code=cls.ERROR_CODE, reason=cls.REASON)
+    def to_model(cls) -> schemas.error.AcmegeolocateErrorModel:
+        return schemas.error.AcmegeolocateErrorModel(error_code=cls.ERROR_CODE, reason=cls.REASON)
 
     @classmethod
     def to_response(cls) -> fastapi.Response:

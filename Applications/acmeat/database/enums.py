@@ -8,10 +8,13 @@ class UserType(enum.Enum):
 
 
 class OrderStatus(enum.Enum):
-    confirmed = 1
-    cancelled = 2
-    w_payment = 3
-    w_transport = 4
-    w_kitchen = 5
-    delivering = 6
-    delivered = 7
+    created = 0
+    w_restaurant_ok = 1
+    w_deliverer_ok = 2
+    confirmed_by_thirds = 3
+    cancelled = 4
+    w_payment = 5
+    w_kitchen = 6
+    w_transport = 7
+    delivering = 8
+    delivered = 9

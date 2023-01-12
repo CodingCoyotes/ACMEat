@@ -37,6 +37,7 @@ class OrderRead(edit.OrderEdit):
 
 
 class ContentRead(edit.ContentEdit):
+    order_id = UUID
     pass
 
 

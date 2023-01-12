@@ -1,3 +1,4 @@
+import typing
 import typing as t
 from uuid import UUID
 from datetime import datetime
@@ -120,7 +121,8 @@ class MenuEdit(base.ACMEORMModel):
 class OrderEdit(base.ACMEORMModel):
     date_order: datetime
     delivery_time: datetime
-    total: float
+    restaurant_total: float
+    deliverer_total: t.Optional[float]
     status: OrderStatus
     deliverer_id: t.Optional[UUID]
 
@@ -129,11 +131,9 @@ class DelivererDeliveryEdit(base.ACMEModel):
     api_key: UUID
 
 
-
 class ContentEdit(base.ACMEORMModel):
-    order_id = UUID
-    menu_id = UUID
-    qty = int
+    menu_id: UUID
+    qty: int
 
 
 class CityEdit(base.ACMEORMModel):
@@ -145,3 +145,8 @@ class DelivererEdit(base.ACMEORMModel):
     name: str
     api_url: str
     address: str
+
+
+class OrderCreation(base.ACMEModel):
+    contents: typing.List[ContentEdit]
+    delivery_time: datetime

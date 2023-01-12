@@ -19,6 +19,7 @@ from acmeat.routers.api.restaurants.v1 import restaurants
 from acmeat.routers.api.menus.v1 import menus
 from acmeat.routers.api.cities.v1 import cities
 from acmeat.routers.api.deliverers.v1 import deliverers
+from acmeat.routers.api.orders.v1 import orders
 
 from acmeat.configuration import setting_required
 from acmeat.services.test_services import echo_task
@@ -34,6 +35,7 @@ app.include_router(restaurants.router)
 app.include_router(menus.router)
 app.include_router(cities.router)
 app.include_router(deliverers.router)
+app.include_router(orders.router)
 
 origins = ["http://localhost:3000"]
 

@@ -13,6 +13,8 @@ from acmerestaurant.schemas import *
 from acmerestaurant.crud import *
 from acmerestaurant.dependencies import dep_dbsession
 import acmerestaurant.errors as errors
+from acmerestaurant.database.enums import UserType
+from acmerestaurant.errors import *
 
 router = APIRouter(
     prefix="/api/user/v1",
@@ -31,10 +33,13 @@ async def read_users_me(current_user: models.User = Depends(get_current_user), d
 
 
 @router.post("/", response_model=acmerestaurant.schemas.read.UserRead)
-async def create_user(user: acmerestaurant.schemas.edit.UserNew, db: Session = Depends(dep_dbsession)):
+async def create_user(user: acmerestaurant.schemas.edit.UserNew, db: Session = Depends(dep_dbsession),
+                      current_user: models.User = Depends(get_current_user)):
     """
     Creates an account for a new user.
     """
+    if current_user.kind != UserType.admin:
+        raise Forbidden
     h = bcrypt.hashpw(bytes(user.password, encoding="utf-8"), bcrypt.gensalt())
     return quick_create(db, models.User(name=user.name, surname=user.surname, password=h, email=user.email))
 

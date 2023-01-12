@@ -1,23 +1,17 @@
-import os
-
+import bcrypt
 import uvicorn
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from fastapi.security import OAuth2PasswordRequestForm
-from starlette.responses import RedirectResponse
-from camunda.external_task.external_task import ExternalTask, TaskResult
-from camunda.external_task.external_task_worker import ExternalTaskWorker
-
 from acmerestaurant.authentication import Token, authenticate_user, create_token, get_hash
-from acmerestaurant.crud import *
 from acmerestaurant.database import models
 from acmerestaurant.database.db import Session, engine
+from acmerestaurant.database.enums import UserType
 
 from acmerestaurant.routers.api.users.v1 import users
+from acmerestaurant.routers.api.server.v1 import server
 
 from acmerestaurant.configuration import setting_required
-from acmerestaurant.services.test_services import echo_task
 from acmerestaurant.errors import *
 from acmerestaurant.handlers import *
 
@@ -26,6 +20,7 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 app.include_router(users.router)
+app.include_router(server.router)
 
 origins = ["http://localhost:3000"]
 
@@ -40,7 +35,6 @@ app.add_middleware(
 app.add_exception_handler(AcmerestaurantException, handle_acme_error)
 app.add_exception_handler(sqlalchemy.exc.NoResultFound, handle_sqlalchemy_not_found)
 app.add_exception_handler(sqlalchemy.exc.MultipleResultsFound, handle_sqlalchemy_multiple_results)
-
 
 camunda_config = {
     "maxTasks": 100,
@@ -65,5 +59,10 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
 if __name__ == "__main__":
     BIND_IP = setting_required("BIND_IP")
     BIND_PORT = setting_required("BIND_PORT")
+    with Session() as db:
+        if not db.query(models.User).all():
+            db.add(models.User(name="Admin", surname="Admin", email=setting_required("ACME_EMAIL"),
+                               password=bcrypt.hashpw(bytes(setting_required("ACME_PASSWORD"), encoding="utf-8"),
+                                                      bcrypt.gensalt()), kind=UserType.admin))
+            db.commit()
     uvicorn.run(app, host=BIND_IP, port=int(BIND_PORT), debug=True)
-

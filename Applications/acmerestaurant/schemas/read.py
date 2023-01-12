@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from acmerestaurant.schemas import edit
+from acmerestaurant.schemas import edit, base
 from acmerestaurant.database.enums import UserType
 
 __all__ = ()
@@ -19,3 +19,7 @@ class UserRead(edit.UserBase):
                 "id": "971851d4-b41f-46e1-a884-5b5e84a276f8",
             },
         }
+
+
+class ServerRead(base.ACMEModel):
+    acmeat_restaurant_id: UUID

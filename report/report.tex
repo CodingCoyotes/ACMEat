@@ -5,6 +5,7 @@
 % See "book", "report", "letter" for other types of document.
 
 \documentclass[11pt]{article} % use larger type; default would be 10pt
+\usepackage[italian]{babel}
 
 \usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
 \usepackage{wrapfig}
@@ -129,13 +130,13 @@ allcolors={BrickRed}
 	\centering
 	\includegraphics[width=\textwidth]{logo.png}\\
 	\vspace*{1cm}
-	\Large \textsc{Second Cycle Degree in Computer Science}
+	\Large \textsc{Laurea Magistrale in Informatica}
 	
 	\vspace*{10mm}
 	\hrule width \hsize \kern 1mm \hrule width \hsize height 2pt
 	\vspace*{5mm}
 	\Huge \emph{\textbf{ACMEat}}\\
-	\large \emph{\textbf{Service Ordiented Software Engineering Course Project Report}}\\
+	\large \emph{\textbf{Relazione del progetto del corso di\\Ingegneria del Software Orientata ai Servizi}}\\
 	\vspace*{5mm}
 	\hrule width \hsize height 2pt
 	\vspace*{1mm}
@@ -144,7 +145,7 @@ allcolors={BrickRed}
 	\vspace*{10mm}
 	\begin{minipage}{0.45\textwidth}
 		\begin{flushleft} \Large
-			\emph{Students:}\\
+			\emph{Studenti:}\\
 			\Large \textbf{Lorenzo \textsc{BALUGANI}}\\
 			\Large \textbf{Alberto \textsc{PAPARELLA}}\\
 			\Large \textbf{Mae \textsc{SOSTO}}
@@ -152,14 +153,14 @@ allcolors={BrickRed}
 	\end{minipage}	
 	\begin{minipage}{0.45\textwidth}
 		\begin{flushright} \Large
-			\emph{Professors:}\\
+			\emph{Docenti:}\\
 			\Large \textbf{Prof. Ivan \textsc{LANESE}}\\
 			\Large \textbf{Prof. Davide \textsc{ROSSI}}
 		\end{flushright}
 	\end{minipage}
 	
 	\vspace*{15mm}
-	\Large \textsc{Academic Year $2021-2022$}
+	\Large \textsc{Anno Accademico $2021-2022$}
 \end{titlepage}
 
 % Table of contents
@@ -170,7 +171,7 @@ allcolors={BrickRed}
 \addtocontents{toc}{\protect\thispagestyle{empty}}	% http://tex.stackexchange.com/questions/2995/removing-page-number-from-toc
 \newpage
 
-\section{Introduction}
+\section{Introduzione}
 
 \subsection{Descrizione del dominio e del problema}
 La società ACMEat propone ai propri clienti un servizio che permette di selezionare un menu da uno fra un insieme di locali convenzionati e farselo recapitare a domicilio.\\
@@ -198,7 +199,7 @@ Il dialogo fra Jolie e BPMS deve avvenire via SOAP, si veda il sito del corso al
 \textbf{Gruppi}: il progetto va realizzato in gruppi di 2/3 persone.\\
 \textbf{Tempi}: Il progetto va consegnato prima che inizino le lezioni dell’A.A. 2022/23.\\
 \textbf{Materiale da consegnare}: relazione che descrive il lavoro fatto nelle varie fasi di modellazione e sviluppo, inclusi i vari diagrammi prodotti: coreografia e sistema proiettato, diagramma/i UML, diagramma/i di processo BPMN, export del progetto del BPMS, sorgenti dei servizi Jolie ed eventuali sorgenti aggiuntivi.\\
-\textbf{Modalità  di consegna}: via email con allegati. Se la dimensione degli allegati fosse eccessiva si consiglia di utilizzare servizi quali wetransfer, dropbox o similari.
+\textbf{Modalità  di consegna}: via email con allegati. Se la dimensione degli allegati fosse eccessiva si consiglia di utilizzare servizi quali wetransfer, dropbox o similari.\\
 \textbf{Discussione del progetto}: la discussione avviene su richiesta. Alla discussione devono presenziare tutti i membri del gruppo. La valutazione è personale, il che vuol dire che i partecipanti di uno stesso gruppo possono ottenere voti differenti fra loro. Queste specifiche non possono considerarsi definitive e verranno corrette e/o integrate quando necessario.
 
 \subsection{Opzioni}

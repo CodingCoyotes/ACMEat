@@ -25,6 +25,8 @@ class ACMEModel(pydantic.BaseModel, metaclass=abc.ABCMeta):
                 lambda obj: obj.timestamp(),
             acmerestaurant.database.enums.UserType:
                 lambda obj: obj.value,
+            acmerestaurant.database.enums.OrderStatus:
+                lambda obj: obj.value
         }
 
 

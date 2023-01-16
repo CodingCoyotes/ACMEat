@@ -6,7 +6,7 @@ include "interface.iol"
 outputPort Bank {
 	//Location: "socket://bank.isos.fermitech.info:2000"
 	//Location: "socket://51.75.207.207:2000"
-	Location: "socket://localhost:2000"
+	Location: "socket://http://bank.isos.fermitech.info/443"
 	Protocol: soap
 	Interfaces: BankInterface
 }

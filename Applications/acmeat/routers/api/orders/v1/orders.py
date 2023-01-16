@@ -1,12 +1,7 @@
 import typing
-import uuid
 from uuid import UUID
-from typing import Optional
-
-import bcrypt
-from fastapi import APIRouter, Depends, Request, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from camunda.client.engine_client import EngineClient
 from acmeat.database.enums import OrderStatus
 import acmeat.schemas.read
 from acmeat.authentication import get_current_user
@@ -35,10 +30,10 @@ async def read_orders(restaurant_id: UUID, db: Session = Depends(dep_dbsession),
     return results
 
 
-@router.get("/{order_id}", response_model=acmeat.schemas.full.OrderFull)
+@router.get("/details/{order_id}", response_model=acmeat.schemas.full.OrderFull)
 async def read_order(order_id: UUID, db: Session = Depends(dep_dbsession),
                      current_user: models.User = Depends(get_current_user)):
-    order = quick_retrieve(db, models.Order, id=order_id, )
+    order = quick_retrieve(db, models.Order, id=order_id)
     restaurant_id = order.contents[0].menu.restaurant_id
     restaurant = quick_retrieve(db, models.Restaurant, id=restaurant_id)
     if not (order.user_id == current_user.id or restaurant.owner_id == current_user.id):

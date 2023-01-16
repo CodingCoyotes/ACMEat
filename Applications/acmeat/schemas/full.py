@@ -27,15 +27,15 @@ class MenuFull(read.MenuRead):
     requests: t.List[read.ContentRead]
 
 
-class OrderFull(read.OrderRead):
-    user: read.UserRead
-    contents: read.ContentRead
-    deliverer: t.Optional[read.DelivererRead]
-
-
 class ContentFull(read.ContentRead):
     order: read.OrderRead
     menu: read.MenuRead
+
+
+class OrderFull(read.OrderRead):
+    user: read.UserRead
+    contents: t.List[ContentFull]
+    deliverer: t.Optional[read.DelivererRead]
 
 
 class CityFull(read.CityRead):

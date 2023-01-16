@@ -4,11 +4,11 @@ import Order from "./Order";
 
 export default function OrderPanel(props) {
 
-    return(
+    return (
         <div>
             <div style={{minWidth: "unset"}}>
                 <Heading level={3}>Ordini</Heading>
-                {props.deliveries.map(delivery => <Order delivery={delivery} key={delivery.id}/>)}
+                {props.orders.map(order => <Order order={order} key={order.id}/>)}
             </div>
         </div>
     );

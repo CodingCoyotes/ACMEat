@@ -23,3 +23,25 @@ class UserRead(edit.UserBase):
 
 class ServerRead(base.ACMEModel):
     acmeat_restaurant_id: UUID
+
+
+class OrderRead(edit.OrderEdit):
+    id: UUID
+    user_id: UUID
+
+
+class MenuRead(edit.MenuEdit):
+    id: UUID
+    restaurant_id: UUID
+
+
+class ContentRead(edit.ContentEdit):
+    order_id = UUID
+    pass
+
+class DelivererRead(edit.DelivererEdit):
+    id: UUID
+
+
+
+

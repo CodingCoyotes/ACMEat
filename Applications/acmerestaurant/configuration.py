@@ -56,12 +56,12 @@ def setting_optional(name) -> typing.Optional[str]:
 
 
 # Required settings
-# ROOT_URL = setting_required("ROOT_URL")
 JWT_KEY = setting_required("JWT_KEY")
 DB_URI = setting_required("DB_URI")
 ACME_EMAIL = setting_required("ACME_EMAIL")
 ACME_PASSWORD = setting_required("ACME_PASSWORD")
 ACME_RESTAURANT_ID = setting_required("ACME_RESTAURANT_ID")
+ACME_URL = setting_required("ACME_URL")
 
 # Also required, but not set here:
 # BIND_IP

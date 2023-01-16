@@ -1,7 +1,9 @@
 import typing as t
 from uuid import UUID
 from datetime import datetime
+import enum
 
+from acmeat.database.enums import OrderStatus
 from acmerestaurant.database import models
 from acmerestaurant.schemas import base
 
@@ -62,3 +64,44 @@ class UserNew(base.ACMEORMModel):
                 "password": "password"
             },
         }
+
+
+class OrderEdit(base.ACMEORMModel):
+    date_order: datetime
+    delivery_time: datetime
+    restaurant_total: float
+    deliverer_total: t.Optional[float]
+    status: OrderStatus
+    deliverer_id: t.Optional[UUID]
+
+
+class ContentEdit(base.ACMEORMModel):
+    menu_id: UUID
+    qty: int
+
+
+class DelivererEdit(base.ACMEORMModel):
+    name: str
+    api_url: str
+    address: str
+
+
+class MenuEntry(base.ACMEModel):
+    name: str
+    desc: str
+
+    def jsonify(self):
+        return {"name": self.name, "desc": self.desc}
+
+
+class MenuEdit(base.ACMEORMModel):
+    name: str
+    contents: t.List[MenuEntry]
+    cost: float
+    hidden: bool
+
+    def jsonify_contents(self):
+        res = []
+        for entry in self.contents:
+            res.append(entry.jsonify())
+        return res

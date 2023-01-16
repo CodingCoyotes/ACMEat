@@ -13,3 +13,14 @@ class UserFull(read.UserRead):
     """
 
     pass
+
+
+class ContentFull(read.ContentRead):
+    order: read.OrderRead
+    menu: read.MenuRead
+
+
+class OrderFull(read.OrderRead):
+    user: read.UserRead
+    contents: t.List[ContentFull]
+    deliverer: t.Optional[read.DelivererRead]

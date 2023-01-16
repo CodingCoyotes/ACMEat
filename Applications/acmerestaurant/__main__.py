@@ -10,6 +10,7 @@ from acmerestaurant.database.enums import UserType
 
 from acmerestaurant.routers.api.users.v1 import users
 from acmerestaurant.routers.api.server.v1 import server
+from acmerestaurant.routers.api.orders.v1 import orders
 
 from acmerestaurant.configuration import setting_required
 from acmerestaurant.errors import *
@@ -21,6 +22,7 @@ app = FastAPI()
 
 app.include_router(users.router)
 app.include_router(server.router)
+app.include_router(orders.router)
 
 origins = ["http://localhost:3000"]
 

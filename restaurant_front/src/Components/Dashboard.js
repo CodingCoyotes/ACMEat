@@ -12,6 +12,7 @@ export default function Dashboard() {
     const {token, setToken} = useAppContext()
     const navigator = useNavigate()
     const [user, setUser] = useState(null)
+    const [orders, setOrders] = useState([])
 
     useEffect(() => {
         if (address === null) {
@@ -24,6 +25,14 @@ export default function Dashboard() {
         }
         getUserData();
     }, [address, token])
+
+    useEffect(()=>{
+        getOrders()
+        const interval = setInterval(()=>getOrders(), 10000)
+        return () => {
+            clearInterval(interval)
+        }
+    }, [])
 
     async function exit() {
         setToken(null);
@@ -46,6 +55,24 @@ export default function Dashboard() {
         }
     }
 
+    async function getOrders(){
+        console.debug("Getting latest orders...")
+        let response = await fetch(schema + address + "/api/orders/v1/", {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + token,
+                'Access-Control-Allow-Origin': process.env.DOMAIN
+            },
+        });
+        if (response.status === 200) {
+            let values = await response.json()
+            setOrders(values)
+        }
+    }
+
     return (
         <div className={Style.Landing}>
             <div className={Style.lander} style={{minWidth: "unset"}}>
@@ -54,12 +81,12 @@ export default function Dashboard() {
                 <p className="text-muted">
                     Salve {user ? (<>{user.name}</>) : (<>...</>)}
                 </p>
-                <Button children={"Logout"} onClick={e => exit()}></Button>
+                <Button children={"Logout"} onClick={e => exit()}/>
                 </Chapter>
             </div>
             {user ? (<>
-                {user.kind == 2 ? (
-                    <div><AdminPanel/></div>) : (<div></div>)}
+                {user.kind === 2 ? (
+                    <div><AdminPanel/><OrderPanel orders={orders}/></div>) : (<div><OrderPanel orders={orders}/></div>)}
             </>) : (<>Caricamento...</>)}
         </div>
     );

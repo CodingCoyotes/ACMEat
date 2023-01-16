@@ -1,0 +1,211 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[11pt]{article} % use larger type; default would be 10pt
+\usepackage[italian]{babel}
+
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+\usepackage{wrapfig}
+%%% Examples of Article customizations
+% These packages are optional, depending on whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+% \geometry{margin=2in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+% read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+\usepackage{url} % better links representation, o così dicono
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{amsmath}
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% These packages are all incorporated in the memoir class to one degree or another...
+\usepackage{listings,multicol}
+\usepackage{caption}
+
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+
+\usepackage{mathpartir}
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{hyperref} % To refer a link (website)
+\hypersetup{%
+  colorlinks=true,% hyperlinks will be coloured
+  %linkcolor={BrickRed},% hyperlink text will be green
+  linkbordercolor=BrickRed,
+  citebordercolor=White,
+  urlbordercolor=White,
+  runbordercolor=White,
+  menubordercolor=White,
+  filebordercolor=White,
+ % urlcolor={BrickRed},
+%filecolor={White},
+%citecolor={BrickRed},
+allcolors={BrickRed}
+%allbordercolors={BrickRed}
+}
+
+\makeatletter
+\Hy@AtBeginDocument{%
+  \def\@pdfborder{0 0 1}% Overrides border definition set with colorlinks=true
+  \def\@pdfborderstyle{/S/U/W .5}% Overrides border style set with colorlinks=true
+                                % Hyperlink border style will be underline of width 1pt
+}
+\makeatother
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+\setlength\parindent{0pt} % Set noindent for the whole document
+\newcommand{\ES}{\textcolor{red}}
+
+
+\usepackage{tikz}
+\usetikzlibrary{shapes,trees,fit,decorations.pathreplacing,arrows.meta}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+%%% END Article customizations
+
+\begin{document}
+%\maketitle
+
+%%% Title page
+\begin{titlepage}
+	\topskip0pt
+	%\vspace*{\fill}
+	\centering
+	\includegraphics[width=\textwidth]{logo.png}\\
+	\vspace*{1cm}
+	\Large \textsc{Laurea Magistrale in Informatica}
+	
+	\vspace*{10mm}
+	\hrule width \hsize \kern 1mm \hrule width \hsize height 2pt
+	\vspace*{5mm}
+	\Huge \emph{\textbf{ACMEat}}\\
+	\large \emph{\textbf{Relazione del progetto del corso di\\Ingegneria del Software Orientata ai Servizi}}\\
+	\vspace*{5mm}
+	\hrule width \hsize height 2pt
+	\vspace*{1mm}
+	\hrule width \hsize \kern 1mm
+	
+	\vspace*{10mm}
+	\begin{minipage}{0.45\textwidth}
+		\begin{flushleft} \Large
+			\emph{Studenti:}\\
+			\Large \textbf{Lorenzo \textsc{BALUGANI}}\\
+			\Large \textbf{Alberto \textsc{PAPARELLA}}\\
+			\Large \textbf{Mae \textsc{SOSTO}}
+		\end{flushleft}
+	\end{minipage}	
+	\begin{minipage}{0.45\textwidth}
+		\begin{flushright} \Large
+			\emph{Docenti:}\\
+			\Large \textbf{Prof. Ivan \textsc{LANESE}}\\
+			\Large \textbf{Prof. Davide \textsc{ROSSI}}
+		\end{flushright}
+	\end{minipage}
+	
+	\vspace*{15mm}
+	\Large \textsc{Anno Accademico $2021-2022$}
+\end{titlepage}
+
+% Table of contents
+\addtocontents{toc}{~\hfill\textbf{Page}\par}	% https://texblog.org/2011/09/09/10-ways-to-customize-tocloflot/
+\clearpage
+\tableofcontents
+\thispagestyle{empty}
+\addtocontents{toc}{\protect\thispagestyle{empty}}	% http://tex.stackexchange.com/questions/2995/removing-page-number-from-toc
+\newpage
+
+\section{Introduzione}
+
+\subsection{Descrizione del dominio e del problema}
+La società ACMEat propone ai propri clienti un servizio che permette di selezionare un menu da uno fra un insieme di locali convenzionati e farselo recapitare a domicilio.\\
+Per poter usufruire del servizio il cliente deve inizialmente selezionare un comune fra quelli nei quali il servizio è attivo. A fronte di questa selezione ACMEat presenta la lista dei locali convenzionati che operano in quel comune e dei menù che offrono. Il cliente può quindi specificare locale e menù di suo interesse e una fascia oraria per la consegna (si tratta di fasce di 15 minuti tra le 12 e le 14 e tra le 19 e le 21).\\
+Segue quindi una fase di pagamento che viene gestita attraverso un istituto bancario terzo al quale il cliente viene indirizzato. A fronte del pagamento l’istituto rilascia un token al cliente il quale lo comunica ad ACMEat, che a sua volta lo usa per verificare con la banca che il pagamento sia stato effettivamente completato. A questo punto l’ordine diventa operativo. I clienti possono comunque ancora annullare l’ordine ma non più tardi di un’ora prima rispetto all’orario di consegna. In tal caso ACMEat chiede alla banca l’annullamento del pagamento.\\
+ACMEat conosce tutti i locali convenzionati nei vari comuni nei quali opera e i loro giorni e orari di operatività. Nel caso in cui un locale non sia disponibile in un giorno in cui dovrebbe normalmente essere aperto è responsabilità del locale stesso contattare ACMEat entro le 10 del mattino comunicando tale indisponibilità. Entro tale orario vanno anche comunicati cambiamenti dei menu proposti (in mancanza di tale comunicazione si assume che siano disponibili gli stessi del giorno precedente). I locali vengono anche contattati ad ogni ordine per verificare che siano effettivamente in grado di far fronte alla richiesta del cliente. In caso negativo l’accettazione dell’ordine si interrompe prima che si passi alla fase di pagamento.\\
+Per la consegna ACMEat si appoggia a più società esterne: per ogni consegna vengono contattate tutte le società che abbiano sede entro 10 chilometri dal comune interessato specificando: indirizzo del locale dove ritirare il pasto, indirizzo del cliente cui recapitarlo e orario previsto di consegna. A fronte di questa richiesta le società devono rispondere entro 15 secondi specificando la loro disponibilità e il prezzo richiesto; ACMEat sceglierà fra le disponibili che avranno risposto nel tempo richiesto quella che propone il prezzo più basso. Nel caso in cui nessuna società di consegna sia disponibile l’ordine viene annullato prima che si passi alla fase di pagamento.
+
+\subsection{Workflow e artefatti}
+Si modellino le comunicazioni dello scenario sopra esposto usando una coreografia, si discutano le sue proprietà di connectedness ed eventualmente si raffini la coreografia per migliorare tali proprietà. Si proietti la coreografia in un sistema di ruoli.\\
+Utilizzando uno o più diagrammi di collaborazione BPMN si modelli l’intera realtà descritta compresi i dettagli di ogni partecipante (usando il processo del ruolo corrispondente come guida). Tale modellazione ha scopo documentativo quindi il livello di dettaglio deve essere consistente con tale scopo.\\
+Si progetti una SOA per la realizzazione del sistema e la si documenti utilizzando UML (eventualmente con opportuni profili, ad esempio TinySOA).\\
+Si realizzi il sistema usando come tecnologie un BPMS (Camunda), Jolie e API Rest, coi seguenti vincoli:
+\begin{itemize}
+\item Il servizio ACMEat, almeno per la parte di human workflow, deve rendere accessibili capabilities realizzate attraverso il BPMS;
+\item i servizi esterni ad ACMEat devono essere (almeno): GIS, servizi bancari, locali e società di consegna;
+\item i servizi di cui sopra vanno implementati (con logica elementare) come parte del progetto;
+\item i servizi bancari devono essere realizzati in Jolie;
+\item almeno un servizio va realizzato con API Rest.
+\end{itemize}
+I modelli di processo BPMN da utilizzare per il BPMS devono essere consistenti con la modellazione a scopo documentativo precedentemente realizzata; volendo si può anche scegliere di dettagliare compiutamente già dal primo modello le pool eseguibili. Quindi nel primo caso si avrebbe un primo modello BPMN documentativo e poi tanti modelli BPMN eseguibili quanti i partecipanti realizzati attraverso BPMS; in alternativa si avrebbe un unico modello BPMN con le pool eseguibili completamente dettagliate e gli altri partecipanti dettagliati a livello documentativo.\\
+Il dialogo fra Jolie e BPMS deve avvenire via SOAP, si veda il sito del corso alla pagina delle risorse per informazioni ulteriori.
+
+\subsection{Consegna e discussione}
+\textbf{Gruppi}: il progetto va realizzato in gruppi di 2/3 persone.\\
+\textbf{Tempi}: Il progetto va consegnato prima che inizino le lezioni dell’A.A. 2022/23.\\
+\textbf{Materiale da consegnare}: relazione che descrive il lavoro fatto nelle varie fasi di modellazione e sviluppo, inclusi i vari diagrammi prodotti: coreografia e sistema proiettato, diagramma/i UML, diagramma/i di processo BPMN, export del progetto del BPMS, sorgenti dei servizi Jolie ed eventuali sorgenti aggiuntivi.\\
+\textbf{Modalità  di consegna}: via email con allegati. Se la dimensione degli allegati fosse eccessiva si consiglia di utilizzare servizi quali wetransfer, dropbox o similari.\\
+\textbf{Discussione del progetto}: la discussione avviene su richiesta. Alla discussione devono presenziare tutti i membri del gruppo. La valutazione è personale, il che vuol dire che i partecipanti di uno stesso gruppo possono ottenere voti differenti fra loro. Queste specifiche non possono considerarsi definitive e verranno corrette e/o integrate quando necessario.
+
+\subsection{Opzioni}
+Fermo restando che la corretta realizzazione del progetto proposto senza la parte opzionale permette di ottenere comunque il massimo punteggio, viene proposta una consegna aggiuntiva da considerarsi opzionale:
+\begin{itemize}
+\item Modellazione della coreografia anche attraverso un diagramma di coreografia BPMN.
+\end{itemize}
+
+\end{document}

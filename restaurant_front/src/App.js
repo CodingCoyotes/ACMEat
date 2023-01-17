@@ -9,7 +9,7 @@ function App() {
     const [token, setToken] = useState(null);
     const [address, setAddress] = useState(null)
     return (
-        <Bluelib theme={"amber"} backgroundColor={"#161616"} accentColor={"#346751"} foregroundColor={"#ECDBBA"}>
+        <Bluelib theme={"amber"} backgroundColor={"#3C2A21"} accentColor={"#E5E5CB"} foregroundColor={"#D5CEA3"}>
             <LayoutThreeCol>
                 <LayoutThreeCol.Center>
                     <div className="App">

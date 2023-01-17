@@ -26,7 +26,7 @@ router = APIRouter(
 
 
 @router.get("/me", response_model=acmerestaurant.schemas.full.UserFull)
-async def read_users_me(current_user: models.User = Depends(get_current_user), db: Session = Depends(dep_dbsession)):
+def read_users_me(current_user: models.User = Depends(get_current_user), db: Session = Depends(dep_dbsession)):
     """
     Returns data about the current user.
     """
@@ -34,7 +34,7 @@ async def read_users_me(current_user: models.User = Depends(get_current_user), d
 
 
 @router.post("/", response_model=acmerestaurant.schemas.read.UserRead)
-async def create_user(user: acmerestaurant.schemas.edit.UserNew, db: Session = Depends(dep_dbsession),
+def create_user(user: acmerestaurant.schemas.edit.UserNew, db: Session = Depends(dep_dbsession),
                       current_user: models.User = Depends(get_current_user)):
     """
     Creates an account for a new user.
@@ -45,14 +45,14 @@ async def create_user(user: acmerestaurant.schemas.edit.UserNew, db: Session = D
 
 
 @router.get("/", response_model=typing.List[acmerestaurant.schemas.read.UserRead])
-async def read_users(current_user: models.User = Depends(get_current_user), db: Session = Depends(dep_dbsession)):
+def read_users(current_user: models.User = Depends(get_current_user), db: Session = Depends(dep_dbsession)):
     if current_user.kind != UserType.admin:
         raise Forbidden
     return db.query(models.User).all()
 
 
 @router.put("/{user_id}", response_model=acmerestaurant.schemas.read.UserRead)
-async def edit_user(edits: acmerestaurant.schemas.edit.UserNew, user_id: UUID,
+def edit_user(edits: acmerestaurant.schemas.edit.UserNew, user_id: UUID,
                     current_user: models.User = Depends(get_current_user),
                     db: Session = Depends(dep_dbsession)):
     """

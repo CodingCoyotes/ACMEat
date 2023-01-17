@@ -20,7 +20,6 @@ export default function AdminPanel() {
     async function getUsers() {
         let response = await fetch(schema + address + "/api/user/v1/", {
             method: "GET",
-            credentials: "include",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -37,7 +36,6 @@ export default function AdminPanel() {
     async function search() {
         let response = await fetch(schema + address + "/api/delivery/v1/" + id, {
             method: "GET",
-            credentials: "include",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',

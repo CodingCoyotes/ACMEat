@@ -26,7 +26,7 @@ class ACMEModel(pydantic.BaseModel, metaclass=abc.ABCMeta):
             acmerestaurant.database.enums.UserType:
                 lambda obj: obj.value,
             acmerestaurant.database.enums.OrderStatus:
-                lambda obj: obj.value
+                lambda obj: obj.value,
         }
 
 

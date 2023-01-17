@@ -38,7 +38,6 @@ export default function Login() {
 
         const response = await fetch(schema+address+"/token", {
             method: "POST",
-            credentials: "include",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',

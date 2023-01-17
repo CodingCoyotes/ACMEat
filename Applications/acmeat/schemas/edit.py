@@ -119,11 +119,11 @@ class MenuEdit(base.ACMEORMModel):
 
 
 class OrderEdit(base.ACMEORMModel):
-    date_order: datetime
-    delivery_time: datetime
-    restaurant_total: float
+    date_order: t.Optional[datetime]
+    delivery_time: t.Optional[datetime]
+    restaurant_total: t.Optional[float]
     deliverer_total: t.Optional[float]
-    status: OrderStatus
+    status: t.Optional[OrderStatus]
     deliverer_id: t.Optional[UUID]
 
 

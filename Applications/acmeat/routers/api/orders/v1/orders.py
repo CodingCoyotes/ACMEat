@@ -1,6 +1,6 @@
 import typing
 from uuid import UUID
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm import Session
 from acmeat.database.enums import OrderStatus
 import acmeat.schemas.read
@@ -56,4 +56,31 @@ async def create_order(restaurant_id: str, order_data: acmeat.schemas.edit.Order
     order.restaurant_total = total
     db.commit()
     #Todo: Bisogna far partire la richiesta di conferma al locale e al trasportatore...
+    return order
+
+
+@router.put("/{order_id}", response_model=acmeat.schemas.read.OrderRead)
+async def update_order(order_id: UUID, request:Request, order_data: acmeat.schemas.edit.OrderEdit,
+                       db: Session = Depends(dep_dbsession),
+                       current_user: models.User = Depends(get_current_user)):
+    order = quick_retrieve(db, models.Order, id=order_id)
+    restaurant_id = order.contents[0].menu.restaurant_id
+    restaurant = quick_retrieve(db, models.Restaurant, id=restaurant_id)
+    if not (order.user_id == current_user.id or restaurant.owner_id == current_user.id):
+        raise errors.Forbidden
+    if order.user_id == current_user.id:
+        if order_data.status != OrderStatus.cancelled:
+            raise errors.Forbidden
+        #Todo: Aggiungi controllo orario
+        order.status = order_data.status
+        db.commit()
+        return order
+    if order.status == OrderStatus.w_restaurant_ok and order_data.status == OrderStatus.cancelled:
+        order.status = order_data.status
+        db.commit()
+        return order
+    if order.status.value > order_data.status.value or order_data.status.value not in [2,7]:
+        raise errors.Forbidden
+    order.status = order_data.status
+    db.commit()
     return order

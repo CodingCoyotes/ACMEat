@@ -8,7 +8,7 @@ import AdminPanel from "./Admin/AdminPanel";
 import OrderPanel from "./Orders/OrderPanel";
 
 export default function Dashboard() {
-    const {address, setAddress} = useAppContext()
+    const {address} = useAppContext()
     const {token, setToken} = useAppContext()
     const navigator = useNavigate()
     const [user, setUser] = useState(null)
@@ -41,7 +41,6 @@ export default function Dashboard() {
     async function getUserData() {
         let response = await fetch(schema + address + "/api/user/v1/me", {
             method: "GET",
-            credentials: "include",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -59,7 +58,6 @@ export default function Dashboard() {
         console.debug("Getting latest orders...")
         let response = await fetch(schema + address + "/api/orders/v1/", {
             method: "GET",
-            credentials: "include",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',

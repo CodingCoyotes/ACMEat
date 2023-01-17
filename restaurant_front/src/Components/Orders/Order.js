@@ -49,19 +49,16 @@ export default function Order(props) {
             default:
                 setStatus("???")
         }
-    }, [props.delivery])
+    }, [props.order, details])
 
     async function getDetails(){
         const response = await fetch(schema + address + "/api/orders/v1/"+props.order.id, {
             method: "GET",
-            credentials: "include",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
                 'Access-Control-Allow-Origin': process.env.DOMAIN,
-                credentials: "include",
                 'Authorization': "Bearer " + token,
-
             }
         });
         if (response.status === 200) {
@@ -71,6 +68,32 @@ export default function Order(props) {
         }
         else{
             alert("Si è verificato un errore durante il caricamento dei dati.")
+        }
+    }
+
+    async function updateStatus(status){
+
+        const response = await fetch(schema + address + "/api/orders/v1/"+props.order.id, {
+            method: "PUT",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': process.env.DOMAIN,
+                'Authorization': "Bearer " + token,
+            },
+            body: JSON.stringify({
+                date_order: props.order.date_order,
+                delivery_time: props.order.delivery_time,
+                restaurant_total: props.order.restaurant_total,
+                deliverer_total: props.order.deliverer_total,
+                status: status,
+                deliverer_id: props.order.deliverer_total
+            })
+        });
+        if (response.status === 200) {
+            let values = await response.json()
+            setDetails(values)
+            console.debug(values)
         }
     }
 
@@ -84,6 +107,23 @@ export default function Order(props) {
                 <div>
                     {status}
                 </div>
+                {props.order.status === 1 &&
+                    <div style={{"display":"flex"}} >
+                    <Button bluelibClassNames={"color-lime"} style={{padding: "0px"}} onClick={event => {updateStatus(2)}}>
+                        Accetta
+                    </Button>
+                    <Button bluelibClassNames={"color-red"} style={{padding: "0px"}} onClick={event => {updateStatus(4)}}>
+                        Declina
+                    </Button>
+                    </div>
+                }
+                {props.order.status === 6 &&
+                <div style={{"display":"flex"}}>
+                    <Button bluelibClassNames={"color-lime"} style={{padding: "0px"}} onClick={event => {updateStatus(7)}}>
+                        Pronto
+                    </Button>
+                </div>
+                }
                 <div>
                     <Button style={{padding: "0px"}} onClick={event => {
                         setHidden(!hidden); getDetails()

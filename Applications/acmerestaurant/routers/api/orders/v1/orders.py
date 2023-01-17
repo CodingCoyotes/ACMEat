@@ -28,20 +28,35 @@ def get_access_token():
 
 
 @router.get("/", response_model=typing.List[acmerestaurant.schemas.read.OrderRead])
-async def read_orders(db: Session = Depends(dep_dbsession),
-                      current_user: models.User = Depends(get_current_user)):
+def read_orders(db: Session = Depends(dep_dbsession),
+                current_user: models.User = Depends(get_current_user)):
     token = get_access_token()
-    orders = requests.get(ACME_URL+"/api/orders/v1/"+ACME_RESTAURANT_ID, headers={"Authorization":"Bearer "+token['access_token']})
+    orders = requests.get(ACME_URL + "/api/orders/v1/" + ACME_RESTAURANT_ID,
+                          headers={"Authorization": "Bearer " + token['access_token']})
     if orders.status_code != 200:
         raise errors.Forbidden
     return orders.json()
 
 
 @router.get("/{order_id}", response_model=acmerestaurant.schemas.full.OrderFull)
-async def read_order(order_id: UUID, db: Session = Depends(dep_dbsession),
-                     current_user: models.User = Depends(get_current_user)):
+def read_order(order_id: UUID, db: Session = Depends(dep_dbsession),
+               current_user: models.User = Depends(get_current_user)):
     token = get_access_token()
-    order = requests.get(ACME_URL+"/api/orders/v1/details/"+str(order_id), headers={"Authorization":"Bearer "+token['access_token']})
+    order = requests.get(ACME_URL + "/api/orders/v1/details/" + str(order_id),
+                         headers={"Authorization": "Bearer " + token['access_token']})
+    if order.status_code != 200:
+        raise errors.Forbidden
+    return order.json()
+
+
+@router.put("/{order_id}", response_model=acmerestaurant.schemas.edit.OrderEdit)
+def edit_order(order_id: UUID, edits: acmerestaurant.schemas.edit.OrderEdit,
+               db: Session = Depends(dep_dbsession),
+               current_user: models.User = Depends(get_current_user)):
+    token = get_access_token()
+    order = requests.put(ACME_URL + "/api/orders/v1/" + str(order_id),
+                         headers={"Authorization": "Bearer " + token['access_token'], "Content-Type":"application/json",
+                                  "Accept": "application/json"}, data=edits.json())
     if order.status_code != 200:
         raise errors.Forbidden
     return order.json()

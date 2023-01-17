@@ -17,7 +17,6 @@ export default function UserEditor(props) {
     async function submit(){
         let response = await fetch(schema + address + "/api/user/v1/", {
             method: "POST",
-            credentials: "include",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',

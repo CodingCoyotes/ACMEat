@@ -66,12 +66,12 @@ class UserNew(base.ACMEORMModel):
         }
 
 
-class OrderEdit(base.ACMEORMModel):
-    date_order: datetime
-    delivery_time: datetime
-    restaurant_total: float
+class OrderEdit(base.ACMEModel):
+    date_order: t.Optional[datetime]
+    delivery_time: t.Optional[datetime]
+    restaurant_total: t.Optional[float]
     deliverer_total: t.Optional[float]
-    status: OrderStatus
+    status: t.Optional[OrderStatus]
     deliverer_id: t.Optional[UUID]
 
 
@@ -80,7 +80,7 @@ class ContentEdit(base.ACMEORMModel):
     qty: int
 
 
-class DelivererEdit(base.ACMEORMModel):
+class DelivererEdit(base.ACMEModel):
     name: str
     api_url: str
     address: str
@@ -94,7 +94,7 @@ class MenuEntry(base.ACMEModel):
         return {"name": self.name, "desc": self.desc}
 
 
-class MenuEdit(base.ACMEORMModel):
+class MenuEdit(base.ACMEModel):
     name: str
     contents: t.List[MenuEntry]
     cost: float

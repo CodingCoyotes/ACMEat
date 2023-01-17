@@ -13,5 +13,5 @@ router = APIRouter(
 
 
 @router.get("/me", response_model=ServerRead)
-async def read_server(current_user: User = Depends(get_current_user)):
+def read_server(current_user: User = Depends(get_current_user)):
     return ServerRead(acmeat_restaurant_id=ACME_RESTAURANT_ID)

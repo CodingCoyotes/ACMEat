@@ -208,4 +208,977 @@ Fermo restando che la corretta realizzazione del progetto proposto senza la part
 \item Modellazione della coreografia anche attraverso un diagramma di coreografia BPMN.
 \end{itemize}
 
+\clearpage
+
+\section{Coreografia}
+
+\begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1]
+Coreografia :== (
+	CoreografiaRichiestaMenu |
+	CoreografiaOrdine |
+	ModificaInformazioniLocali
+)
+
+CoreografiaRichiestaMenu :== (
+	SelezioneComune : Cliente -> ACMEat ;
+	InvioListaLocali : ACMEat -> Cliente
+)
+
+CoreografiaOrdine :==   (
+	Ordine : Cliente -> ACMEat ;
+	Richiesta disponibilità ristorante : ACMEat -> Ristorante;
+	DisponibilitàR: Ristorante -> ACMEat;
+	// Disponibile ?
+	(
+		// No
+		Annullamento procedura : ACMEat -> Cliente
+	) + (
+		// Sì
+		( 
+			Richiesta disponibilità SDS : ACMEat -> SDS;
+			( //In 15 secondi 
+				PreventivoDisponibilità: SDS -> ACMEat +
+				1
+			)
+		)* ;
+	// Lista vuota ?
+	(
+		// Sì
+		AnnullamentoC : ACMEat -> Cliente |
+		AnnullamentoR : ACMEat -> Ristorante ;
+	) + (
+		// No
+		Contatta SDS costo minore: ACMEat -> SDS ;
+		ACK: SDS -> ACMEat;
+		CreazioneRichiestaPagamento: ACMEat -> Banca ;
+		ConfermaCreazioneTransazione: Banca -> ACMEat ;
+		RedirezionePagamento: ACMEat -> Cliente ;
+		// Modellazione timeout 
+		(
+			Pagamento : Cliente -> Banca;
+			InvioTokenC : Banca -> Cliente;
+			InvioTokenA : Cliente -> ACMEat ;
+			RichiestaValidità : ACMEat -> Banca ;
+			ValiditàToken : Banca -> ACMEat ;
+			// Token valido ?
+			(
+				// No
+				ErrorePagamento: ACMEat -> Cliente   |
+				AnnullamentoR : ACMEat -> Ristorante |
+				AnnullamentoS : ACMEat -> SDS        |
+			) + (
+				// Sì
+				AttivazioneOrdineR : ACMEat -> Ristorante |
+				AttivazioneOrdineS : ACMEat -> SDS        |
+				ConfermaOrdine: ACMEat -> Cliente ;
+
+				// Manca meno di un'ora ?
+				(
+					// No
+					// Annullare ?
+					(
+						// Sì
+						AnnullamentoOrdine: Cliente -> ACMEat ;
+						(
+							AnnullamentoPagamento: ACMEat -> Banca;
+							Rimborso: Banca -> Cliente;
+						) |
+						(
+							AnnullamentoR : ACMEat -> Ristorante;
+							RicevutoAnnullamento: Ristorante -> ACMEat;
+						) |
+						(
+							AnnullamentoS : ACMEat -> SDS;
+							RicevutoAnnullamento: SDS -> ACMEat;
+						)
+					) + (
+						// No
+						1
+					)
+				) + (
+					// Sì
+					(
+						PagamentoR : ACMEat -> Banca;
+						RicezionePagamentoR : Banca -> Ristorante;
+					) |
+					(
+						PagamentoS : ACMEat -> Banca;
+						RicezionePagamentoS : Banca -> SDS ;
+					) |
+					(
+						ConsegnaMerceF : Ristorante -> Fattorino ;
+						ConcegnaMerceC : Fattorino -> Cliente;
+						ConfermaRicevutaSpedizione: Fattorino -> ACMEat;
+					)
+				)
+			) + (
+				//Scadenza timer
+				ErrorePagamento: ACMEat -> Cliente |
+				(
+					Annullamento: ACMEat -> Ristorante;
+					RicevutoAnnullamento: Ristorante -> ACMEat;    
+				) |
+				(
+					Annullamento: ACMEat -> Corriere ;
+					RicevutoAnnullamento: Corriere -> ACMEat;
+				)
+			)
+		)
+	)
+)
+
+ModificaInformazioniLocali :==  (
+	RichiestaAggiornamento : Ristorante -> ACMEat ;
+	// Prima delle 10 ?
+	(
+		// No
+		RichiestaRifiutata : ACMEat -> Ristorante
+	) + (
+		// Sì
+		RichiestaAccettata : ACMEat -> Ristorante
+	)
+)
+\end{lstlisting}
+
+\subsection{Correctedness}
+
+\ldots
+
+\subsection{Proiezioni}
+
+\clearpage
+\subsubsection{ACMEat}
+
+\begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1]
+Coreografia :== (
+	CoreografiaRichiestaMenu |
+	CoreografiaOrdine |
+	ModificaInformazioniLocali 
+)  
+
+CoreografiaRichiestaMenu :==  (
+	SelezioneComune@Cliente; 
+	InvioListaLocali@Cliente 
+) 
+
+CoreografiaOrdine :==   ( 
+	Ordine@Cliente ;
+	Richiesta disponibilità ristorante@Ristorante ;
+	DisponibilitàR@Ristorante ;
+	// Disponibile ?
+	(
+		// No
+		Annullamento procedura@Cliente
+	) + (
+		// Sì
+		(
+			Richiesta disponibilità SDS@SDS ; 
+			(
+				// In 15 secondi
+				PreventivoDisponibilità@SDS +
+				1
+			)
+	)* ; 
+	// Lista vuota ? 
+	(
+		// Sì
+		AnnullamentoC@Cliente |
+		AnnullamentoR@Ristorante ;
+	) + (
+		// No
+		Contatta SDS costo minore@SDS ;
+		ACK@SDS ;
+		CreazioneRichiestaPagamento@Banca ;
+		ConfermaCreazioneTransazione@Banca ;
+		RedirezionePagamento@Cliente ;
+		// Modellazione timeout 
+		(
+			1;
+			1;
+			InvioTokenA@Cliente ;
+			RichiestaValidità@Banca ;
+			ValiditàToken@Banca ;
+			// Token valido ?
+			(
+				// No
+				ErrorePagamento@Cliente |
+				AnnullamentoR@Ristorante |
+				AnnullamentoS@SDS |
+			) + (
+				// Sì
+				AttivazioneOrdineR@Ristorante |
+				AttivazioneOrdineS@SDS |
+				ConfermaOrdine@Cliente ;
+				// Manca meno di un'ora ?
+				(
+					// No
+					// Annullare ?
+					(
+						// Sì
+						AnnullamentoOrdine@Cliente;
+						(
+							AnnullamentoPagamento@Banca ;
+							1 ;
+						) |
+						(
+							AnnullamentoR@Ristorante ;
+							RicevutoAnnullamento@RistorantE ;
+						) |
+						(
+							AnnullamentoS@SDS ;
+							RicevutoAnnullamento@SDS ;
+						)
+					) +
+					(
+						// No
+						1
+					) 
+				) +
+				(
+					// Sì
+					(
+						PagamentoR@Banca ;
+						1 ;
+					) |
+					(
+						PagamentoS@Banca ;
+						1 ;
+					) |
+					(
+						1 ;
+						1 ;
+						ConfermaRicevutaSpedizione@Fattorino ;
+					)
+				)
+			) +
+			(
+				//Scadenza timer
+				ErrorePagamento@Cliente |
+				(
+					Annullamento@Ristorante ;
+					RicevutoAnnullamento@Ristorante ;
+				) |
+				(
+					Annullamento@Corriere ;
+					RicevutoAnnullamento@Corriere ;
+				)
+			)
+		)
+	)
+) 
+
+ModificaInformazioniLocali :==  (
+	RichiestaAggiornamento@Ristorante ;
+	// Prima delle 10 ?
+	(
+		// No
+		RichiestaRifiutata@Ristorante
+	) +
+	(
+		// Sì
+		RichiestaAccettata@Ristorante
+	) 
+) 
+\end{lstlisting}
+
+\clearpage
+
+\subsubsection{Banca}
+
+\begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1]
+Coreografia :== (
+	CoreografiaRichiestaMenu |
+	CoreografiaOrdine |
+	ModificaInformazioniLocali
+) 
+
+CoreografiaRichiestaMenu :== (
+	1 ;
+	1
+) 
+
+CoreografiaOrdine :== (
+	1 ;
+	1 ;
+	1 ;
+	// Disponibile ?
+	(
+		// No
+		1
+	) +
+	(
+		// Sì
+		( 
+			1 ;
+			(
+				 // In 15 secondi
+				1 +
+				1
+			)
+		)* ;
+		// Lista vuota ?
+		(
+			// Sì
+			1 |
+			1 ;
+		) +
+		(
+			// No
+			1 ;
+			1 ;
+			CreazioneRichiestaPagamento@ACMEat ;
+			ConfermaCreazioneTransazione@ACMEat ;
+			1 ;
+			// Modellazione timeout
+			(
+				Pagamento@Cliente ;
+				InvioTokenC@Cliente ;
+				1 ;
+				RichiestaValidità@ACMEat ;
+				ValiditàToken@ACMEat ;
+				// Token valido ?
+				(
+					// No
+					1 |
+					1 |
+					1 |
+				) +
+				(
+					// Sì
+					1 |
+					1 |
+					1 ;
+					// Manca meno di un'ora ?
+					(
+						// No
+						// Annullare ?
+						(
+							// Sì
+							1 ;
+							(
+								AnnullamentoPagamento@ACMEat ;
+								Rimborso@Cliente ;
+							) |
+						(
+							1 ;
+							1 ;
+						) |
+						(
+							1 ;
+							1 ;
+						)
+					) +
+					(
+						// No
+						1
+					)
+				) +
+				(
+					// Sì
+					(
+						PagamentoR@ACMEat ;
+						RicezionePagamentoR@Ristorante ;
+					) |
+					(
+						PagamentoS@ACMEat ;
+						RicezionePagamentoS@SDS ;
+					) |
+					(
+						1 ;
+						1 ;
+						1 ;
+					)
+				)
+			) +
+			(
+				// Scadenza timer
+				1 |
+				(
+					1 ;
+					1 ;
+				) |
+				(
+					1 ;
+					1 ;
+				)
+			)
+		)
+	)
+)
+
+ModificaInformazioniLocali :== (
+	1 ;
+	// Prima delle 10 ?
+	(
+		// No
+		1
+	) +
+	(
+		// Sì
+		1
+	)
+)
+\end{lstlisting}
+
+\clearpage
+
+\subsubsection{Cliente}
+
+\begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1]
+Coreografia :== (
+	CoreografiaRichiestaMenu |
+	CoreografiaOrdine |
+	ModificaInformazioniLocali
+) 
+
+CoreografiaRichiestaMenu :== (
+	1 ;
+	InvioListaLocali@ACMEat
+) 
+
+CoreografiaOrdine :== (
+	Ordine@ACMEat ;
+	1 ;
+	1 ;
+	// Disponibile ?
+	(
+		// No
+		Annullamento procedura@ACMEat
+	) +
+	(
+		// Sì
+		(
+			1 ;
+			(
+				// In 15 secondi
+				1 +
+				1
+			)
+		)* ;
+		// Lista vuota ?
+		(
+			// Sì
+			AnnullamentoC@ACMEat |
+			1;
+		) +
+		(
+			// No
+			1 ;
+			1 ; 
+			1 ;
+			1 ;
+			RedirezionePagamento@ACMEat ;
+			// Modellazione timeout
+			(
+				Pagamento@Banca ;
+				InvioTokenC@Banca ;
+				InvioTokenA@ACMEat ;
+				1 ;
+				1 ;
+				// Token valido ?
+				(
+					// No
+					ErrorePagamento@ACMEat |
+					1 |
+					1
+				) +
+				(
+					// Sì
+					1 |
+					1 |
+					ConfermaOrdine@ACMEat ;
+					// Manca meno di un'ora ?
+					(
+						// No
+						// Annullare ?
+						(
+							// Sì
+							AnnullamentoOrdine@ACMEat ;
+							(
+								1 ;
+								Rimborso@Banca ;
+							) |
+							(
+								1 ;
+								1 ;
+							) |
+							(
+								1 ;
+								1
+							)
+						) +
+						(
+							// No
+							1
+						)
+					) +
+					(
+						// Sì
+						(
+							1 ;
+							1
+						) |
+						(
+							1 ;
+							1
+						) |
+						(
+							1 ;
+							ConcegnaMerceC@Fattorino ;
+							1
+						)
+					)
+				) +
+				(
+					//Scadenza timer
+					ErrorePagamento@ACMEat |
+					(
+						1 ;
+						1
+					) |
+					(
+						1 ;
+						1
+					)
+				)
+			)
+		)
+	)
+)
+
+ 
+
+ModificaInformazioniLocali :== (
+	1 ;
+	// Prima delle 10 ?
+	(
+		// No
+		1
+	) +
+	(
+		// Sì
+		1
+	)
+)
+\end{lstlisting}
+
+\clearpage
+
+\subsubsection{Fattorino}
+
+\begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1]
+Coreografia :== (
+	CoreografiaRichiestaMenu |
+	CoreografiaOrdine |
+	ModificaInformazioniLocali
+)
+
+CoreografiaRichiestaMenu :== (
+	1 ;
+	1
+) 
+
+CoreografiaOrdine :== (
+	1 ;
+	1 ;
+	1 ;
+	// Disponibile ?
+	(
+		// No
+		1
+	) +
+	(
+		// Sì
+		(
+			1 ;
+			( 
+				// In 15 secondi
+				1 +
+				1
+			)
+		)* ;
+		// Lista vuota ?
+		(
+			// Sì
+			1 |
+			1
+		) +
+		(
+			// No
+			1 ;
+			1 ;
+			1 ;
+			1 ;
+			1 ;
+			// Modellazione timeout 
+			(
+				1 ;
+				1 ;
+				1 ;
+				1 ;
+				1 ;
+				// Token valido ?
+				(
+					// No
+					1 |
+					1 |
+					1
+				) +
+				(
+					// Sì
+					1 |
+					1 |
+					1 ;
+                                        	// Manca meno di un'ora ?
+					(
+						// No
+						// Annullare ?
+						(
+							// Sì
+							1 ;
+							(
+								1 ;
+								1
+							) |
+							(
+								1 ;
+								1
+							) |
+							(
+								1 ;
+								1
+							)
+						) +
+						(
+							// No
+							1
+						)
+					) +
+					(
+						// Sì
+						(
+							1 ;
+							1
+						) |
+						(
+							1 ;
+							1
+						) |
+						(
+							ConsegnaMerceF@Ristorante ;
+							ConcegnaMerceC@Cliente ;
+							ConfermaRicevutaSpedizione@ACMEat
+						)
+					)
+				) +
+				(
+					// Scadenza timer
+					1 |
+					(
+						1 ;
+						1
+					) |
+					(
+						Annullamento@ACMEat ;
+						RicevutoAnnullamento@ACMEat ;
+					)
+				)
+			)
+		)
+	)
+)
+
+ModificaInformazioniLocali :== (
+	1 ;
+	// Prima delle 10 ?
+	(
+		// No
+		1
+	) + (
+		// Sì
+		1
+	)
+)
+\end{lstlisting}
+
+\clearpage
+
+\subsubsection{Ristorante}
+
+\begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1]
+Coreografia :== (
+	CoreografiaRichiestaMenu |
+	CoreografiaOrdine |
+	ModificaInformazioniLocali
+) 
+
+CoreografiaRichiestaMenu :== (
+	1 ;
+	1
+)
+
+CoreografiaOrdine :== (
+	1 ;
+	Richiesta disponibilità ristorante@ACMEat ;
+	DisponibilitàR@ACMEat ;
+	// Disponibile ?
+	(
+		// No
+		1
+	) +
+	(
+		// Sì
+		(
+			1 ;
+			(
+				// In 15 secondi
+				1 +
+				1
+			)
+		)* ;
+		// Lista vuota ?
+		(
+			// Sì
+			1 |
+			AnnullamentoR@ACMEat
+		) +
+		(
+			// No
+			1 ;
+			1 ;
+			1 ;
+			1 ;
+			1 ;
+			// Modellazione timeout
+			(
+				1 ;
+				1 ;
+				1 ;
+				1 ;
+				1 ;
+				// Token valido ?
+				(
+					// No
+					1 |
+					AnnullamentoR@ACMEat |
+					1
+				) +
+				(
+					// Sì
+					AttivazioneOrdineR@ACMEat |
+					1 |
+					1 ;
+					// Manca meno di un'ora ?
+					(
+						// No
+						// Annullare ?
+						(
+							// Sì
+							1 ;
+							(
+								1 ;
+								1
+							) |
+							(
+								AnnullamentoR @ACMEat ;
+								RicevutoAnnullamento@ACMEat
+							) |
+							(
+								1 ;
+								1
+							)
+						) +
+						(
+							// No
+							1
+						)
+					) +
+					(
+						// Sì
+						(
+							1 ;
+							RicezionePagamentoR@Banca ;
+						) |
+						(
+							1 ;
+							1
+						) |
+						(
+							1 ;
+							1;
+							1
+						)
+					)
+				) +
+				(
+					// Scadenza timer
+					1 |
+					(
+						Annullamento@ACMEat ;
+						RicevutoAnnullamento@ACMEat
+					) |
+					(
+						1 ;
+						1
+					)
+				)
+			)
+		)
+	)
+)
+ 
+
+ModificaInformazioniLocali :== (
+	RichiestaAggiornamento@ACMEat ;
+	// Prima delle 10 ?
+	(
+		// No
+		RichiestaRifiutata@ACMEat
+	) +
+	(
+		// Sì
+		RichiestaAccettata@ACMEat
+	)
+) 
+\end{lstlisting}
+
+\clearpage
+
+\subsubsection{Servizio di spedizione}
+
+\begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1]
+Coreografia :== (
+	CoreografiaRichiestaMenu |
+	CoreografiaOrdine |
+	ModificaInformazioniLocali
+)
+
+CoreografiaRichiestaMenu :== (
+	1 ;
+	1
+)
+
+CoreografiaOrdine :==   (
+	1 ;
+	1 ;
+	1 ;
+	// Disponibile ?
+	(
+		// No
+		1
+	) +
+	(
+		// Sì
+		(
+			Richiesta disponibilità SDS@ACMEat ;
+			(
+				// In 15 secondi
+				PreventivoDisponibilità@ACMEat +
+				1
+			)
+		)* ;
+		// Lista vuota ?
+		(
+			// Sì
+			1 |
+			1
+		) +
+		(
+			// No
+			Contatta SDS costo minore@ACMEat ;
+			ACK@ACMEat ;
+			1 ;
+			1 ;
+			1 ;
+			// Modellazione timeout
+			(
+				1 ;
+				1 ;
+				1 ;
+				1 ;
+				1 ;
+				// Token valido ?
+				(
+					// No
+					1 |
+					1 |
+					AnnullamentoS@ACMEat |
+				) +
+				(
+					// Sì
+					1 |
+					AttivazioneOrdineS@ACMEat |
+					1 ;
+					// Manca meno di un'ora ?
+					(
+						// No
+						// Annullare ?
+						(
+							// Sì
+							1 ;
+							(
+								1 ;
+								1
+							) |
+							(
+								1 ;
+								1
+							) |
+							(
+								AnnullamentoS@ACMEat ;
+								RicevutoAnnullamento@ACMEat
+							)
+						) +
+						(
+							// No
+							1
+						)
+					) +
+					(
+						// Sì
+						(
+							1 ;
+							1
+						) |
+						(
+							PagamentoS : ACMEat -> Banca ;
+							RicezionePagamentoS : Banca -> SDS ;
+					) |
+					(
+						1 ;
+						1 ;
+						1
+					)
+				)
+			) +
+			(
+				// Scadenza timer
+				1 |
+				(
+					1 ;
+					1
+				) |
+				(
+					1 ;
+					1
+				)
+			)
+		)
+	)
+) 
+
+ModificaInformazioniLocali :== (
+	1 ;
+	// Prima delle 10 ?
+	(
+		// No
+		1
+	) +
+	(
+		// Sì
+		1
+	)
+) 
+\end{lstlisting}
+
 \end{document}

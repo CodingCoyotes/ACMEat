@@ -17,6 +17,7 @@ python-multipart = "^0.0.5"
 camunda-external-task-client-python3 = "^4.3.0"
 lazy-object-proxy = "^1.7.1"
 psycopg2-binary = "^2.9.5"
+pycamunda = "^0.6.1"
 
 [tool.poetry.dev-dependencies]
 

@@ -15,7 +15,7 @@ def deliverer_preview(order_id):
             return {"order_id": order_id.value}
         restaurant: Restaurant = order.contents[0].menu.restaurant
         deliverers: Deliverer = db.query(Deliverer).all()
-        search_radius = 15  # Search radius in km, around the restaurant
+        search_radius = 10  # Search radius in km, around the restaurant
 
         for deliverer in deliverers:
             r = requests.post(GEOLOCATE_URL + "/api/geo/v1/distance",

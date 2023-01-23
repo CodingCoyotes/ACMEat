@@ -37,5 +37,4 @@ if __name__ == '__main__':
         func=payment_received,
         variables=['order_id']
     )
-
     worker.run()

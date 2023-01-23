@@ -85,7 +85,7 @@ class Time(base.ACMEModel):
 class RestaurantEdit(base.ACMEORMModel):
     name: str
     address: str
-    coords: Coords
+    number: str
     open_times: t.List[Time]
     closed: bool
     city_id: UUID
@@ -144,9 +144,18 @@ class CityEdit(base.ACMEORMModel):
 class DelivererEdit(base.ACMEORMModel):
     name: str
     api_url: str
+    nation: str
+    city: str
     address: str
+    number: str
+    external_api_key: str
+    api_key: UUID
 
 
 class OrderCreation(base.ACMEModel):
     contents: typing.List[ContentEdit]
     delivery_time: datetime
+    address: str
+    number: str
+    city: str
+    nation: str

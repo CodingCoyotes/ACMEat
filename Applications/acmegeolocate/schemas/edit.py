@@ -14,7 +14,7 @@ class Address(base.ACMEModel):
     nation: str
     city: str
     roadname: str
-    number: int
+    number: str
 
     def __repr__(self):
         return f"{self.number},{self.roadname},{self.city},{self.nation}"

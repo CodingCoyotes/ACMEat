@@ -73,7 +73,7 @@ async def create_delivery(delivery_request: acmedeliver.schemas.edit.ClientDeliv
     target = quick_retrieve(db, models.Client, api_key=delivery_request.api_key)
     if not target:
         raise errors.Forbidden
-    # Todo: Aggiungi funzione calcolo costo, logica selezione utente che deve consegnare il tutto
+    # Todo: Aggiungi funzione calcolo costo
     return acmedeliver.schemas.edit.DeliveryPreviewCost(cost=1.0)
 
 

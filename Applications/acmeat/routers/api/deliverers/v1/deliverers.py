@@ -45,7 +45,9 @@ async def create_deliverer(deliverer: acmeat.schemas.edit.DelivererEdit,
     if current_user.kind != acmeat.database.enums.UserType.admin:
         raise errors.Forbidden
     return quick_create(db, models.Deliverer(name=deliverer.name, api_url=deliverer.api_url,
-                                             address=deliverer.address))
+                                             address=deliverer.address, city=deliverer.city,
+                                             nation=deliverer.nation, number=deliverer.number,
+                                             external_api_key=deliverer.external_api_key))
 
 
 @router.put("/{deliverer_id}", response_model=acmeat.schemas.read.DelivererRead)

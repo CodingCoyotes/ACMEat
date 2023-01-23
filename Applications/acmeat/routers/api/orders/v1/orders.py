@@ -46,7 +46,8 @@ async def create_order(restaurant_id: str, order_data: acmeat.schemas.edit.Order
                        db: Session = Depends(dep_dbsession),
                        current_user: models.User = Depends(get_current_user)):
     order = quick_create(db, models.Order(status=OrderStatus.w_restaurant_ok, delivery_time=order_data.delivery_time,
-                                          user_id=current_user.id))
+                                          user_id=current_user.id, nation=order_data.nation, number=order_data.number,
+                                          address=order_data.address, city=order_data.city))
     total = 0
     for elem in order_data.contents:
         # Ensures no menu mix-up in order (all menus must be from same restaurant)

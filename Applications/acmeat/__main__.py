@@ -1,5 +1,6 @@
 import os
 
+import bcrypt
 import uvicorn
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,6 +14,7 @@ from acmeat.authentication import Token, authenticate_user, create_token, get_ha
 from acmeat.crud import *
 from acmeat.database import models
 from acmeat.database.db import Session, engine
+from acmeat.database.enums import UserType
 
 from acmeat.routers.api.users.v1 import users
 from acmeat.routers.api.restaurants.v1 import restaurants
@@ -22,7 +24,6 @@ from acmeat.routers.api.deliverers.v1 import deliverers
 from acmeat.routers.api.orders.v1 import orders
 
 from acmeat.configuration import setting_required
-from acmeat.services.test_services import echo_task
 from acmeat.errors import *
 from acmeat.handlers import *
 
@@ -75,5 +76,11 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
 if __name__ == "__main__":
     BIND_IP = setting_required("BIND_IP")
     BIND_PORT = setting_required("BIND_PORT")
+    with Session() as db:
+        if not db.query(models.User).all():
+            db.add(models.User(name="Admin", surname="Admin", email="admin@admin.com",
+                               password=bcrypt.hashpw(bytes("password", encoding="utf-8"),
+                                                      bcrypt.gensalt()), kind=UserType.admin))
+            db.commit()
     uvicorn.run(app, host=BIND_IP, port=int(BIND_PORT), debug=True)
 

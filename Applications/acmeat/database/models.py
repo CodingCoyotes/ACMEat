@@ -29,7 +29,7 @@ class Restaurant(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String, nullable=False)
     address = Column(String, nullable=False)
-    coords = Column(JSON, nullable=False)
+    number = Column(String, nullable=False)
     open_times = Column(JSON, nullable=False)
     closed = Column(Boolean, default=False, nullable=False)
 
@@ -63,6 +63,10 @@ class Order(Base):
     restaurant_total = Column(Float)
     deliverer_total = Column(Float)
     status = Column(Enum(OrderStatus), nullable=False)
+    nation = Column(String, nullable=False)
+    city = Column(String, nullable=False)
+    address = Column(String, nullable=False)
+    number = Column(String, nullable=False)
 
     user_id = Column(UUID(as_uuid=True), ForeignKey("user.id"))
     user = relationship("User", back_populates="orders")
@@ -98,6 +102,10 @@ class Deliverer(Base):
     name = Column(String, unique=True, nullable=False)
     api_url = Column(String, unique=True, nullable=False)
     api_key = Column(UUID(as_uuid=True), nullable=False, unique=True, default=uuid.uuid4)
+    nation = Column(String, nullable=False)
+    city = Column(String, nullable=False)
     address = Column(String, nullable=False)
+    number = Column(String, nullable=False)
+    external_api_key = Column(String, nullable=False)
 
     orders = relationship("Order", back_populates="deliverer")

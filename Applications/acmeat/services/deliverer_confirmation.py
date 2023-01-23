@@ -4,7 +4,7 @@ import requests
 import json
 
 
-def deliverer_confirmation(order_id):
+def deliverer_confirmation(order_id, success):
     print(f"[{order_id.value}] Starting deliverer confirmation routine...")
     with Session(future=True) as db:
         order: Order = db.query(Order).filter_by(id=order_id.value).first()
@@ -28,4 +28,4 @@ def deliverer_confirmation(order_id):
         order.status = OrderStatus.confirmed_by_thirds
         db.commit()
     print(f"[{order_id.value}] deliverer confirmation routine complete!")
-    return {"order_id": order_id.value}
+    return {"order_id": order_id.value, "success": success.value}

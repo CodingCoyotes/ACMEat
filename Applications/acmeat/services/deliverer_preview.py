@@ -5,7 +5,8 @@ import requests
 import json
 
 
-def deliverer_preview(order_id):
+def deliverer_preview(order_id, success):
+    print(f"[{order_id.value}] Order ready for delivery")
     print(f"[{order_id.value}] Starting deliverer preview routine...")
     GEOLOCATE_URL = setting_required("GEOLOCATE_SERVICE")
     candidates = []
@@ -62,4 +63,4 @@ def deliverer_preview(order_id):
             order.deliverer_id = sorted_by_price[0]["deliverer"].id
         db.commit()
     print(f"[{order_id.value}] deliverer preview routine complete!")
-    return {"order_id": order_id.value}
+    return {"order_id": order_id.value, "success":success.value}

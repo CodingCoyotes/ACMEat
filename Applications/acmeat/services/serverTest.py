@@ -15,26 +15,26 @@ if __name__ == '__main__':
     worker.subscribe(
         topic='restaurant_confirmation',
         func=restaurant_confirmation,
-        variables=['order_id']
+        variables=['order_id', 'success']
     )
     worker.subscribe(
         topic='deliverer_preview',
         func=deliverer_preview,
-        variables=['order_id']
+        variables=['order_id', 'success']
     )
     worker.subscribe(
         topic='deliverer_confirmation',
         func=deliverer_confirmation,
-        variables=['order_id']
+        variables=['order_id', 'success']
     )
     worker.subscribe(
         topic='payment_request',
         func=payment_request,
-        variables=['order_id']
+        variables=['order_id', 'success']
     )
     worker.subscribe(
         topic='payment_received',
         func=payment_received,
-        variables=['order_id']
+        variables=['order_id', 'success']
     )
     worker.run()

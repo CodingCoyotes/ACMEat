@@ -94,14 +94,8 @@ class Worker:
     def run(self):
         """Run the worker."""
         threadlist = []
-        executed = []
         while not self.stopped:
             tasks = self.fetch_and_lock()
-            if len(tasks) > 1000:
-                executed = executed[500:]
-            if len(tasks) == 0 or tasks[0].execution_id in executed:
-                continue
-            executed.append(tasks[0].execution_id)
             thread = Thread(target=work, args=(self, tasks))
             threadlist.append(thread)
             thread.start()
@@ -141,4 +135,5 @@ def work(worker, tasks):
             complete_task.id_ = task.id_
             for variable, value in return_variables.items():
                 complete_task.add_variable(name=variable, value=value)
-            complete_task()
+            if return_variables['success']:
+                complete_task()

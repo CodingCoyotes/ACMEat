@@ -24,10 +24,10 @@ main
 	login( lrequest )( lresponse ) {
 		// connect to DB
 		with ( connectionInfo ) {
-			.username = "postgres";
+			.username = "alberto";
 			.password = "password";
 			.host = "";
-			.database = "bank_database";
+			.database = "bank";
 			.driver = "postgresql"
 		};
 
@@ -35,21 +35,26 @@ main
 
 		// print inserted content
 		queryRequest =
-			"SELECT id, name, count FROM bank_users " +
-			"WHERE name=:name;";
-		username = lrequest.name;
-		queryRequest.name = username;
+			"SELECT id, username, password, balance FROM users " +
+			"WHERE username=:username;";
+		username = lrequest.username;
+		queryRequest.username = username;
 		query@Database( queryRequest )( queryResponse );
 
 		lresponse.sid = csets.sid = new;
 		if (#queryResponse.row < 1) {
-			lresponse.message = "An error has occured.\tUser " + username + " not found."
+			lresponse.message = "An error has occured.\tUser " + username + " not found.";
 			lresponse.successfull = false
 		} else {
-			fromUserId = int(queryResponse.id);
-			lresponse.message = "You are logged in."
-			lresponse.successfull = true
-			println@Console("User " + username + " logged in.")() // DEBUG
+			if (lrequest.password != queryResponse.row[0].password) {
+				lresponse.message = "An error has occured.\t Wrong password for user " + username + ".";
+				lresponse.successfull = false
+			} else {
+				fromUserId = int(queryResponse.id);
+				lresponse.message = "You are logged in.";
+				lresponse.successfull = true;
+				println@Console("User " + username + " logged in.")() // DEBUG
+			}
 		}
 	};
 	while( keepRunning ){
@@ -116,52 +121,55 @@ main
 			synchronized(db_access) {
 				// check if toUser exists
 				queryRequest =
-					"SELECT id, name, count FROM bank_users " +
-					"WHERE name=:name;";
+					"SELECT id, username, balance FROM users " +
+					"WHERE id::text=:toUser;";
 				toUser = prequest.toUser;
-				queryRequest.name = toUser;
+				queryRequest.toUser = toUser;
 				query@Database( queryRequest )( queryResponse );
 				if (#queryResponse.row < 1) {
 					presponse.successfull = false
 					presponse.message = "An error has occured.\tUser " + toUser + " not found."
 				} else {
-					toUserId = int(queryResponse.id);
+					toUserName = queryResponse.row[0].username;
 					presponse.successfull = true
 					// withdraw from fromUser
 					queryRequest =
-						"SELECT count, report FROM bank_users " +
-						"WHERE name=:name;";
-					queryRequest.name = username;
+						"SELECT balance FROM users " +
+						"WHERE username=:username;";
+					queryRequest.username = username;
 					query@Database( queryRequest )( queryResponse );
 					update@Database(
-						"update bank_users set count=:count, report=:report where name=:name" {
-							.count = queryResponse.row[0].count - prequest.amount,
-							.report = queryResponse.row[0].report + "Payed " + prequest.amount + " to " + toUser + "\n",
-							.name = username
+						"update users set balance=:balance where username=:username" {
+							.balance = queryResponse.row[0].balance - prequest.amount,
+							.username = username
 						}
 					)(dbresponse.status)
+					// TODO: INSERT INTO OPERATIONS
 					// deposit to toUser
 					queryRequest =
-						"SELECT count, report FROM bank_users " +
-						"WHERE name=:name;";
-					queryRequest.name = toUser;
+						"SELECT balance FROM users " +
+						"WHERE id::text=:toUser;";
+					queryRequest.toUser = toUser;
 					query@Database( queryRequest )( queryResponse );
 					update@Database(
-						"update bank_users set count=:count, report=:report where name=:name" {
-							.count = queryResponse.row[0].count + prequest.amount,
-							.report = queryResponse.row[0].report + "Received " + prequest.amount + " from " + username + " \n",
-							.name = toUser
+						"update users set balance=:balance where id::text=:toUser" {
+							.balance = queryResponse.row[0].balance + prequest.amount,
+							.toUser = toUser
 						}
 					)(dbresponse.status)
 					println@Console( "Moved " + prequest.amount + " from " + username +" to " + toUser )() // DEBUG
+					
 					// TODO generate token and store in transaction database
 					// https://docs.jolie-lang.org/v1.10.x/language-tools-and-standard-library/standard-library-api/string_utils.html#getRandomUUID
+					getRandomUUID@StringUtils()( id )
 					getRandomUUID@StringUtils()( token )
 					update@Database(
-						"insert into bank_transactions(from_user, to_user, amount, transaction_token) values (:fromUser, :toUser, :amount, :token)" {
-							.fromUser = fromUserId,
-							.toUser = toUserId,
+						"insert into operations(id, source_user, dest_user, amount, type, token) values (:id::uuid, :fromUser, :toUser, :amount, :type, :token::uuid)" {
+							.id = id,
+							.fromUser = username,
+							.toUser = toUserName,
 							.amount = prequest.amount,
+							.type = 2, // 0: deposit, 1: withdraw, 2: move
 							.token = token
 						}
 					)(dbresponse.status);

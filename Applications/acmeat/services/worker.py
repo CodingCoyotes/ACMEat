@@ -101,7 +101,10 @@ class Worker:
             thread.start()
         print("Shutting down worker...")
         for thread in threadlist:
-            thread.join()
+            try:
+                thread.join()
+            except Exception:
+                pass
 
 
 def work(worker, tasks):

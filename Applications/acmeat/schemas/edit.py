@@ -159,3 +159,7 @@ class OrderCreation(base.ACMEModel):
     number: str
     city: str
     nation: str
+
+
+class PaymentEdit(base.ACMEORMModel):
+    bank_id: UUID

@@ -7,7 +7,18 @@ import LoginForm from "./LoginForm";
 
 export default function Pay() {
     const data = useParams()
-    const {token, setToken} = useAppContext()
+    const {token} = useAppContext()
+
+    useEffect(()=>{
+        if(token!=null) {
+            pay()
+        }
+    }, [token])
+
+    async function pay(){
+        console.debug("Pay!")
+    }
+
     return (
         <div className={Style.Landing}>
             <div className={Style.lander} style={{minWidth: "unset"}}>
@@ -17,9 +28,17 @@ export default function Pay() {
                 </p>
 
             </div>
-            <Panel style={{minWidth: "unset"}}>
-                <LoginForm/>
-            </Panel>
+            {token === null &&
+                <Panel style={{minWidth: "unset"}}>
+                    <LoginForm/>
+                </Panel>
+            }
+            {token !== null &&
+                <Panel>
+                    Pagamento in corso, attendere prego...
+                </Panel>
+            }
+
         </div>
     );
 }

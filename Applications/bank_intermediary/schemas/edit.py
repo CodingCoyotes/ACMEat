@@ -2,14 +2,15 @@ import typing as t
 from bank_intermediary.schemas import base
 
 __all__ = (
-    "LoginRequest",
-    "LoginResponse"
+    "Request",
+    "Response"
 )
 
 
-class LoginRequest(base.ACMEModel):
-    username: str
+class Request(base.ACMEModel):
+    xml: str
+    action: str
 
 
-class LoginResponse(base.ACMEModel):
-    sid: str
+class Response(base.ACMEModel):
+    xml: str

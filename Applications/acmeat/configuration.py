@@ -59,7 +59,9 @@ def setting_optional(name) -> typing.Optional[str]:
 # ROOT_URL = setting_required("ROOT_URL")
 JWT_KEY = setting_required("JWT_KEY")
 DB_URI = setting_required("DB_URI")
-
+BANK_URI = setting_required("BANK_URI")
+BANK_USERNAME = setting_required("BANK_USERNAME")
+BANK_PASSWORD = setting_required("BANK_PASSWORD")
 # Also required, but not set here:
 # BIND_IP
 # BIND_PORT

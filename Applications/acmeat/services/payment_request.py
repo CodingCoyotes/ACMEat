@@ -6,7 +6,7 @@ def payment_request(order_id, success):
     print(f"[{order_id.value}] Starting payment request routine...")
     with Session(future=True) as db:
         order: Order = db.query(Order).filter_by(id=order_id.value).first()
-        if len(order.payment) == 0:
+        if not order.payment:
             success.value = False
             order.status = OrderStatus.w_payment
             db.commit()

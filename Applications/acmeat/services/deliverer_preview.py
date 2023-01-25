@@ -13,7 +13,9 @@ def deliverer_preview(order_id, success):
     with Session(future=True) as db:
         order: Order = db.query(Order).filter_by(id=order_id.value).first()
         if not order:
-            return {"order_id": order_id.value}
+            return {"order_id": order_id.value, "success":success.value}
+        if order.status.value > OrderStatus.w_deliverer_ok.value:
+            return {"order_id": order_id.value, "success":success.value}
         restaurant: Restaurant = order.contents[0].menu.restaurant
         deliverers: Deliverer = db.query(Deliverer).all()
         search_radius = 10  # Search radius in km, around the restaurant

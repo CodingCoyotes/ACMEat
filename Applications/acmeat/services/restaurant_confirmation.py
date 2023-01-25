@@ -10,6 +10,6 @@ def restaurant_confirmation(order_id, success):
         order: Order = db.query(Order).filter_by(id=order_id.value).first()
         if not order:
             pass
-        elif order.status == OrderStatus.w_deliverer_ok:
+        elif order.status.value >= OrderStatus.w_deliverer_ok.value:
             success.value = True
     return {"order_id":order_id.value, "success":success.value}

@@ -10,6 +10,8 @@ def deliverer_confirmation(order_id, success):
         order: Order = db.query(Order).filter_by(id=order_id.value).first()
         #if not order:
         #    return {"order_id": order_id.value}
+        if order.status.value > OrderStatus.w_deliverer_ok.value:
+            return {"order_id": order_id.value, "success":success.value}
         deliverer: Deliverer = order.deliverer
         restaurant: Restaurant = order.contents[0].menu.restaurant
         r = requests.post(deliverer.api_url + "/api/delivery/v1",

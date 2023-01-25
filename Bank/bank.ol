@@ -10,7 +10,7 @@ inputPort Bank {
 }
 
 cset {
-	sid: OpMessage.sid WithdrawRequest.sid DepositRequest.sid ReportRequest.sid ReportResponse.sid PaymentRequest.sid PaymentResponse.sid
+	sid: OpMessage.sid WithdrawRequest.sid DepositRequest.sid ReportRequest.sid ReportResponse.sid PaymentRequest.sid PaymentResponse.sid OperationReportRequest.sid OperationReportResponse.sid
 }
 
 execution {
@@ -39,7 +39,7 @@ main
 				"WHERE username=:username;";
 			username = lRequest.username;
 			queryRequest.username = username;
-			query@Database( queryRequest )( queryResponse );
+			query@Database( queryRequest )( queryResponse )
 		};
 		lResponse.sid = csets.sid = new;
 		if ( #queryResponse.row < 1 ) {
@@ -76,11 +76,11 @@ main
 						"insert into operations(id, source_user, amount, type, token) values (:id::uuid, :fromUser, :amount, :type, :token::uuid)" {
 							.id = id,
 							.fromUser = username,
-							.amount = pRequest.amount,
+							.amount = wRequest.amount,
 							.type = 0, // 0: withdraw, 1: deposit, 2: move
 							.token = token
 						}
-					)(dbresponse.status);
+					)(dbresponse.status)
 			};
 			println@Console( "User " + username + " withdrawn: " + wRequest.amount )() // DEBUG
 		}
@@ -103,24 +103,50 @@ main
 						"insert into operations(id, dest_user, amount, type, token) values (:id::uuid, :toUser, :amount, :type, :token::uuid)" {
 							.id = id,
 							.toUser = username,
-							.amount = pRequest.amount,
+							.amount = dRequest.amount,
 							.type = 1, // 0: withdraw, 1: deposit, 2: move
 							.token = token
 						}
-					)(dbresponse.status);
+					)(dbresponse.status)
 			};
 			println@Console( "User " + username + " deposited: " + dRequest.amount )() // DEBUG
 		}
 		[ report( rRequest )( rResponse ) {
-			rResponse.sid = request.sid;
+			rResponse.sid = rRequest.sid;
 			synchronized( db_access ) {
 				queryRequest =
-					"SELECT source_user, dest_user, amount, type FROM operations " +
-					"WHERE fromUser=:username OR toUser=:username;";
+					"SELECT source_user, dest_user, amount, type, token FROM operations " +
+					"WHERE source_user=:username OR dest_user=:username;";
 				queryRequest.username = username;
 				query@Database( queryRequest )( queryResponse );
-				
-				rResponse.message = queryResponse.row[0].report + "Currently available: " + queryResponse.row[0].count + "\n"
+				for ( i = 0, i < #queryResponse.row, i++) {
+					rResponse.report[i].source_user = queryResponse.row[i].source_user
+					rResponse.report[i].dest_user = queryResponse.row[i].dest_user
+					rResponse.report[i].amount = queryResponse.row[i].amount
+					rResponse.report[i].type = queryResponse.row[i].type
+					rResponse.report[i].token = queryResponse.row[i].token
+				}		
+			}
+		}]
+		[ operationReport( oRequest )( oResponse ) {
+			oResponse.sid = oRequest.sid;
+			synchronized( db_access ) {
+				queryRequest =
+					"SELECT source_user, dest_user, amount, type, token FROM operations " +
+					"WHERE (source_user=:username OR dest_user=:username) AND token::text=:token;";
+				queryRequest.username = username;
+				queryRequest.token = oRequest.token;
+				query@Database( queryRequest )( queryResponse );
+				if ( #queryResponse.row < 1 ) {
+					oResponse.successfull = false
+				} else {
+					oResponse.report.source_user = queryResponse.row[0].source_user;
+					oResponse.report.dest_user = queryResponse.row[0].dest_user;
+					oResponse.report.amount = queryResponse.row[0].amount;
+					oResponse.report.type = queryResponse.row[0].type;
+					oResponse.report.token = queryResponse.row[0].token;
+					oResponse.successfull = true
+				}
 			}
 		}]
 		[ logout( request )] { 

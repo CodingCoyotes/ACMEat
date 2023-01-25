@@ -19,9 +19,9 @@ type ReportRequest: void {
 	.sid: string
 }
 
-type ReportResponse: void{
+type ReportResponse: void {
 	.sid: string
-	.message?: string
+	.message*: string
 }
 
 type WithdrawRequest: void {

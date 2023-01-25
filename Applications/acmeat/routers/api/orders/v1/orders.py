@@ -85,3 +85,13 @@ async def update_order(order_id: UUID, request:Request, order_data: acmeat.schem
     order.status = order_data.status
     db.commit()
     return order
+
+
+@router.post("/{order_id}/payment/", response_model=acmeat.schemas.read.PaymentRead)
+def pay_order(order_id: UUID, payment_data: acmeat.schemas.edit.PaymentEdit,
+              db: Session = Depends(dep_dbsession),
+              current_user: models.User = Depends(get_current_user)):
+    order = quick_retrieve(db, models.Order, id=order_id)
+    if not (order.user_id == current_user.id):
+        raise errors.Forbidden
+    return quick_create(db, models.Payment(bank_id=payment_data.bank_id, order_id=order.id))

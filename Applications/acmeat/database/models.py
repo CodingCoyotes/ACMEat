@@ -73,6 +73,19 @@ class Order(Base):
     contents = relationship("Content", back_populates="order")
     deliverer_id = Column(UUID(as_uuid=True), ForeignKey("deliverer.id"))
     deliverer = relationship("Deliverer", back_populates="orders")
+    payment = relationship("Payment", back_populates="order")
+
+
+class Payment(Base):
+    __tablename__ = "payment"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    bank_id = Column(UUID(as_uuid=True), unique=True)
+    date = Column(DateTime, default=datetime.datetime.now, nullable=False)
+    verified = Column(Boolean, default=False, nullable=False)
+
+    order_id = Column(UUID(as_uuid=True), ForeignKey("order.id"), unique=True)
+    order = relationship("Order", back_populates="payment")
 
 
 class Content(Base):

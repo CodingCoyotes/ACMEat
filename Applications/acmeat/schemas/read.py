@@ -47,3 +47,9 @@ class CityRead(edit.CityEdit):
 
 class DelivererRead(edit.DelivererEdit):
     id: UUID
+
+
+class PaymentRead(edit.PaymentEdit):
+    id: UUID
+    order_id: UUID
+    verified: bool

@@ -34,6 +34,7 @@ class ContentFull(read.ContentRead):
 
 class OrderFull(read.OrderRead):
     user: read.UserRead
+    payment: t.Optional[read.PaymentRead]
     contents: t.List[ContentFull]
     deliverer: t.Optional[read.DelivererRead]
 
@@ -44,3 +45,7 @@ class CityFull(read.CityRead):
 
 class DelivererFull(read.DelivererRead):
     orders: t.List[read.OrderRead]
+
+
+class PaymentFull(read.PaymentRead):
+    order: read.OrderRead

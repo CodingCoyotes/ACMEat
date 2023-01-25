@@ -10,7 +10,7 @@ inputPort Bank {
 }
 
 cset {
-	sid: OpMessage.sid WithdrawRequest.sid DepositRequest.sid ReportRequest.sid ReportResponse.sid PaymentRequest.sid PaymentResponse.sid OperationReportRequest.sid OperationReportResponse.sid
+	sid: OpMessage.sid WithdrawRequest.sid DepositRequest.sid ReportRequest.sid ReportResponse.sid PaymentRequest.sid PaymentResponse.sid OperationReportRequest.sid OperationReportResponse.sid CancelOperationRequest.sid CancelOperationResponse.sid
 }
 
 execution {
@@ -51,8 +51,8 @@ main
 				lResponse.successfull = false
 			} else {
 				lResponse.message = "You are logged in.";
-				lResponse.successfull = true;
-				println@Console("User " + username + " logged in.")() // DEBUG
+				lResponse.successfull = true
+				//println@Console("User " + username + " logged in.")() // DEBUG
 			}
 		}
 	};
@@ -81,8 +81,8 @@ main
 							.token = token
 						}
 					)(dbresponse.status)
-			};
-			println@Console( "User " + username + " withdrawn: " + wRequest.amount )() // DEBUG
+			}
+			//println@Console( "User " + username + " withdrawn: " + wRequest.amount )() // DEBUG
 		}
 		[ deposit( dRequest )] {
 			synchronized( db_access ) {
@@ -108,8 +108,8 @@ main
 							.token = token
 						}
 					)(dbresponse.status)
-			};
-			println@Console( "User " + username + " deposited: " + dRequest.amount )() // DEBUG
+			}
+			//println@Console( "User " + username + " deposited: " + dRequest.amount )() // DEBUG
 		}
 		[ report( rRequest )( rResponse ) {
 			rResponse.sid = rRequest.sid;
@@ -149,8 +149,61 @@ main
 				}
 			}
 		}]
+		[ cancelOperation( cRequest )( cResponse ) {
+			cResponse.sid = cRequest.sid;
+			token = cRequest.token;
+			synchronized( db_access ) {
+				queryRequest =
+					"SELECT source_user, dest_user, amount, type, token FROM operations " +
+					"WHERE (source_user=:username OR dest_user=:username) AND token::text=:token;";
+				queryRequest.username = username;
+				queryRequest.token = token;
+				query@Database( queryRequest )( queryResponse );
+				if ( #queryResponse.row < 1 ) {
+					cResponse.message = "Error: operation not found.";
+					cResponse.successfull = false
+				} else {
+					source_user = queryResponse.row[0].source_user;
+					dest_user = queryResponse.row[0].dest_user;
+					amount = queryResponse.row[0].amount;
+					// Revert payment (invert source and dest user)
+					// withdraw from dest_user
+					queryRequest =
+						"SELECT balance FROM users " +
+						"WHERE username=:username;";
+					queryRequest.username = dest_user;
+					query@Database( queryRequest )( queryResponse );
+					update@Database(
+						"update users set balance=:balance where username=:username" {
+							.balance = queryResponse.row[0].balance - amount,
+							.username = dest_user
+						}
+					)(dbresponse.status);
+					// deposit to source_user
+					queryRequest =
+						"SELECT balance FROM users " +
+						"WHERE username=:toUser;";
+					queryRequest.toUser = source_user;
+					query@Database( queryRequest )( queryResponse );
+					update@Database(
+						"update users set balance=:balance where username=:toUser" {
+							.balance = queryResponse.row[0].balance + amount,
+							.toUser = source_user
+						}
+					)(dbresponse.status);
+					// Delete operation
+					update@Database(
+						"delete from operations where token::text=:token" {
+							.token = token
+						}
+					)(dbresponse.status);
+					cResponse.message = "OK";
+					cResponse.successfull = true
+				}
+			}
+		}]
 		[ logout( request )] { 
-			println@Console("User " + username + " logged out.")(); // DEBUG
+			//println@Console("User " + username + " logged out.")(); // DEBUG
 			keepRunning = false
 		}
 
@@ -190,7 +243,6 @@ main
 							.username = username
 						}
 					)(dbresponse.status)
-					// TODO: INSERT INTO OPERATIONS
 					// deposit to toUser
 					queryRequest =
 						"SELECT balance FROM users " +
@@ -203,7 +255,7 @@ main
 							.toUser = toUser
 						}
 					)(dbresponse.status)
-					println@Console( "Moved " + pRequest.amount + " from " + username +" to " + toUser )() // DEBUG
+					//println@Console( "Moved " + pRequest.amount + " from " + username +" to " + toUser )() // DEBUG
 					
 					// TODO generate token and store in transaction database
 					// https://docs.jolie-lang.org/v1.10.x/language-tools-and-standard-library/standard-library-api/string_utils.html#getRandomUUID

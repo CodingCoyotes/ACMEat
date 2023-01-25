@@ -70,6 +70,17 @@ type OperationReportResponse: void {
 	}
 }
 
+type CancelOperationRequest: void {
+	.sid: string
+	.token: string
+}
+
+type CancelOperationResponse: void {
+	.sid: string
+	.successfull: bool
+	.message?: string
+}
+
 
 // ACMEat types
 type FakeReqRequest: void {
@@ -100,11 +111,11 @@ type VerifyTokenResponse: void {
 
 // Interfaces
 interface BankInterface {
-	RequestResponse: login(LoginRequest)(LoginResponse), report(ReportRequest)(ReportResponse), operationReport(OperationReportRequest)(OperationReportResponse), paymentTo(PaymentRequest)(PaymentResponse)
+	RequestResponse: login(LoginRequest)(LoginResponse), report(ReportRequest)(ReportResponse), operationReport(OperationReportRequest)(OperationReportResponse), paymentTo(PaymentRequest)(PaymentResponse), cancelOperation(CancelOperationRequest)(CancelOperationResponse)
 	OneWay: withdraw(WithdrawRequest), deposit(DepositRequest), logout(OpMessage)
 }
 
 
 interface AcmeatInterface {
-	RequestResponse: fakeReq(FakeReqRequest)(FakeReqResponse), verifyToken(VerifyTokenRequest)(VerifyTokenResponse)
+	RequestResponse: fakeReq(FakeReqRequest)(FakeReqResponse), verifyToken(VerifyTokenRequest)(VerifyTokenResponse), cancelOperation(CancelOperationRequest)(CancelOperationResponse)
 }

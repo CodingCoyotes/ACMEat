@@ -18,7 +18,7 @@ outputPort Bank {
 }
 
 cset {
-	sid: FakeReqResponse.sid VerifyTokenRequest.sid VerifyTokenResponse.sid
+	sid: FakeReqResponse.sid VerifyTokenRequest.sid VerifyTokenResponse.sid CancelOperationRequest.sid CancelOperationResponse.sid
 }
 
 execution {
@@ -89,5 +89,18 @@ main
 		// Nb: here, Acmeat only verified the operation was successfull, not that the token hans't already been used
 		// vResponse.successfull = ( Acmeat.checkIfTokenHasAlreadyBeenUsed(token) && oResponse.successfull )
 		// This has not been modeled in this simulation, but must be done in the real application
+	};
+	cancelOperation( cRequest )( cResponse ) {
+		cResponse.sid = cRequest.sid;
+		login@Bank( lRequest )( lResponse );
+		bankSid = lResponse.sid;
+		cbRequest.sid = bankSid;
+		cbRequest.token = cRequest.token;
+		cancelOperation@Bank( cbRequest )( cbResponse );
+		oRequest.sid = bankSid;
+		operationReport@Bank( oRequest )( oResponse );	// Only to test that the operation has effectively been deleted
+		opMessage.sid = bankSid;
+		logout@Bank( opMessage );
+		cResponse.successfull = !oResponse.successfull
 	}
 }

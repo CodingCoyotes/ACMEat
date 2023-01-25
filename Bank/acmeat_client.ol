@@ -61,6 +61,17 @@ main
 		} else {
 			println@Console("NOT OK")()
 		}
+		showInputDialog@SwingUI( "1) Cancel operation\n2) Quit" )( cancel );
+		if ( cancel=="1" ) {
+			cRequest.sid = acmeatSid;
+			cRequest.token = token;
+			cancelOperation@Acmeat( cRequest )( cResponse );
+			if ( cResponse.successfull ) {
+				println@Console( "OK" )()
+			} else {
+				println@Console( "NO" )()
+			}
+		}
 	} else {
 		println@Console( fResponse.message )()
 	}

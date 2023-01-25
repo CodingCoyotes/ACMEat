@@ -9,6 +9,7 @@ export default function LoginForm() {
     const data = useParams()
     const {token, setToken} = useAppContext()
     const [username, setUsername] = useState("")
+    const [password, setPassword] = useState("")
 
     async function login(){
         const response = await fetch(address, {
@@ -22,7 +23,8 @@ export default function LoginForm() {
                 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                     <SOAP-ENV:Body>
                                 <login>
-                                    <name xsi:type="xsd:string">${username}</name>
+                                    <password xsi:type="xsd:string">${password}</password>
+                                    <username xsi:type="xsd:string">${username}</username>
                                 </login>
                     </SOAP-ENV:Body>
                 </SOAP-ENV:Envelope>`})
@@ -39,7 +41,10 @@ export default function LoginForm() {
             <Form>
                 <Form.Row>
                     <Form.Field onSimpleChange={e => setUsername(e)} value={username} required={true}
-                                placeholder={"Email"}>
+                                placeholder={"username"}>
+                    </Form.Field>
+                    <Form.Field onSimpleChange={e => setPassword(e)} value={password} type="password" required={true}
+                                placeholder={"password"}>
                     </Form.Field>
                 </Form.Row>
             </Form>

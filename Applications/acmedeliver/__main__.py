@@ -33,7 +33,7 @@ app.include_router(users.router)
 app.include_router(clients.router)
 app.include_router(deliveries.router)
 
-origins = ["http://localhost:3000"]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,

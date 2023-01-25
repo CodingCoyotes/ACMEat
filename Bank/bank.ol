@@ -26,10 +26,10 @@ main
 	login( lRequest )( lResponse ) {
 		// Connect to DB
 		with ( connectionInfo ) {
-			.username = "alberto";
+			.username = "postgres";
 			.password = "password";
 			.host = "";
-			.database = "bank";
+			.database = "bank_database";
 			.driver = "postgresql"
 		};
 		connect@Database( connectionInfo )( void );

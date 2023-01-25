@@ -32,6 +32,7 @@ class Restaurant(Base):
     number = Column(String, nullable=False)
     open_times = Column(JSON, nullable=False)
     closed = Column(Boolean, default=False, nullable=False)
+    bank_address = Column(String, nullable=False)
 
     owner_id = Column(UUID(as_uuid=True), ForeignKey("user.id"))
     owner = relationship("User", back_populates="restaurants")
@@ -120,5 +121,6 @@ class Deliverer(Base):
     address = Column(String, nullable=False)
     number = Column(String, nullable=False)
     external_api_key = Column(String, nullable=False)
+    bank_address = Column(String, nullable=False)
 
     orders = relationship("Order", back_populates="deliverer")

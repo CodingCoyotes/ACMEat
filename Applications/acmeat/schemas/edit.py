@@ -89,6 +89,7 @@ class RestaurantEdit(base.ACMEORMModel):
     open_times: t.List[Time]
     closed: bool
     city_id: UUID
+    bank_address: str
 
     def jsonify_time(self):
         res = []
@@ -150,6 +151,7 @@ class DelivererEdit(base.ACMEORMModel):
     number: str
     external_api_key: str
     api_key: UUID
+    bank_address: str
 
 
 class OrderCreation(base.ACMEModel):

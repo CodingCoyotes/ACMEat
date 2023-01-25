@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {useAppContext} from "../../Context";
 //import { roles } from "../Utils/Lists";
-import { getUserInfo, registerNewRestaurant } from "../Database/DBacmeat";
+import {getUserInfo, registerNewRestaurant, getCities} from "../Database/DBacmeat";
 import { list_city } from "../Utils/Lists";
 
 
@@ -14,6 +14,7 @@ export default function RestaurantRegistration() {
   const [name, setName] = useState();
   const [address, setAddress] = useState();
   const [city, setCity] = useState();
+  const [cityList, setCityList] = useState([]);
   const [user, setUser] = useState(null);
   const {token, setToken} = useAppContext();
   const navigate = useNavigate()
@@ -23,25 +24,36 @@ export default function RestaurantRegistration() {
           navigate("/")
       }
       else if (user===null){
-          getInfo()
+          getInfo();
+          getCity();
       }
+
   }, [])
+
+  async function getCity(){
+    let resp = await getCities();
+    if (resp.status === 200) {
+        let values = await resp.json();
+        setCityList(values);
+        console.log(cityList);
+    }
+  }
 
   async function getInfo() {
     console.debug(token)
     let response = await getUserInfo(token);
     if (response.status === 200) {
-        let values = await response.json()
-        
+        let values = await response.json();
+        setUser(values);
     }
-}
+  }
 
   const handleSubmit = async e => {
     e.preventDefault();
     console.log("Token: "+ token);
 
     const response = await registerNewRestaurant(token,{
-      
+
         "name": name,
         "address": address,
         "coords": {
@@ -55,9 +67,9 @@ export default function RestaurantRegistration() {
           }
         ],
         "closed": true,
-        "city_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-        // "city_id": city
-      
+        "city_id": city,
+        "owner_id": user
+
     });
     if (response.status === 200) {
         let values = await response.json()
@@ -93,10 +105,13 @@ export default function RestaurantRegistration() {
             <div className="form-group mt-3">
                 <label>Città</label>
                 <select className="form-select" aria-label="Default select example" onChange={e => setCity(e.target.value)}>
-                    {list_city.map((e, key) => {
-                        return <option key={key} value={e.value}>{e.name}</option>;
+                    {cityList.map((e, key) => {
+                        return <option key={key} value={e.id}>{e.name}</option>;
                     })}
                 </select>
+                <button type="button" className="btn btn-secondary bi bi-plus" onClick={event => {navigate("/cityregistration")}}>
+                   + Agg. Città
+                </button>
             </div>
             <div className="d-grid gap-2 mt-3">
               <button type="submit" className="btn btn-primary">

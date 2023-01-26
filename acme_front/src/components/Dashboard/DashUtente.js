@@ -2,8 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {useAppContext} from "../../Context";
 import {getCities, getRestaurants, getUserInfo} from '../Database/DBacmeat';
-import '../css/DashUtente.css'
-import List from "./List";
+import '../css/Dash.css'
+import RestaurantList_city from "./RestaurantList_city";
 import Container from "react-bootstrap/Container";
 import {forEach} from "react-bootstrap/ElementChildren";
 
@@ -11,9 +11,9 @@ export default function DashUtente(){
     console.log("Sono in Dashboard");
     const {token, setToken} = useAppContext();
     const [user, setUser] = useState(null);
-    const [city, setCity] = useState("");
+    const [city, setCity] = useState();
     const [cityList, setCityList] = useState([]);
-    const [citySel, setCitysel] = useState(false);
+    const [citySel, setCitySel] = useState(false);
     const [restaurantsList, setRestaurantsList] = useState([]);
     const navigate = useNavigate();
 
@@ -66,8 +66,9 @@ export default function DashUtente(){
 
     const handleSubmit = async e => {
         e.preventDefault();
-        setCitysel(true);
         cleanRestaurants(restaurantsList, city);
+        setCity(city);
+        setCitySel(true);
     }
 
     return( (citySel === false) ? (
@@ -93,23 +94,11 @@ export default function DashUtente(){
             </div>
         </form>
     </div>
-    ) : ((restaurantsList.length === 0)? (
-        <div>
-            <div className="fixed-nav">
-                <h3>Non ci sono ristoranti</h3>
-            </div>
-        </div>
     ) : (
-        //<div>
-          //  <div className="fixed-nav">
-        //    <h3>Ci sono {restaurantsList.length} ristoranti</h3>
-         //   </div>
-        //</div>
         <Container>
-            <List
-                items={restaurantsList}
-                //city={city}
+            <RestaurantList_city
+                city = {city}
             />
         </Container>
-        )));
+        ));
 }

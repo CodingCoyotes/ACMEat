@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
-//import PropTypes from 'prop-types';
 import {useNavigate} from "react-router-dom";
 import {useAppContext} from "../../Context";
-//import { roles } from "../Utils/Lists";
 import {getUserInfo, registerNewRestaurant, getCities} from "../Database/DBacmeat";
 import { list_city } from "../Utils/Lists";
+import TimePicker from 'react-time-picker';
 
 
 
@@ -17,7 +16,15 @@ export default function RestaurantRegistration() {
   const [cityList, setCityList] = useState([]);
   const [user, setUser] = useState(null);
   const {token, setToken} = useAppContext();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [value, setValue] = useState('10:00');
+    const [lunTime, setLunTime] = useState('10:00');
+    const [marTime, setMarTime] = useState('10:00');
+    const [merTime, setMerTime] = useState('10:00');
+    const [gioTime, setGioTime] = useState('10:00');
+    const [venTime, setVenTime] = useState('10:00');
+    const [sabTime, setSabTime] = useState('10:00');
+    const [domTime, setDomTime] = useState('10:00');
 
   useEffect(() => {
       if (token === null) {
@@ -47,11 +54,18 @@ export default function RestaurantRegistration() {
         setUser(values);
     }
   }
+  const setTime = async e => {
+      //e.preventDefault();
+      console.log("sono in onChange");
+      console.log(e);
+      console.log("lunTime");
+      console.log(lunTime);
+
+  }
 
   const handleSubmit = async e => {
     e.preventDefault();
     console.log("Token: "+ token);
-
     const response = await registerNewRestaurant(token,{
 
         "name": name,
@@ -84,7 +98,7 @@ export default function RestaurantRegistration() {
           <div className="Auth-form-content">
             <h3 className="Auth-form-title">Registra il tuo ristorante</h3>
             <div className="form-group mt-3">
-              <label>Nome</label>
+              <h5>Nome</h5>
               <input
                 type="text"
                 className="form-control mt-1"
@@ -93,7 +107,7 @@ export default function RestaurantRegistration() {
               />
             </div>
             <div className="form-group mt-3">
-              <label>Indirizzo</label>
+              <h5>Indirizzo</h5>
               <input
                 type="text"
                 className="form-control mt-1"
@@ -101,7 +115,11 @@ export default function RestaurantRegistration() {
                 onChange={e => setAddress(e.target.value)}
               />
             </div>
-            
+              <div className="form-group mt-3">
+                  <h5>Seleziona orari apertura</h5>
+                  <label>Lunedì</label>
+                  <TimePicker id='lunedi' onChange={e => setTime(e)} value={lunTime} />
+              </div>
             <div className="form-group mt-3">
                 <label>Città</label>
                 <select className="form-select" aria-label="Default select example" onChange={e => setCity(e.target.value)}>

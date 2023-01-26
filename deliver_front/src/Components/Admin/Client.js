@@ -17,12 +17,10 @@ export default function Client(props) {
     async function getData(){
         let response = await fetch(schema + address + "/api/client/v1/"+props.client.id, {
             method: "GET",
-            credentials: "include",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': "Bearer " + token,
-                'Access-Control-Allow-Origin': process.env.DOMAIN
             },
         });
         if (response.status === 200) {
@@ -55,6 +53,12 @@ export default function Client(props) {
                                 <div>
                                     <p>
                                     Api Key: {data.api_key}
+                                    </p>
+                                    <p>
+                                        Api Key remoto: {data.remote_api_key}
+                                    </p>
+                                    <p>
+                                        Api Url: {data.api_url}
                                     </p>
                                     <div>
                                         {data.deliveries.map(delivery => <Delivery delivery={delivery} key={delivery.id}/>)}

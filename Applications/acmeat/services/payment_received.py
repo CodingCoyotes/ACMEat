@@ -58,7 +58,7 @@ def payment_received(order_id, success):
         result = getConfirm(sid, payment.token)
         if result["result"] == "true":
             #if float(result["data"]["amount"]) != order.restaurant_total + order.deliverer_total:
-            #    # Che si fa se il pagamento è inferiore? Si cancella l'ordine?
+            #    # Che si fa se il pagamento è inferiore? Si cancella l'ordine? Si rimborsa la cifra e si richiede un nuovo pagamento?
             #    pass
             #else:
             print(f"[{order_id.value}] payment verification complete!")

@@ -17,12 +17,10 @@ export default function User(props) {
     async function getData(){
         let response = await fetch(schema + address + "/api/user/v1/"+props.user.id, {
             method: "GET",
-            credentials: "include",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': "Bearer " + token,
-                'Access-Control-Allow-Origin': process.env.DOMAIN
             },
         });
         if (response.status === 200) {

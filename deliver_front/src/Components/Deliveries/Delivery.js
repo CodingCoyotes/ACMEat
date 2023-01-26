@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {Box, Chapter, Panel, Button} from "@steffo/bluelib-react";
+import schema from "../../config";
+import {useAppContext} from "../../Context";
 
 export default function Delivery(props) {
-
+    const {address, token} = useAppContext()
     const [hidden, setHidden] = useState(false)
     const [date, setDate] = useState(null)
     const [status, setStatus] = useState("???")
@@ -10,7 +12,6 @@ export default function Delivery(props) {
     useEffect((e)=>{
         let d = new Date(props.delivery.delivery_time)
         setDate(`${d.getDate()}/${d.getMonth()+1}/${d.getUTCFullYear()} - ${d.getHours()}:${d.getMinutes()}`)
-        console.debug(props.delivery)
         switch (props.delivery.status){
             case 1:
                 setStatus("In attesa")
@@ -28,6 +29,23 @@ export default function Delivery(props) {
                 setStatus("???")
         }
     }, [props.delivery])
+
+    async function deliver(){
+        let response = await fetch(schema + address + "/api/delivery/v1/" + props.delivery.id, {
+            method: "PUT",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + token,
+            },
+        });
+        if (response.status === 200) {
+            alert("La consegna è stata memorizzata.")
+        }
+        else{
+            alert("L'ordine non è pronto per essere consegnato.")
+        }
+    }
 
     return (
         <Box>
@@ -58,8 +76,16 @@ export default function Delivery(props) {
                     <p>
                         ID: {props.delivery.id}
                     </p>
+                    {status === "In lavorazione" &&
+                    <div>
+                        <Button onClick={e=>{deliver()}}>
+                            Indica come consegnata
+                        </Button>
+                    </div>
+                    }
                 </Panel>
             ) : (<></>)}
+
         </Box>
     );
 }

@@ -57,7 +57,8 @@ async def create_client(client: acmedeliver.schemas.edit.ClientEdit,
     if current_user.kind.value < UserType.admin.value:
         raise errors.Forbidden
     token = binascii.hexlify(os.urandom(10)).decode()
-    return quick_create(db, models.Client(name=client.name, api_key=token))
+    return quick_create(db, models.Client(name=client.name, api_key=token, api_url=client.api_url,
+                                          remote_api_key=client.remote_api_key))
 
 
 @router.put("/{client_id}", response_model=acmedeliver.schemas.read.ClientRead)

@@ -83,3 +83,13 @@ class ClientDeliveryRequest(base.ACMEORMModel):
 
 class ClientEdit(base.ACMEORMModel):
     name: str
+    api_url: str
+    remote_api_key: UUID
+
+
+class ClientRemoveRequest(base.ACMEORMModel):
+    api_key: str
+
+
+class ApiKey(base.ACMEModel):
+    api_key: UUID

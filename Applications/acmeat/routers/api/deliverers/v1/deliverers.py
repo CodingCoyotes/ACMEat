@@ -78,9 +78,9 @@ async def edit_deliverer(edits: acmeat.schemas.edit.DelivererDeliveryEdit,
 
 
 @router.get("/delivery/{order_id}", response_model=acmeat.schemas.read.OrderRead)
-async def edit_deliverer(edits: acmeat.schemas.edit.DelivererDeliveryEdit,
-                         order_id: UUID,
-                         db: Session = Depends(dep_dbsession)):
+async def deliverer_get_data(edits: acmeat.schemas.edit.DelivererDeliveryEdit,
+                             order_id: UUID,
+                             db: Session = Depends(dep_dbsession)):
     target = quick_retrieve(db, models.Deliverer, api_key=edits.api_key)
     if not target:
         raise errors.Forbidden

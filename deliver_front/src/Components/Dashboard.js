@@ -12,6 +12,7 @@ export default function Dashboard() {
     const {token, setToken} = useAppContext()
     const navigator = useNavigate()
     const [user, setUser] = useState(null)
+    const [fuse, setFuse] = useState(false)
 
     useEffect(() => {
         if (address === null) {
@@ -32,12 +33,10 @@ export default function Dashboard() {
     async function getUserData() {
         let response = await fetch(schema + address + "/api/user/v1/me", {
             method: "GET",
-            credentials: "include",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': "Bearer " + token,
-                'Access-Control-Allow-Origin': process.env.DOMAIN
             },
         });
         if (response.status === 200) {
@@ -45,6 +44,14 @@ export default function Dashboard() {
             setUser(values)
         }
     }
+
+    useEffect(() => {
+        getUserData()
+        const interval = setInterval(() => getUserData(), 10000)
+        return () => {
+            clearInterval(interval)
+        }
+    }, [])
 
     return (
         <div className={Style.Landing}>

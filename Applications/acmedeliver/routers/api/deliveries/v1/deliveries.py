@@ -19,6 +19,7 @@ import acmedeliver.errors as errors
 from acmedeliver.database.enums import UserType
 from acmedeliver.configuration import setting_required
 import json
+from acmedeliver.responses import NO_CONTENT
 
 router = APIRouter(
     prefix="/api/delivery/v1",
@@ -107,17 +108,29 @@ async def create_delivery(delivery_request: acmedeliver.schemas.edit.ClientDeliv
         cost=calculate_cost(delivery_request.request.source, delivery_request.request.receiver))
 
 
-@router.put("/{client_id}", response_model=acmedeliver.schemas.read.ClientRead)
-async def edit_delivery(edits: acmedeliver.schemas.edit.ClientEdit, client_id: UUID,
-                        current_user: models.User = Depends(get_current_user),
-                        db: Session = Depends(dep_dbsession)):
-    """
-    Updates the account of the logged in user
-    :param client_id:
-    :param current_user: the current user
-    :param edits: the pydantic schema that contains the edits
-    :param db: the database session
-    :return: the representation of the updated profile
-    """
-    # Todo: scrivi questa funzione che aggiorna lo stato di consegna
-    return None
+@router.put("/{delivery_id}", response_model=acmedeliver.schemas.read.DeliveryRead)
+async def edit_delivery_status(delivery_id: UUID,
+                               current_user: models.User = Depends(get_current_user),
+                               db: Session = Depends(dep_dbsession)):
+    delivery = quick_retrieve(db, models.Delivery, id=delivery_id)
+    response = requests.put(delivery.client.api_url + "/api/deliverers/v1/delivery/" + str(delivery.source_id),
+                            headers={"Content-Type": "application/json",
+                                     "Accept": "application/json"},
+                            data=acmedeliver.schemas.edit.ApiKey(api_key=delivery.client.remote_api_key).json())
+    if response.status_code != 200:
+        raise acmedeliver.errors.Forbidden
+    delivery.status = acmedeliver.database.enums.DeliveryStatus.delivered
+    db.commit()
+    return delivery
+
+
+@router.delete("/{source_id}", status_code=204)
+async def delete_delivery(request: acmedeliver.schemas.edit.ClientRemoveRequest, source_id: UUID,
+                          db: Session = Depends(dep_dbsession)):
+    client_target = quick_retrieve(db, models.Client, api_key=request.api_key)
+    target = quick_retrieve(db, models.Delivery, source_id=source_id, client_id=client_target.id)
+    if not target:
+        raise errors.ResourceNotFound
+    db.delete(target)
+    db.commit()
+    return NO_CONTENT

@@ -46,5 +46,7 @@ class Client(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String, nullable=False)
     api_key = Column(String, nullable=False)
+    api_url = Column(String, nullable=False)
+    remote_api_key = Column(UUID(as_uuid=True), nullable=False)
 
     deliveries = relationship("Delivery", back_populates="client")

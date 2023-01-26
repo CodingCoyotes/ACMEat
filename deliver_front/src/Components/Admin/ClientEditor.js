@@ -10,20 +10,21 @@ export default function ClientEditor(props) {
     const {address} = useAppContext();
     const {token} = useAppContext();
     const [name, setName] = useState("")
+    const [apiUrl, setApiUrl] = useState("")
+    const [apiKey, setApiKey] = useState("")
 
     async function submit(){
         let response = await fetch(schema + address + "/api/client/v1/", {
             method: "POST",
-            credentials: "include",
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': "Bearer " + token,
-                'Access-Control-Allow-Origin': process.env.DOMAIN,
-
             },
             body: JSON.stringify({
                 name: name,
+                api_url: apiUrl,
+                remote_api_key: apiKey
             })
         });
         if (response.status === 200) {
@@ -43,6 +44,12 @@ export default function ClientEditor(props) {
                 <Form.Row>
                     <Form.Field onSimpleChange={e => setName(e)} value={name} required={true}
                                 placeholder={"Nome"}>
+                    </Form.Field>
+                    <Form.Field onSimpleChange={e => setApiUrl(e)} value={apiUrl} required={true}
+                                placeholder={"Url API"}>
+                    </Form.Field>
+                    <Form.Field onSimpleChange={e => setApiKey(e)} value={apiKey} required={true}
+                                placeholder={"Key API"}>
                     </Form.Field>
                 </Form.Row>
             </Form>

@@ -6,6 +6,8 @@ import Landing from "./Landing/Landing";
 import Login from "./Login/Login";
 import RestaurantRegistration from "./Restaurant/RestaurantRegistration";
 import CityRegistration from "./City/CityRegistration";
+import DashMenu from "./Menu/DashMenu";
+import MenuRegistration from "./Menu/MenuRegistration";
 
 export default function Routing(){
     return (
@@ -18,6 +20,8 @@ export default function Routing(){
                 <Route path="/dashristorante" element={<DashRistorante/>}/>
                 <Route path="/restaurantregistration" element={<RestaurantRegistration/>}/>
                 <Route path="/cityregistration" element={<CityRegistration/>}/>
+                <Route path="/dashmenu" element={<DashMenu/>}/>
+                <Route path="/menuregistration" element={<MenuRegistration/>}/>
             </Routes>
         </Router>
     )

@@ -63,7 +63,7 @@ export async function registerNewRestaurant(token, info) {
       .then(data => data.json())
 }
 
-//registra un nuovo ristorante date le informazioni
+//prendi tutti i ristoranti
 export async function getRestaurants(domain) {
   return fetch(address + "/api/restaurants/v1/", {
     method: 'GET',
@@ -75,6 +75,20 @@ export async function getRestaurants(domain) {
     }
   })
 }
+
+//Ottiene un ristorante dal suo id
+export async function getRestaurant(id, domain) {
+  return fetch(address + "/api/restaurants/v1/" + id, {
+    method: "GET",
+    //credentials: "include",
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    }
+  });
+}
+
+
 
 // ---------------------------------------------------------------------------------------------
 //                                      FUNZIONI CITY
@@ -115,8 +129,28 @@ export async function getCity(id, domain) {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
+
     }
   });
+}
+
+
+// ---------------------------------------------------------------------------------------------
+//                                      FUNZIONI MENU
+// ---------------------------------------------------------------------------------------------
+//Registra un nuovo menu
+export async function registerNewMenu(restaurant_id, info, token) {
+  return fetch(address + "/api/menus/v1/" + restaurant_id, {
+    method: 'POST',
+
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer " + token,
+    },
+    body: JSON.stringify(info)
+  })
+      .then(data => data.json())
 }
 
 

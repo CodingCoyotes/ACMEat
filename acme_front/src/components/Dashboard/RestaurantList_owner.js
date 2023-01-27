@@ -77,6 +77,9 @@ export default function RestaurantList_owner({ownerId}) {
                         <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/restaurantregistration")}}>
                             Modifica dati
                         </button>
+                        <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/dashmenu"); localStorage.setItem("id_restaurant", item.id);}}>
+                            Gestisci menù
+                        </button>
 
                     </div>
                     </div>

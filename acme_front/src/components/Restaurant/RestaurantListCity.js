@@ -89,7 +89,9 @@ export default function RestaurantListCity() {
                                 <div className="card-body">
                                     <h5 className="card-title">{item.name}</h5>
                                     <p className="card-text">{item.address}</p>
-                                    <a href="src/components/Restaurant/RestaurantList_city#" className="btn btn-primary">Ordina</a>
+                                    <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/dashorder"); localStorage.setItem("id_restaurant", item.id);}}>
+                                        Ordina
+                                    </button>
                                 </div>
                             </div>
                         ))}

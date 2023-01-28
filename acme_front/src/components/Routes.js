@@ -9,6 +9,7 @@ import CityRegistration from "./City/CityRegistration";
 import DashMenu from "./Menu/DashMenu";
 import MenuRegistration from "./Menu/MenuRegistration";
 import RestaurantListCity from "./Restaurant/RestaurantListCity";
+import DashOrder from "./Order/DashOrder";
 
 export default function Routing(){
     return (
@@ -24,6 +25,7 @@ export default function Routing(){
                 <Route path="/dashmenu" element={<DashMenu/>}/>
                 <Route path="/menuregistration" element={<MenuRegistration/>}/>
                 <Route path="/restaurantlistcity" element={<RestaurantListCity/>}/>
+                <Route path="/dashorder" element={<DashOrder/>}/>
             </Routes>
         </Router>
     )

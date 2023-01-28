@@ -8,7 +8,7 @@ import '../css/Dash.css'
 
 
 
-export default function DashMenu(){
+export default function DashOrder(){
     const navigate = useNavigate()
     const {token, setToken} = useAppContext();
     const [user, setUser] = useState(null);
@@ -16,6 +16,7 @@ export default function DashMenu(){
     const [restaurantId, setRestaurantId] = useState(null);
     const [restaurantName, setRestaurantName] = useState("");
     const [menuList, setMenuList]  = useState([]);
+    const [ordersList, setOrdersList]  = useState([]);
 
     useEffect(() => {
         console.log("dashMenu")
@@ -41,6 +42,7 @@ export default function DashMenu(){
         let response = await getRestaurant(restaurantId);
         if (response.status === 200) {
             let values = await response.json();
+            console.log(values);
             setMenuList(values.menus);
             setRestaurantName(values.name);
         }
@@ -53,6 +55,47 @@ export default function DashMenu(){
             setUser(values);
             setOwnerId(values.id);
         }
+    }
+
+    async function handleCounter (e, val, menu) {
+        e.preventDefault();
+        console.log("sono in handlercount")
+        console.log(val)
+        //console.log(menu)
+        let presente = false;
+        let tmpList = [];
+        for(let i = 0; i < ordersList.length; i = i+1){
+            //console.log(ordersList[i].id)
+            if(ordersList[i].id === menu.id){ //Se ho trovato l'ordine nella lista
+                presente = true;
+                if(val > 0){
+                    let elem = {
+                        qty: val,
+                        id: menu.id,
+                        name: menu.name,
+                    }
+                    tmpList = tmpList.concat(elem);
+                }
+            }
+            else{
+                tmpList = tmpList.concat(ordersList[i]);
+            }
+            console.log(tmpList);
+
+        }
+        setOrdersList(tmpList);
+
+        if(!presente){
+            console.log("non è presente");
+            let elem = {
+                qty: val,
+                id: menu.id,
+                name: menu.name,
+            }
+            setOrdersList(ordersList.concat(elem))
+            console.log(ordersList.concat(elem));
+        }
+        //console.log(ordersList.concat(elem));
     }
 
     return(
@@ -88,9 +131,16 @@ export default function DashMenu(){
                                     {item.contents.map(i => (
                                         <div className="card-text">{i.name} : {i.desc} </div>
                                     ))}
-                                    <button type="button" className="btn btn-secondary" onClick={event => {navigate("/menuregistration"); localStorage.setItem("id_menu", item.id);}}>
-                                        Modifica
-                                    </button>
+                                    <div className="form-group mt-3">
+                                        <label>Quantità</label>
+                                        <input
+                                            type="number"
+                                            className="form-control mt-1"
+                                            placeholder="0"
+                                            min={0}
+                                            onChange={e => handleCounter(e, e.target.value, item)}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         ))}

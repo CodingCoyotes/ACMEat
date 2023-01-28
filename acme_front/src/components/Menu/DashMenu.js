@@ -3,6 +3,8 @@ import {useNavigate,  useParams} from "react-router-dom";
 import {useAppContext} from "../../Context";
 import Container from "react-bootstrap/Container";
 import {getMenus, getRestaurant, getRestaurants, getUserInfo} from "../Database/DBacmeat";
+import classNames from "classnames";
+import '../css/Dash.css'
 
 
 
@@ -13,8 +15,7 @@ export default function DashMenu(){
     const [ownerId, setOwnerId] = useState("");
     const [restaurantId, setRestaurantId] = useState(null);
     const [restaurantName, setRestaurantName] = useState("");
-    const [hoMenu, setHoMenu] = useState(false);
-    const [listMenu, setListMenu] = useState([]);
+    const [menuList, setMenuList]  = useState([]);
 
     useEffect(() => {
         console.log("dashMenu")
@@ -34,16 +35,14 @@ export default function DashMenu(){
             console.log(restId)
             setRestaurantId(restId)
             getRest(restId)
-            getMen();
         }
     }
     async function getRest(restaurantId) {
         let response = await getRestaurant(restaurantId);
         if (response.status === 200) {
             let values = await response.json();
-            console.log("ho il rest")
-            console.log(values)
-           setRestaurantName(values.name);
+            setMenuList(values.menus);
+            setRestaurantName(values.name);
         }
     }
 
@@ -56,47 +55,48 @@ export default function DashMenu(){
         }
     }
 
-    async function getMen(){
-        let rest = await getMenus();
-        if (rest.status === 200) {
-            let list = await rest.json()
-            getMyMenus(list);
-        }
-    }
-
-    function getMyMenus(list){
-        const newList = []
-        Object.entries(list).forEach((entry) => {
-            const [key, value] = entry;
-            if(value.restaurant_id === restaurantId){
-                newList.push(value);
-                setHoMenu(true);
-            }
-            setListMenu(newList);
-        });
-    }
-
-    return((hoMenu === false) ? (
-            <div className='container'>
-                <h2>Non ci sono menù per il ristorante {restaurantName}</h2>
-                <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/menuregistration")}}>
+    return(
+        <div className='container'>
+            <div >
+                <button type="button" className="btn btn-primary " onClick={event => {navigate("/dashboard")}}>
+                    Indietro
+                </button>
+                <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/menuregistration"); localStorage.removeItem("id_menu");}}>
                     Crea un nuovo menù
                 </button>
             </div>
-        ) : (
-            <div>
-                <div className='container'>
-                    <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/menuregistration")}}>
-                        Crea un nuovo menù
-                    </button>
-
-                </div>
+            {(menuList.length === 0)? (
                 <div>
-                    <Container>
-
-                    </Container>
+                    <div className="fixed-nav">
+                        <h3>Non ci sono menu per il ristorante {restaurantName}</h3>
+                    </div>
                 </div>
-            </div>
-        )
-    );
+            ): (
+                <div>
+                    <div className="fixed-nav">
+                        <h3>Ci sono {menuList.length} per il ristorante {restaurantName}</h3>
+                    </div>
+
+                    <div className="list-grid">
+                        {menuList.map(item => (
+                            <div className="card">
+                                <div className="card-header">
+                                    <div>{item.cost} €</div>
+                                </div>
+                                <div className="card-body">
+                                    <h5 className="card-title">{item.name}</h5>
+                                    {item.contents.map(i => (
+                                        <div className="card-text">{i.name} : {i.desc} </div>
+                                    ))}
+                                    <button type="button" className="btn btn-secondary" onClick={event => {navigate("/menuregistration"); localStorage.setItem("id_menu", item.id);}}>
+                                        Modifica
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+        </div>
+    )
 }

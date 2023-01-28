@@ -168,17 +168,32 @@ export async function registerNewMenu(restaurant_id, info, token) {
       .then(data => data.json())
 }
 
-//Ottiene i menu
-export async function getMenus(domain) {
-  return fetch(address + "/api/menus/v1/", {
-    method: 'GET',
-
+//Ottiene un menu dal suo id
+export async function getMenu(id, domain) {
+  return fetch(address + "/api/menus/v1/" + id, {
+    method: "GET",
+    //credentials: "include",
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
 
     }
   });
+}
+
+//Modifica un menu
+export async function modifyMenu(token, info, id) {
+  return fetch(address + "/api/menus/v1/" + id, {
+    method: 'PUT',
+
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer " + token
+    },
+    body: JSON.stringify(info)
+  })
+      .then(data => data.json())
 }
 
 

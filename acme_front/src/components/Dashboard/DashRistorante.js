@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
-import {getCities, getRestaurants, getUserInfo} from "../Database/DBacmeat";
+import {getRestaurants, getUserInfo} from "../Database/DBacmeat";
 import {useAppContext} from "../../Context";
 import RestaurantList_owner from "./RestaurantList_owner";
 import Container from "react-bootstrap/Container";

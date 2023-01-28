@@ -1,8 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {useAppContext} from "../../Context";
-import {getUserInfo, registerNewMenu, registerNewRestaurant} from "../Database/DBacmeat";
+import {
+    getMenu,
+    getRestaurant,
+    getUserInfo,
+    modifyMenu,
+    registerNewMenu,
+    registerNewRestaurant
+} from "../Database/DBacmeat";
 import classNames from "classnames";
+import '../css/Dash.css'
 
 
 export default function MenuRegistration() {
@@ -10,6 +18,7 @@ export default function MenuRegistration() {
     const [user, setUser] = useState(null);
     const {token, setToken} = useAppContext();
     const navigate = useNavigate();
+    const [menuId, setMenuId] = useState("");
     const [name, setName] = useState();
     const [restaurantId, setRestaurantId] = useState(null);
     const [prezzo, setPrezzo] = useState();
@@ -27,16 +36,33 @@ export default function MenuRegistration() {
 
         }
         getRestaurantId();
-
+        getMenuId();
     }, [])
+
+
+    function getMenuId(){
+        if (localStorage.getItem("id_menu")) {
+            let menuId = localStorage.getItem("id_menu")
+            //setRestaurantId(restId)
+            console.log("getmenuid")
+            console.log(menuId)
+            setMenuId(menuId);
+            getMen(menuId);
+        }
+    }
+
+    async function getMen(menuId){
+        let response = await getMenu(menuId);
+        if (response.status === 200) {
+            let values = await response.json();
+            updateData(values);
+        }
+    }
 
     function getRestaurantId(){
         if (localStorage.getItem("id_restaurant") &&  restaurantId== null) {
             let restId = localStorage.getItem("id_restaurant")
-            console.log("ho il rest id")
-            console.log(restId)
             setRestaurantId(restId);
-
         }
     }
 
@@ -48,8 +74,28 @@ export default function MenuRegistration() {
             setUser(values);
         }
     }
+
+    function updateData(menu){
+        setName(menu.name);
+        setPrezzo(menu.cost);
+        setListIngredienti(menu.contents);
+    }
+
     const handleSubmit = async e => {
         e.preventDefault();
+        console.log("sono in handlersub")
+        if(localStorage.getItem("id_menu")) {
+            console.log("ho il menu id")
+            let restId = localStorage.getItem("id_menu")
+            await editMenu(restId);
+        }
+        else {
+            console.log("non ho il menu id")
+            await newMenu();
+        }
+    }
+
+    async function newMenu(){
         const response = await registerNewMenu(restaurantId,{
 
             "name": name,
@@ -61,6 +107,26 @@ export default function MenuRegistration() {
         }, token);
         if (response.status === 200) {
             let values = await response.json()
+        }
+        else {
+            navigate("/dashmenu");
+        }
+    }
+
+    async function editMenu(menuId){
+        const response = await modifyMenu(token,{
+
+            "name": name,
+            "contents": listIngredienti,
+            "cost": prezzo,
+            "hidden": false,
+            "restaurant_id": restaurantId
+
+        }, menuId);
+        if (response.status === 200) {
+            let values = await response.json()
+        }
+        else {
             navigate("/dashmenu");
         }
     }
@@ -97,6 +163,7 @@ export default function MenuRegistration() {
                         <input
                             type="text"
                             className="form-control mt-1"
+                            value={name}
                             placeholder="Inserisci il nome del menù"
                             onChange={e => setName(e.target.value)}
                         />
@@ -105,6 +172,7 @@ export default function MenuRegistration() {
                         <h5>Prezzo</h5>
                         <input
                             type="number"
+                            value={prezzo}
                             className="form-control mt-1"
                             placeholder="5"
                             onChange={e => setPrezzo(e.target.value)}

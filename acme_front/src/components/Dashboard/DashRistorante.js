@@ -59,14 +59,14 @@ export default function DashRistorante(){
     return((hoRest === false) ? (
         <div className='container'>
             <h2>Sembra che tu non abbia un ristorante.</h2>
-            <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/restaurantregistration")}}>
+            <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/restaurantregistration"); localStorage.removeItem("id_restaurant");}}>
                 Crea un ristorante
             </button>
         </div>
         ) : (
             <div>
                 <div className='container'>
-                    <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/restaurantregistration")}}>
+                    <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/restaurantregistration"); localStorage.removeItem("id_restaurant");}}>
                         Crea un ristorante
                     </button>
 

@@ -74,7 +74,7 @@ export default function RestaurantList_owner({ownerId}) {
                     <div className="card-body">
                     <h5 className="card-title">{item.name}</h5>
                     <p className="card-text">{item.address}</p>
-                        <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/restaurantregistration")}}>
+                        <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/restaurantregistration"); localStorage.setItem("id_restaurant", item.id);}}>
                             Modifica dati
                         </button>
                         <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/dashmenu"); localStorage.setItem("id_restaurant", item.id);}}>

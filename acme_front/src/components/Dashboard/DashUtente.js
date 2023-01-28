@@ -3,9 +3,6 @@ import {useNavigate} from "react-router-dom";
 import {useAppContext} from "../../Context";
 import {getCities, getRestaurants, getUserInfo} from '../Database/DBacmeat';
 import '../css/Dash.css'
-import RestaurantList_city from "./RestaurantList_city";
-import Container from "react-bootstrap/Container";
-import {forEach} from "react-bootstrap/ElementChildren";
 
 export default function DashUtente(){
     console.log("Sono in Dashboard");
@@ -71,7 +68,7 @@ export default function DashUtente(){
         setCitySel(true);
     }
 
-    return( (citySel === false) ? (
+    return(
 
         <div className='container'>
         {user ? (
@@ -88,17 +85,11 @@ export default function DashUtente(){
                 </select>
             </div>
             <div className="d-grid gap-2 mt-3">
-              <button type="submit" className="btn btn-primary">
-                Invia
-              </button>
+                <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/restaurantlistcity"); localStorage.setItem("id_city", city);}}>
+                    Cerca
+                </button>
             </div>
         </form>
     </div>
-    ) : (
-        <Container>
-            <RestaurantList_city
-                city = {city}
-            />
-        </Container>
-        ));
+    )
 }

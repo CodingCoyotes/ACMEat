@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate,  useParams} from "react-router-dom";
 import {useAppContext} from "../../Context";
 import Container from "react-bootstrap/Container";
-import {getRestaurant, getUserInfo} from "../Database/DBacmeat";
+import {getMenus, getRestaurant, getRestaurants, getUserInfo} from "../Database/DBacmeat";
 
 
 
@@ -14,6 +14,7 @@ export default function DashMenu(){
     const [restaurantId, setRestaurantId] = useState(null);
     const [restaurantName, setRestaurantName] = useState("");
     const [hoMenu, setHoMenu] = useState(false);
+    const [listMenu, setListMenu] = useState([]);
 
     useEffect(() => {
         console.log("dashMenu")
@@ -33,6 +34,7 @@ export default function DashMenu(){
             console.log(restId)
             setRestaurantId(restId)
             getRest(restId)
+            getMen();
         }
     }
     async function getRest(restaurantId) {
@@ -52,6 +54,26 @@ export default function DashMenu(){
             setUser(values);
             setOwnerId(values.id);
         }
+    }
+
+    async function getMen(){
+        let rest = await getMenus();
+        if (rest.status === 200) {
+            let list = await rest.json()
+            getMyMenus(list);
+        }
+    }
+
+    function getMyMenus(list){
+        const newList = []
+        Object.entries(list).forEach((entry) => {
+            const [key, value] = entry;
+            if(value.restaurant_id === restaurantId){
+                newList.push(value);
+                setHoMenu(true);
+            }
+            setListMenu(newList);
+        });
     }
 
     return((hoMenu === false) ? (

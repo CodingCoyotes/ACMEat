@@ -63,6 +63,21 @@ export async function registerNewRestaurant(token, info) {
       .then(data => data.json())
 }
 
+//Modifica ristorante
+export async function modifyRestaurant(token, info, id) {
+  return fetch(address + "/api/restaurants/v1/" + id, {
+    method: 'PUT',
+
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer " + token
+    },
+    body: JSON.stringify(info)
+  })
+      .then(data => data.json())
+}
+
 //prendi tutti i ristoranti
 export async function getRestaurants(domain) {
   return fetch(address + "/api/restaurants/v1/", {
@@ -151,6 +166,19 @@ export async function registerNewMenu(restaurant_id, info, token) {
     body: JSON.stringify(info)
   })
       .then(data => data.json())
+}
+
+//Ottiene i menu
+export async function getMenus(domain) {
+  return fetch(address + "/api/menus/v1/", {
+    method: 'GET',
+
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+
+    }
+  });
 }
 
 

@@ -17,9 +17,10 @@ export default function DashOrder(){
     const [restaurantName, setRestaurantName] = useState("");
     const [menuList, setMenuList]  = useState([]);
     const [ordersList, setOrdersList]  = useState([]);
+    const [totPrice, setTotPrice] = useState(0);
 
     useEffect(() => {
-        console.log("dashMenu")
+        console.log("dashOrder")
         if (token === null) {
             navigate("/")
         }
@@ -42,7 +43,6 @@ export default function DashOrder(){
         let response = await getRestaurant(restaurantId);
         if (response.status === 200) {
             let values = await response.json();
-            console.log(values);
             setMenuList(values.menus);
             setRestaurantName(values.name);
         }
@@ -60,10 +60,10 @@ export default function DashOrder(){
     async function handleCounter (e, val, menu) {
         e.preventDefault();
         console.log("sono in handlercount")
-        console.log(val)
         //console.log(menu)
         let presente = false;
         let tmpList = [];
+        let tot = 0;
         for(let i = 0; i < ordersList.length; i = i+1){
             //console.log(ordersList[i].id)
             if(ordersList[i].id === menu.id){ //Se ho trovato l'ordine nella lista
@@ -73,6 +73,7 @@ export default function DashOrder(){
                         qty: val,
                         id: menu.id,
                         name: menu.name,
+                        cost: menu.cost
                     }
                     tmpList = tmpList.concat(elem);
                 }
@@ -80,22 +81,24 @@ export default function DashOrder(){
             else{
                 tmpList = tmpList.concat(ordersList[i]);
             }
-            console.log(tmpList);
-
         }
-        setOrdersList(tmpList);
+
 
         if(!presente){
-            console.log("non è presente");
             let elem = {
                 qty: val,
                 id: menu.id,
                 name: menu.name,
+                cost: menu.cost
             }
-            setOrdersList(ordersList.concat(elem))
-            console.log(ordersList.concat(elem));
+            tmpList = ordersList.concat(elem);
         }
-        //console.log(ordersList.concat(elem));
+        setOrdersList(tmpList);
+
+        for(let i = 0; i < tmpList.length; i = i+1){
+            tot = tot + (tmpList[i].cost * tmpList[i].qty);
+        }
+        setTotPrice(tot);
     }
 
     return(
@@ -103,9 +106,6 @@ export default function DashOrder(){
             <div >
                 <button type="button" className="btn btn-primary " onClick={event => {navigate("/dashboard")}}>
                     Indietro
-                </button>
-                <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/menuregistration"); localStorage.removeItem("id_menu");}}>
-                    Crea un nuovo menù
                 </button>
             </div>
             {(menuList.length === 0)? (
@@ -115,7 +115,27 @@ export default function DashOrder(){
                     </div>
                 </div>
             ): (
-                <div>
+                    <div>
+                        {(ordersList.length > 0)? (<div>
+                            <div className="card carrello">
+                                <div className="card-header">
+                                    <div>Il tuo carrello</div>
+                                </div>
+                                <div className="card-body">
+                                    <ul>
+                                        {ordersList.map(item => (
+                                            <li>{item.qty}: {item.name}</li>
+                                        ))}
+                                    </ul>
+                                    <h6>Totale: {totPrice} €</h6>
+                                    <button type="button" className="btn btn-primary " onClick={event => {navigate("/recaporder", { state: { param: ordersList }}) }}>
+                                        Ordina
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>) : (<div></div>)}
+
                     <div className="fixed-nav">
                         <h3>Ci sono {menuList.length} menu per il ristorante {restaurantName}</h3>
                     </div>

@@ -10,7 +10,6 @@ export default function DashUtente(){
     const [user, setUser] = useState(null);
     const [city, setCity] = useState();
     const [cityList, setCityList] = useState([]);
-    const [citySel, setCitySel] = useState(false);
     const [restaurantsList, setRestaurantsList] = useState([]);
     const navigate = useNavigate();
 
@@ -65,7 +64,6 @@ export default function DashUtente(){
         e.preventDefault();
         cleanRestaurants(restaurantsList, city);
         setCity(city);
-        setCitySel(true);
     }
 
     return(

@@ -154,9 +154,13 @@ export default function MenuRegistration() {
     }
 
     return (
-        <div className="Auth-form-container">
-            <form className="Auth-form" onSubmit={handleSubmit}>
-                <div className="Auth-form-content">
+        <div className='container'>
+            <div>
+                <button type="button" className="btn btn-primary " onClick={event => {navigate("/dashmenu")}}>
+                    Indietro
+                </button>
+            </div>
+            <form className="Auth-form-content card" onSubmit={handleSubmit}>
                     <h3 className="Auth-form-title">Registra un nuovo menu</h3>
                     <div className="form-group mt-3">
                         <h5>Nome menu</h5>
@@ -226,7 +230,6 @@ export default function MenuRegistration() {
                             Invia
                         </button>
                     </div>
-                </div>
             </form>
         </div>
     )

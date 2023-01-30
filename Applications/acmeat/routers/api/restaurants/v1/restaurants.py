@@ -53,7 +53,8 @@ async def create_restaurant(restaurant: acmeat.schemas.edit.RestaurantEdit, db: 
                                               open_times=restaurant.jsonify_time(),
                                               number=restaurant.number, closed=restaurant.closed,
                                               owner=quick_retrieve(db, models.User, id=current_user.id),
-                                              city=quick_retrieve(db, models.City, id=restaurant.city_id)))
+                                              city=quick_retrieve(db, models.City, id=restaurant.city_id),
+                                              bank_address=restaurant.bank_address))
 
 
 @router.put("/{restaurant_id}", response_model=acmeat.schemas.read.RestaurantRead)

@@ -10,6 +10,7 @@ def deliverer_preview(order_id, success):
     print(f"[{order_id.value}] Starting deliverer preview routine...")
     GEOLOCATE_URL = setting_required("GEOLOCATE_SERVICE")
     candidates = []
+    #TODO: add a 15s timer
     with Session(future=True) as db:
         order: Order = db.query(Order).filter_by(id=order_id.value).first()
         if not order:

@@ -57,6 +57,7 @@ async def create_order(restaurant_id: str, order_data: acmeat.schemas.edit.Order
     order.restaurant_total = total
     db.commit()
     #Todo: Bisogna far partire la richiesta di conferma al locale e al trasportatore...
+
     return order
 
 

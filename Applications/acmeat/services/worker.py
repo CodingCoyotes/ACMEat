@@ -138,5 +138,5 @@ def work(worker, tasks):
             complete_task.id_ = task.id_
             for variable, value in return_variables.items():
                 complete_task.add_variable(name=variable, value=value)
-            if return_variables['success']:
+            if 'success' not in return_variables.keys() or return_variables['success']:
                 complete_task()

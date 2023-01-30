@@ -19,7 +19,6 @@ export default function RestaurantRegistration() {
     const [user, setUser] = useState(null);
     const {token, setToken} = useAppContext();
     const navigate = useNavigate();
-    const [restaurantName, setRestaurantName] = useState("");
     const [name, setName] = useState();
     const [address, setAddress] = useState();
     const [addressNum, setAddressNum] = useState();
@@ -53,21 +52,12 @@ export default function RestaurantRegistration() {
     }, [])
 
     function getRestaurantId(){
-        /*if (localStorage.getItem("id_restaurant")) {
-            let restId = localStorage.getItem("id_restaurant")
-            //setRestaurantId(restId)
-            console.log("getrestid")
-            console.log(restId)
-            //console.log(restaurantId)
-            getRest(restId)
-        }*/
-
         if(state !== null){
             const {param} = state;
             console.log("getrestid")
             console.log(param)
             //console.log(restaurantId)
-            setRestaurantName(param.name);
+
             getRest(param)
         }
     }
@@ -320,7 +310,7 @@ export default function RestaurantRegistration() {
             </div>
 
           <form className="Auth-form-content card" onSubmit={handleSubmit}>
-            <h3 className="Auth-form-title">{(restaurantName === "")? (<div>Registra il tuo ristorante</div>): (<div>Modifica il ristorante {restaurantName}</div>)}</h3>
+            <h3 className="Auth-form-title">{(state === null)? (<div>Registra il tuo ristorante</div>): (<div>Modifica il ristorante</div>)}</h3>
             <div className="form-group mt-3">
               <h5>Nome</h5>
               <input

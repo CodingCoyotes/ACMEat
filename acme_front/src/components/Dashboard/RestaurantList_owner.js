@@ -54,13 +54,7 @@ export default function RestaurantList_owner({ownerId}) {
     }
 
 
-    return ( (restaurantsList.length === 0)? (
-        <div>
-            <div className="fixed-nav">
-                <h3>Non ci sono ristoranti a {}</h3>
-            </div>
-        </div>
-        ): (
+    return (
         <div>
             <div
                 className={classNames("list", { "list-grid": isDetailedView })}
@@ -74,10 +68,10 @@ export default function RestaurantList_owner({ownerId}) {
                     <div className="card-body">
                     <h5 className="card-title">{item.name}</h5>
                     <p className="card-text">{item.address}</p>
-                        <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/restaurantregistration"); localStorage.setItem("id_restaurant", item.id);}}>
+                        <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/restaurantregistration", { state: { param: item.id }});}}>
                             Modifica dati
                         </button>
-                        <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/dashmenu"); localStorage.setItem("id_restaurant", item.id);}}>
+                        <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/dashmenu", { state: { param: item.id }});}}>
                             Gestisci menù
                         </button>
 
@@ -86,5 +80,5 @@ export default function RestaurantList_owner({ownerId}) {
                 ))}
             </div>
         </div>
-    ));
+    );
 }

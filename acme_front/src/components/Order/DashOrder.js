@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useNavigate,  useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {useAppContext} from "../../Context";
 import Container from "react-bootstrap/Container";
 import {getMenus, getRestaurant, getRestaurants, getUserInfo} from "../Database/DBacmeat";
@@ -12,12 +12,11 @@ export default function DashOrder(){
     const navigate = useNavigate()
     const {token, setToken} = useAppContext();
     const [user, setUser] = useState(null);
-    const [ownerId, setOwnerId] = useState("");
-    const [restaurantId, setRestaurantId] = useState(null);
     const [restaurantName, setRestaurantName] = useState("");
     const [menuList, setMenuList]  = useState([]);
     const [ordersList, setOrdersList]  = useState([]);
     const [totPrice, setTotPrice] = useState(0);
+    const {state} = useLocation();
 
     useEffect(() => {
         console.log("dashOrder")
@@ -31,12 +30,11 @@ export default function DashOrder(){
     }, [])
 
     function getRestaurantId(){
-        if (localStorage.getItem("id_restaurant") &&  restaurantId== null) {
-            let restId = localStorage.getItem("id_restaurant")
+        if (state !== null) {
+            const {param} = state;
             console.log("ho il rest id")
-            console.log(restId)
-            setRestaurantId(restId)
-            getRest(restId)
+            console.log(param)
+            getRest(param)
         }
     }
     async function getRest(restaurantId) {
@@ -53,7 +51,6 @@ export default function DashOrder(){
         if (response.status === 200) {
             let values = await response.json();
             setUser(values);
-            setOwnerId(values.id);
         }
     }
 

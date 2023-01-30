@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useNavigate,  useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {useAppContext} from "../../Context";
 import Container from "react-bootstrap/Container";
 import {getMenus, getRestaurant, getRestaurants, getUserInfo} from "../Database/DBacmeat";
@@ -16,6 +16,7 @@ export default function DashMenu(){
     const [restaurantId, setRestaurantId] = useState(null);
     const [restaurantName, setRestaurantName] = useState("");
     const [menuList, setMenuList]  = useState([]);
+    const {state} = useLocation();
 
     useEffect(() => {
         console.log("dashMenu")
@@ -29,12 +30,12 @@ export default function DashMenu(){
     }, [])
 
     function getRestaurantId(){
-        if (localStorage.getItem("id_restaurant") &&  restaurantId== null) {
-            let restId = localStorage.getItem("id_restaurant")
+        if (state !== null) {
+            const {param} = state;
             console.log("ho il rest id")
-            console.log(restId)
-            setRestaurantId(restId)
-            getRest(restId)
+            console.log(param)
+            setRestaurantId(param)
+            getRest(param)
         }
     }
     async function getRest(restaurantId) {
@@ -61,7 +62,7 @@ export default function DashMenu(){
                 <button type="button" className="btn btn-primary " onClick={event => {navigate("/dashboard")}}>
                     Indietro
                 </button>
-                <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/menuregistration"); localStorage.removeItem("id_menu");}}>
+                <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/menuregistration");}}>
                     Crea un nuovo menù
                 </button>
             </div>
@@ -88,7 +89,7 @@ export default function DashMenu(){
                                     {item.contents.map(i => (
                                         <div className="card-text">{i.name} : {i.desc} </div>
                                     ))}
-                                    <button type="button" className="btn btn-secondary" onClick={event => {navigate("/menuregistration"); localStorage.setItem("id_menu", item.id);}}>
+                                    <button type="button" className="btn btn-secondary" onClick={event => {navigate("/menuregistration", { state: { restaurantId: restaurantId, menuId: item.id }});}}>
                                         Modifica
                                     </button>
                                 </div>

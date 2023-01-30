@@ -2,19 +2,17 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {useAppContext} from "../../Context";
 import {getCities, getRestaurants, getUserInfo} from '../Database/DBacmeat';
-import '../css/DashUtente.css'
-import List from "./List";
-import Container from "react-bootstrap/Container";
-import {forEach} from "react-bootstrap/ElementChildren";
+import '../css/Dash.css'
 
 export default function DashUtente(){
-    console.log("Sono in Dashboard");
     const {token, setToken} = useAppContext();
     const [user, setUser] = useState(null);
-    const [city, setCity] = useState("");
+    const [allCitiesList, setAllCitiesList] = useState([]);
     const [cityList, setCityList] = useState([]);
-    const [citySel, setCitysel] = useState(false);
-    const [restaurantsList, setRestaurantsList] = useState([]);
+    const [nationList, setNationList] = useState([]);
+    const [currNation, setCurrNation] = useState("");
+    const [currCity, setCurrCity] = useState("");
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -22,9 +20,9 @@ export default function DashUtente(){
             navigate("/")
         }
         else if (user===null){
+            console.log("Sono in Dashboard");
             getInfo();
             getCity();
-            getRest();
         }
     }, [])
 
@@ -32,7 +30,17 @@ export default function DashUtente(){
         let resp = await getCities();
         if (resp.status === 200) {
             let values = await resp.json();
-            setCityList(values);
+            setAllCitiesList(values);
+           //console.log(values);
+
+            let tmpList = [];
+            values.map(val =>(
+                tmpList = tmpList.concat(val.nation)
+            ));
+            const withoutDuplicates = [...new Set(tmpList)];
+            setNationList(withoutDuplicates);
+
+            getCityList(values, values[0].nation);
         }
     }
 
@@ -44,33 +52,41 @@ export default function DashUtente(){
         }
     }
 
-    async function getRest(){
-        let rest = await getRestaurants();
-        if (rest.status === 200) {
-            let list = await rest.json()
-            setRestaurantsList(list)
-        }
+    async function getCityList(list, nation){
+        console.log("getCitylist");
+        let tmpList= []
+        list.map(val =>{
+            if(val.nation === nation)
+                tmpList = tmpList.concat(val)
+        });
+        console.log(tmpList);
+        setCityList(tmpList);
+        setCurrCity(tmpList[0].id);
     }
 
-    function cleanRestaurants(restaurants, cityId){
-        const newList = []
-        Object.entries(restaurants).forEach((entry) => {
-            const [key, value] = entry;
-            console.log(value.city_id)
-            if(value.city_id === cityId){
-                newList.push(value);
-            }
-            setRestaurantsList(newList);
-        });
+    const handleCurrNationChange = async e =>{
+        e.preventDefault();
+        let nation = e.target.value
+        setCurrNation(nation);
+        console.log(nation);
+        getCityList(allCitiesList, nation);
+    }
+
+    const handleCurrCityChange = async e =>{
+        e.preventDefault();
+        let nation = e.target.value
+        setCurrCity(nation);
+        console.log(nation);
     }
 
     const handleSubmit = async e => {
         e.preventDefault();
-        setCitysel(true);
-        cleanRestaurants(restaurantsList, city);
+        //setCity(city);
+        console.log("submit")
+        console.log(currCity)
     }
 
-    return( (citySel === false) ? (
+    return(
 
         <div className='container'>
         {user ? (
@@ -79,37 +95,25 @@ export default function DashUtente(){
         <h2>Effettua subito un ordine!</h2>
         <form onSubmit={handleSubmit}>
             <div className="form-group mt-4">
-                <label>Seleziona la tua città</label>
-                <select className="form-select" aria-label="Default select example" onChange={e => setCity(e.target.value)}>
-                    {cityList.map((e, key) => {
-                        return <option key={key} value={e.id}>{e.name}</option>;
+                <label>Seleziona una nazione</label>
+                <select className="form-select" aria-label="Default select example" value={currNation} onChange={handleCurrNationChange}>
+                    {nationList.map(nation => {
+                        return <option key={nation} value={nation}>{nation}</option>;
+                    })}
+                </select>
+                <label>Seleziona una città</label>
+                <select className="form-select" aria-label="Default select example" value={currCity} onChange={handleCurrCityChange}>
+                    {cityList.map(city => {
+                        return <option key={city.id} value={city.id}>{city.name}</option>;
                     })}
                 </select>
             </div>
             <div className="d-grid gap-2 mt-3">
-              <button type="submit" className="btn btn-primary">
-                Invia
-              </button>
+                <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/restaurantlistcity", { state:{param: currCity}});}}>
+                    Cerca
+                </button>
             </div>
         </form>
     </div>
-    ) : ((restaurantsList.length === 0)? (
-        <div>
-            <div className="fixed-nav">
-                <h3>Non ci sono ristoranti</h3>
-            </div>
-        </div>
-    ) : (
-        //<div>
-          //  <div className="fixed-nav">
-        //    <h3>Ci sono {restaurantsList.length} ristoranti</h3>
-         //   </div>
-        //</div>
-        <Container>
-            <List
-                items={restaurantsList}
-                //city={city}
-            />
-        </Container>
-        )));
+    )
 }

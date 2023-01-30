@@ -1,11 +1,13 @@
+
+const address = 'https://acmeat.isos.fermitech.info';
+
 // ---------------------------------------------------------------------------------------------
 //                                      FUNZIONI UTENTE
 // ---------------------------------------------------------------------------------------------
-
 //registra un nuovo utente date le credenziali
 export async function registerNewUser(credentials) {
   //localStorage.setItem('token', credentials)
-  return fetch('https://acmeat.isos.fermitech.info' + "/token", {
+  return fetch(address + "/token", {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -17,7 +19,7 @@ export async function registerNewUser(credentials) {
 
 //login
 export async function loginUser(formB){
-  return fetch("https://acmeat.isos.fermitech.info" + "/token", {
+  return fetch(address + "/token", {
     method: "POST",
     //credentials: "include",
     headers: {
@@ -30,7 +32,7 @@ export async function loginUser(formB){
 
 //dato il token restituisce le informazioni utente
 export async function getUserInfo(token, domain){
-  return fetch("https://acmeat.isos.fermitech.info" + "/api/user/v1/me", {
+  return fetch(address + "/api/user/v1/me", {
     method: "GET",
     //credentials: "include",
     headers: {
@@ -48,7 +50,7 @@ export async function getUserInfo(token, domain){
 
 //registra un nuovo ristorante date le informazioni
 export async function registerNewRestaurant(token, info) {
-  return fetch("https://acmeat.isos.fermitech.info" + "/api/restaurants/v1/", {
+  return fetch(address + "/api/restaurants/v1/", {
     method: 'POST',
 
     headers: {
@@ -61,9 +63,24 @@ export async function registerNewRestaurant(token, info) {
       .then(data => data.json())
 }
 
-//registra un nuovo ristorante date le informazioni
+//Modifica ristorante
+export async function modifyRestaurant(token, info, id) {
+  return fetch(address + "/api/restaurants/v1/" + id, {
+    method: 'PUT',
+
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer " + token
+    },
+    body: JSON.stringify(info)
+  })
+      .then(data => data.json())
+}
+
+//prendi tutti i ristoranti
 export async function getRestaurants(domain) {
-  return fetch("https://acmeat.isos.fermitech.info" + "/api/restaurants/v1/", {
+  return fetch(address + "/api/restaurants/v1/", {
     method: 'GET',
 
     headers: {
@@ -74,12 +91,26 @@ export async function getRestaurants(domain) {
   })
 }
 
+//Ottiene un ristorante dal suo id
+export async function getRestaurant(id, domain) {
+  return fetch(address + "/api/restaurants/v1/" + id, {
+    method: "GET",
+    //credentials: "include",
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    }
+  });
+}
+
+
+
 // ---------------------------------------------------------------------------------------------
 //                                      FUNZIONI CITY
 // ---------------------------------------------------------------------------------------------
 //Registra una nuova città
 export async function registerNewCity(token, info) {
-  return fetch("https://acmeat.isos.fermitech.info" + "/api/cities/v1/", {
+  return fetch(address + "/api/cities/v1/", {
     method: 'POST',
 
     headers: {
@@ -94,7 +125,7 @@ export async function registerNewCity(token, info) {
 
 //Ottiene le città
 export async function getCities(domain) {
-  return fetch("https://acmeat.isos.fermitech.info" + "/api/cities/v1/", {
+  return fetch(address + "/api/cities/v1/", {
     method: 'GET',
 
     headers: {
@@ -103,6 +134,66 @@ export async function getCities(domain) {
 
     }
   });
+}
+
+//Ottiene una città dal suo id
+export async function getCity(id, domain) {
+  return fetch(address + "/api/cities/v1/" + id, {
+    method: "GET",
+    //credentials: "include",
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+
+    }
+  });
+}
+
+
+// ---------------------------------------------------------------------------------------------
+//                                      FUNZIONI MENU
+// ---------------------------------------------------------------------------------------------
+//Registra un nuovo menu
+export async function registerNewMenu(restaurant_id, info, token) {
+  return fetch(address + "/api/menus/v1/" + restaurant_id, {
+    method: 'POST',
+
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer " + token,
+    },
+    body: JSON.stringify(info)
+  })
+      .then(data => data.json())
+}
+
+//Ottiene un menu dal suo id
+export async function getMenu(id, domain) {
+  return fetch(address + "/api/menus/v1/" + id, {
+    method: "GET",
+    //credentials: "include",
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+
+    }
+  });
+}
+
+//Modifica un menu
+export async function modifyMenu(token, info, id) {
+  return fetch(address + "/api/menus/v1/" + id, {
+    method: 'PUT',
+
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer " + token
+    },
+    body: JSON.stringify(info)
+  })
+      .then(data => data.json())
 }
 
 

@@ -6,6 +6,11 @@ import Landing from "./Landing/Landing";
 import Login from "./Login/Login";
 import RestaurantRegistration from "./Restaurant/RestaurantRegistration";
 import CityRegistration from "./City/CityRegistration";
+import DashMenu from "./Menu/DashMenu";
+import MenuRegistration from "./Menu/MenuRegistration";
+import RestaurantListCity from "./Restaurant/RestaurantListCity";
+import DashOrder from "./Order/DashOrder";
+import RecapOrder from "./Order/RecapOrder";
 
 export default function Routing(){
     return (
@@ -18,6 +23,11 @@ export default function Routing(){
                 <Route path="/dashristorante" element={<DashRistorante/>}/>
                 <Route path="/restaurantregistration" element={<RestaurantRegistration/>}/>
                 <Route path="/cityregistration" element={<CityRegistration/>}/>
+                <Route path="/dashmenu" element={<DashMenu/>}/>
+                <Route path="/menuregistration" element={<MenuRegistration/>}/>
+                <Route path="/restaurantlistcity" element={<RestaurantListCity/>}/>
+                <Route path="/dashorder" element={<DashOrder/>}/>
+                <Route path="/recaporder" element={<RecapOrder/>}/>
             </Routes>
         </Router>
     )

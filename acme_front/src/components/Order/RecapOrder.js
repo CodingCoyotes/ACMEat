@@ -124,7 +124,7 @@ export default function RecapOrder() {
             let values = await response.json()
 
         }
-        navigate("/dashutente");
+        navigate("/loading");
 
     }
 

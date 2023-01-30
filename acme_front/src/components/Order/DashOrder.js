@@ -13,6 +13,7 @@ export default function DashOrder(){
     const {token, setToken} = useAppContext();
     const [user, setUser] = useState(null);
     const [restaurantName, setRestaurantName] = useState("");
+    const [restaurantId, setRestaurantId] = useState("");
     const [menuList, setMenuList]  = useState([]);
     const [ordersList, setOrdersList]  = useState([]);
     const [totPrice, setTotPrice] = useState(0);
@@ -34,6 +35,7 @@ export default function DashOrder(){
             const {param} = state;
             console.log("ho il rest id")
             console.log(param)
+            setRestaurantId(param)
             getRest(param)
         }
     }
@@ -125,7 +127,7 @@ export default function DashOrder(){
                                         ))}
                                     </ul>
                                     <h6>Totale: {totPrice} €</h6>
-                                    <button type="button" className="btn btn-primary " onClick={event => {navigate("/recaporder", { state: { param: ordersList }}) }}>
+                                    <button type="button" className="btn btn-primary " onClick={event => {navigate("/recaporder", { state: { list: ordersList, restaurantId: restaurantId }}) }}>
                                         Ordina
                                     </button>
                                 </div>

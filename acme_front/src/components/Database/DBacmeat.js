@@ -196,4 +196,20 @@ export async function modifyMenu(token, info, id) {
       .then(data => data.json())
 }
 
+// ---------------------------------------------------------------------------------------------
+//                                      FUNZIONI ORDER
+// ---------------------------------------------------------------------------------------------
+//Registra un nuovo ordine
+export async function registerNewOrder(restaurant_id, info, token) {
+  return fetch(address + "/api/orders/v1/" + restaurant_id, {
+    method: 'POST',
 
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer " + token,
+    },
+    body: JSON.stringify(info)
+  })
+      .then(data => data.json())
+}

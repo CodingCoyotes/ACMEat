@@ -7,7 +7,7 @@ import {
     getRestaurant,
     getUserInfo,
     modifyMenu,
-    registerNewMenu,
+    registerNewMenu, registerNewOrder,
     registerNewRestaurant
 } from "../Database/DBacmeat";
 import classNames from "classnames";
@@ -28,7 +28,8 @@ export default function RecapOrder() {
     const [currCity, setCurrCity] = useState("");
     const [orderList, setOrderList] = useState([]);
     const {state} = useLocation();
-    const {param} = state; // Read values passed on state
+    const {list} = state; // Read values passed on state
+    const {restaurantId} = state;
 
     useEffect(() => {
         if (token === null) {
@@ -37,7 +38,7 @@ export default function RecapOrder() {
         else if (user===null){
             getInfo();
             getCity();
-            setOrderList(param);
+            setOrderList(list);
         }
     }, [])
 
@@ -63,7 +64,7 @@ export default function RecapOrder() {
             ));
             const withoutDuplicates = [...new Set(tmpList)];
             setNationList(withoutDuplicates);
-
+            setCurrNation(values[0].nation);
             getCityList(values, values[0].nation);
         }
     }
@@ -98,6 +99,32 @@ export default function RecapOrder() {
     const handleSubmit = async e => {
         e.preventDefault();
         console.log("sono in handlersub")
+
+        let contentList = [];
+        orderList.map(ord =>{
+           let obj = {
+               menu_id: ord.id,
+               qty: ord.qty
+           }
+           contentList = contentList.concat(obj);
+        });
+         let info = {
+
+             "contents": contentList,
+             "delivery_time": new Date().getTime(),
+             "address": indirizzo,
+             "number": numCivico,
+             "city": currCity,
+             "nation": currNation,
+
+         };
+         console.log(info);
+        const response = await registerNewOrder(restaurantId,info, token);
+        if (response.status === 200) {
+            let values = await response.json()
+
+        }
+        navigate("/dashutente");
 
     }
 

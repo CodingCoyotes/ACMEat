@@ -2,7 +2,7 @@ import React, {useRef, useMemo, useLayoutEffect, useEffect, useState} from "reac
 import Form from "react-bootstrap/Form";
 import classNames from "classnames";
 import {getCity, getRestaurants} from "../Database/DBacmeat";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 
 export default function RestaurantListCity() {
@@ -11,6 +11,8 @@ export default function RestaurantListCity() {
     const [cityName, setCityName] = useState();
     const [cityId, setCityId] = useState(null);
     const navigate = useNavigate();
+    const {state} = useLocation();
+    const {param} = state;
 
     useEffect(() => {
         console.log("sono in restaurantlistcity")
@@ -21,14 +23,19 @@ export default function RestaurantListCity() {
     const containerRef = useRef(null);
 
     function getCityId(){
-        if (localStorage.getItem("id_city") &&  cityId== null) {
+        /*if (localStorage.getItem("id_city") &&  cityId== null) {
             let restId = localStorage.getItem("id_city")
             console.log("ho il city id")
             console.log(restId)
             setCityId(restId)
             getCityFomId(restId)
             getRest(restId);
-        }
+        }*/
+        console.log("ho il city id")
+        console.log(param);
+        setCityId(param);
+        getCityFomId(param)
+        getRest(param);
     }
 
     async function getCityFomId(cityId){

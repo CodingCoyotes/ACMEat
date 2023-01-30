@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {useAppContext} from "../../Context";
 import {getUserInfo, registerNewRestaurant, getCities, getRestaurant, modifyRestaurant} from "../Database/DBacmeat";
 import Stack from '@mui/material/Stack';
@@ -19,10 +19,16 @@ export default function RestaurantRegistration() {
     const [user, setUser] = useState(null);
     const {token, setToken} = useAppContext();
     const navigate = useNavigate();
+    const [restaurantName, setRestaurantName] = useState("");
     const [name, setName] = useState();
     const [address, setAddress] = useState();
-    const [cityId, setCityId] = useState();
+    const [addressNum, setAddressNum] = useState();
+    const [bank_address, setBank_address] = useState();
+    const [allCitiesList, setAllCitiesList] = useState([]);
     const [cityList, setCityList] = useState([]);
+    const [nationList, setNationList] = useState([]);
+    const [currNation, setCurrNation] = useState("");
+    const [currCity, setCurrCity] = useState("");
     const [lunTime, setLunTime] = React.useState(new Date());
     const [marTime, setMarTime] = React.useState(new Date());
     const [merTime, setMerTime] = React.useState(new Date());
@@ -31,6 +37,8 @@ export default function RestaurantRegistration() {
     const [sabTime, setSabTime] = React.useState(new Date());
     const [domTime, setDomTime] = React.useState(new Date());
     const [aperturaBool, setAperturaBool] = useState(true);
+    const {state} = useLocation();
+
 
     useEffect(() => {
         if (token === null) {
@@ -45,15 +53,23 @@ export default function RestaurantRegistration() {
     }, [])
 
     function getRestaurantId(){
-        if (localStorage.getItem("id_restaurant")) {
+        /*if (localStorage.getItem("id_restaurant")) {
             let restId = localStorage.getItem("id_restaurant")
             //setRestaurantId(restId)
             console.log("getrestid")
             console.log(restId)
             //console.log(restaurantId)
             getRest(restId)
-        }
+        }*/
 
+        if(state !== null){
+            const {param} = state;
+            console.log("getrestid")
+            console.log(param)
+            //console.log(restaurantId)
+            setRestaurantName(param.name);
+            getRest(param)
+        }
     }
 
     async function getRest(restaurantId) {
@@ -67,6 +83,8 @@ export default function RestaurantRegistration() {
     function updateData(restaurant){
         setName(restaurant.name);
         setAddress(restaurant.address);
+        setAddressNum(restaurant.number);
+        setBank_address(restaurant.bank_address);
         setAperturaBool(restaurant.closed);
         let orario = restaurant.open_times;
         let day = "";
@@ -98,14 +116,24 @@ export default function RestaurantRegistration() {
                     break;
             }
         }
-        setCityId(restaurant.city_id);
+       setCurrCity(restaurant.city_id);
     }
 
     async function getCity(){
         let resp = await getCities();
         if (resp.status === 200) {
             let values = await resp.json();
-            setCityList(values);
+            setAllCitiesList(values);
+            //console.log(values);
+
+            let tmpList = [];
+            values.map(val =>(
+                tmpList = tmpList.concat(val.nation)
+            ));
+            const withoutDuplicates = [...new Set(tmpList)];
+            setNationList(withoutDuplicates);
+
+            getCityList(values, values[0].nation);
         }
     }
 
@@ -116,6 +144,29 @@ export default function RestaurantRegistration() {
             let values = await response.json();
             setUser(values);
         }
+    }
+
+    async function getCityList(list, nation){
+        let tmpList= []
+        list.map(val =>{
+            if(val.nation === nation)
+                tmpList = tmpList.concat(val)
+        });
+        setCityList(tmpList);
+        setCurrCity(tmpList[0].id);
+    }
+
+    const handleCurrNationChange = async e =>{
+        e.preventDefault();
+        let nation = e.target.value
+        setCurrNation(nation);
+        getCityList(allCitiesList, nation);
+    }
+
+    const handleCurrCityChange = async e =>{
+        e.preventDefault();
+        let nation = e.target.value
+        setCurrCity(nation);
     }
 
     const handleLunTime = (newValue) => {
@@ -153,14 +204,11 @@ export default function RestaurantRegistration() {
     }
 
     async function newRest(){
-        const response = await registerNewRestaurant(token,{
+        let obj = {
 
             "name": name,
             "address": address,
-            "coords": {
-                "latitude": 0,
-                "longitude": 0
-            },
+            "number": addressNum,
             "open_times": [
                 {
                     "day": "lunedi",
@@ -192,10 +240,12 @@ export default function RestaurantRegistration() {
                 }
             ],
             "closed": aperturaBool,
-            "city_id": cityId,
-            "owner_id": user
+            "city_id": currCity,
+            "bank_address": bank_address
 
-        });
+        };
+        console.log(obj);
+        const response = await registerNewRestaurant(token,obj);
         if (response.status === 200) {
             let values = await response.json()
         }
@@ -211,6 +261,7 @@ export default function RestaurantRegistration() {
 
             "name": name,
             "address": address,
+            "number": addressNum,
             "coords": {
                 "latitude": 0,
                 "longitude": 0
@@ -246,8 +297,9 @@ export default function RestaurantRegistration() {
                 }
             ],
             "closed": aperturaBool,
-            "city_id": cityId,
-            "owner_id": user,
+            "city_id": currCity,
+            "owner_id": user.id,
+            "bank_address": bank_address,
             "id": restaurantId
 
         }, restaurantId);
@@ -268,7 +320,7 @@ export default function RestaurantRegistration() {
             </div>
 
           <form className="Auth-form-content card" onSubmit={handleSubmit}>
-            <h3 className="Auth-form-title">{(name === "")? (<div>Registra il tuo ristorante</div>): (<div>Modifica il ristorante {name}</div>)}</h3>
+            <h3 className="Auth-form-title">{(restaurantName === "")? (<div>Registra il tuo ristorante</div>): (<div>Modifica il ristorante {restaurantName}</div>)}</h3>
             <div className="form-group mt-3">
               <h5>Nome</h5>
               <input
@@ -285,10 +337,27 @@ export default function RestaurantRegistration() {
                 type="text"
                 value={address}
                 className="form-control mt-1"
-                placeholder="Inserisci la Via/piazza/"
+                placeholder="Via Roma"
                 onChange={e => setAddress(e.target.value)}
               />
+                <input
+                    type="number"
+                    value={addressNum}
+                    className="form-control mt-1"
+                    placeholder="5"
+                    onChange={e => setAddressNum(e.target.value)}
+                />
             </div>
+              <div className="form-group mt-3">
+                  <h5>Coordinate bancarie</h5>
+                  <input
+                      type="text"
+                      value={bank_address}
+                      className="form-control mt-1"
+                      placeholder="IT60X0542811101000000123456"
+                      onChange={e => setBank_address(e.target.value)}
+                  />
+              </div>
             <div className="form-group mt-3">
                 <FormControl>
                     <FormLabel id="demo-radio-buttons-group-label">Stato</FormLabel>
@@ -355,17 +424,20 @@ export default function RestaurantRegistration() {
                       </LocalizationProvider>
                   </div>
               </div>
-            <div className="form-group mt-3">
-                <h5>Città</h5>
-                <select className="form-select" aria-label="Default select example" value={cityId} onChange={e => setCityId(e.target.value)}>
-                    {cityList.map((e, key) => {
-                        return <option key={key} value={e.id}>{e.name}</option>;
-                    })}
-                </select>
-                <button type="button" className="btn btn-secondary bi bi-plus" onClick={event => {navigate("/cityregistration")}}>
-                   + Agg. Città
-                </button>
-            </div>
+              <div className="form-group mt-4">
+                  <label>Seleziona una nazione</label>
+                  <select className="form-select" aria-label="Default select example" value={currNation} onChange={handleCurrNationChange}>
+                      {nationList.map(nation => {
+                          return <option key={nation} value={nation}>{nation}</option>;
+                      })}
+                  </select>
+                  <label>Seleziona una città</label>
+                  <select className="form-select" aria-label="Default select example" value={currCity} onChange={handleCurrCityChange}>
+                      {cityList.map(city => {
+                          return <option key={city.id} value={city.id}>{city.name}</option>;
+                      })}
+                  </select>
+              </div>
             <div className="d-grid gap-2 mt-3">
               <button type="submit" className="btn btn-primary">
                 Invia

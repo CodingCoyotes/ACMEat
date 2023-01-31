@@ -35,6 +35,7 @@
 % These packages are all incorporated in the memoir class to one degree or another...
 \usepackage{listings,multicol}
 \usepackage{caption}
+\usepackage{comment}
 
 \usepackage{graphicx}
 \graphicspath{ {./images/} }
@@ -173,46 +174,25 @@ allcolors={BrickRed}
 
 \section{Introduzione}
 
-\subsection{Descrizione del dominio e del problema}
+\clearpage
+
+\section{Descrizione del dominio e del problema}
+\label{intro}
 La società ACMEat propone ai propri clienti un servizio che permette di selezionare un menu da uno fra un insieme di locali convenzionati e farselo recapitare a domicilio.\\
 Per poter usufruire del servizio il cliente deve inizialmente selezionare un comune fra quelli nei quali il servizio è attivo. A fronte di questa selezione ACMEat presenta la lista dei locali convenzionati che operano in quel comune e dei menù che offrono. Il cliente può quindi specificare locale e menù di suo interesse e una fascia oraria per la consegna (si tratta di fasce di 15 minuti tra le 12 e le 14 e tra le 19 e le 21).\\
 Segue quindi una fase di pagamento che viene gestita attraverso un istituto bancario terzo al quale il cliente viene indirizzato. A fronte del pagamento l’istituto rilascia un token al cliente il quale lo comunica ad ACMEat, che a sua volta lo usa per verificare con la banca che il pagamento sia stato effettivamente completato. A questo punto l’ordine diventa operativo. I clienti possono comunque ancora annullare l’ordine ma non più tardi di un’ora prima rispetto all’orario di consegna. In tal caso ACMEat chiede alla banca l’annullamento del pagamento.\\
 ACMEat conosce tutti i locali convenzionati nei vari comuni nei quali opera e i loro giorni e orari di operatività. Nel caso in cui un locale non sia disponibile in un giorno in cui dovrebbe normalmente essere aperto è responsabilità del locale stesso contattare ACMEat entro le 10 del mattino comunicando tale indisponibilità. Entro tale orario vanno anche comunicati cambiamenti dei menu proposti (in mancanza di tale comunicazione si assume che siano disponibili gli stessi del giorno precedente). I locali vengono anche contattati ad ogni ordine per verificare che siano effettivamente in grado di far fronte alla richiesta del cliente. In caso negativo l’accettazione dell’ordine si interrompe prima che si passi alla fase di pagamento.\\
 Per la consegna ACMEat si appoggia a più società esterne: per ogni consegna vengono contattate tutte le società che abbiano sede entro 10 chilometri dal comune interessato specificando: indirizzo del locale dove ritirare il pasto, indirizzo del cliente cui recapitarlo e orario previsto di consegna. A fronte di questa richiesta le società devono rispondere entro 15 secondi specificando la loro disponibilità e il prezzo richiesto; ACMEat sceglierà fra le disponibili che avranno risposto nel tempo richiesto quella che propone il prezzo più basso. Nel caso in cui nessuna società di consegna sia disponibile l’ordine viene annullato prima che si passi alla fase di pagamento.
 
-\subsection{Workflow e artefatti}
-Si modellino le comunicazioni dello scenario sopra esposto usando una coreografia, si discutano le sue proprietà di connectedness ed eventualmente si raffini la coreografia per migliorare tali proprietà. Si proietti la coreografia in un sistema di ruoli.\\
-Utilizzando uno o più diagrammi di collaborazione BPMN si modelli l’intera realtà descritta compresi i dettagli di ogni partecipante (usando il processo del ruolo corrispondente come guida). Tale modellazione ha scopo documentativo quindi il livello di dettaglio deve essere consistente con tale scopo.\\
-Si progetti una SOA per la realizzazione del sistema e la si documenti utilizzando UML (eventualmente con opportuni profili, ad esempio TinySOA).\\
-Si realizzi il sistema usando come tecnologie un BPMS (Camunda), Jolie e API Rest, coi seguenti vincoli:
-\begin{itemize}
-\item Il servizio ACMEat, almeno per la parte di human workflow, deve rendere accessibili capabilities realizzate attraverso il BPMS;
-\item i servizi esterni ad ACMEat devono essere (almeno): GIS, servizi bancari, locali e società di consegna;
-\item i servizi di cui sopra vanno implementati (con logica elementare) come parte del progetto;
-\item i servizi bancari devono essere realizzati in Jolie;
-\item almeno un servizio va realizzato con API Rest.
-\end{itemize}
-I modelli di processo BPMN da utilizzare per il BPMS devono essere consistenti con la modellazione a scopo documentativo precedentemente realizzata; volendo si può anche scegliere di dettagliare compiutamente già dal primo modello le pool eseguibili. Quindi nel primo caso si avrebbe un primo modello BPMN documentativo e poi tanti modelli BPMN eseguibili quanti i partecipanti realizzati attraverso BPMS; in alternativa si avrebbe un unico modello BPMN con le pool eseguibili completamente dettagliate e gli altri partecipanti dettagliati a livello documentativo.\\
-Il dialogo fra Jolie e BPMS deve avvenire via SOAP, si veda il sito del corso alla pagina delle risorse per informazioni ulteriori.
-
-\subsection{Consegna e discussione}
-\textbf{Gruppi}: il progetto va realizzato in gruppi di 2/3 persone.\\
-\textbf{Tempi}: Il progetto va consegnato prima che inizino le lezioni dell’A.A. 2022/23.\\
-\textbf{Materiale da consegnare}: relazione che descrive il lavoro fatto nelle varie fasi di modellazione e sviluppo, inclusi i vari diagrammi prodotti: coreografia e sistema proiettato, diagramma/i UML, diagramma/i di processo BPMN, export del progetto del BPMS, sorgenti dei servizi Jolie ed eventuali sorgenti aggiuntivi.\\
-\textbf{Modalità  di consegna}: via email con allegati. Se la dimensione degli allegati fosse eccessiva si consiglia di utilizzare servizi quali wetransfer, dropbox o similari.\\
-\textbf{Discussione del progetto}: la discussione avviene su richiesta. Alla discussione devono presenziare tutti i membri del gruppo. La valutazione è personale, il che vuol dire che i partecipanti di uno stesso gruppo possono ottenere voti differenti fra loro. Queste specifiche non possono considerarsi definitive e verranno corrette e/o integrate quando necessario.
-
-\subsection{Opzioni}
-Fermo restando che la corretta realizzazione del progetto proposto senza la parte opzionale permette di ottenere comunque il massimo punteggio, viene proposta una consegna aggiuntiva da considerarsi opzionale:
-\begin{itemize}
-\item Modellazione della coreografia anche attraverso un diagramma di coreografia BPMN.
-\end{itemize}
-
 \clearpage
 
-\section{Coreografia}
+\section{Modellazione delle comunicazioni}
 
-\begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1]
+La prima fase di lavoro ha visto la realizzazione di una \emph{coreografia} (riportata in Lst.~\ref{coreo}) con l'obiettivo di modellare le comunicazioni dello scenario descritto nella Sez.~\ref{intro}. Tale coreografia è stata iterativamente raffinata in modo da migliorare il più possibile le sue proprietà di \emph{correctedness}; per motivi di spazio, viene riportata solo l'ultima coreografia frutto di questo lavoro di raffinamento. La coreografia è stata poi proiettata in un \emph{sistema di ruoli}, riportato nella Sez.~\ref{sdr}, in cui vengono distinti i seguenti ruoli: \emph{ACMEat}, la \emph{banca}, il \emph{cliente}, il \emph{fattorino}, il \emph{ristorante} e il \emph{servizio di spedizione}. Infine, viene riportata una modellazione della coreografia anche attraverso un diagramma di coreografia BPMN.
+
+\subsection{Coreografia}
+
+\begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1,label=coreo,caption=Coreografia dello scenario di utilizzo di ACMEat]
 Coreografia :== (
 	CoreografiaRichiestaMenu |
 	CoreografiaOrdine |
@@ -344,12 +324,14 @@ ModificaInformazioniLocali :==  (
 
 \ldots
 
-\subsection{Proiezioni}
-
 \clearpage
+
+\subsection{Sistema di Ruoli}
+\label{sdr}
+
 \subsubsection{ACMEat}
 
-\begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1]
+\begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1,caption=Proiezione della coreografia relativamente ad ACMEat]
 Coreografia :== (
 	CoreografiaRichiestaMenu |
 	CoreografiaOrdine |
@@ -485,7 +467,7 @@ ModificaInformazioniLocali :==  (
 
 \subsubsection{Banca}
 
-\begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1]
+\begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1,caption=Proiezione della coerografia relativamente alla banca]
 Coreografia :== (
 	CoreografiaRichiestaMenu |
 	CoreografiaOrdine |
@@ -624,7 +606,7 @@ ModificaInformazioniLocali :== (
 
 \subsubsection{Cliente}
 
-\begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1]
+\begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1, caption=Proiezione della coreografia relativamente al cliente]
 Coreografia :== (
 	CoreografiaRichiestaMenu |
 	CoreografiaOrdine |
@@ -766,7 +748,7 @@ ModificaInformazioniLocali :== (
 
 \subsubsection{Fattorino}
 
-\begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1]
+\begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1, caption=Proiezione della coreografia relativamente al fattorino]
 Coreografia :== (
 	CoreografiaRichiestaMenu |
 	CoreografiaOrdine |
@@ -905,7 +887,7 @@ ModificaInformazioniLocali :== (
 
 \subsubsection{Ristorante}
 
-\begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1]
+\begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1, caption=Proiezione della coreografia relativamente al ristorante]
 Coreografia :== (
 	CoreografiaRichiestaMenu |
 	CoreografiaOrdine |
@@ -1046,7 +1028,7 @@ ModificaInformazioniLocali :== (
 
 \subsubsection{Servizio di spedizione}
 
-\begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1]
+\begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1, caption=Proiezione della coreografia relativamente al servizio di spedizione]
 Coreografia :== (
 	CoreografiaRichiestaMenu |
 	CoreografiaOrdine |
@@ -1180,5 +1162,124 @@ ModificaInformazioniLocali :== (
 	)
 ) 
 \end{lstlisting}
+
+\clearpage
+
+\section{Documentazione}
+
+Durante la seconda fase di lavoro è stato realizzanto un diagramma di collaborazione BPMN (Fig.~\ref{bpmn}) con l'obiettivo di modellare l'intera realtà descritta a scopo documentativo, compresi i dettagli di ogni partecipante. Tale diagramma e la relativa export \verb|.png| sono forniti in allegato a questa relazione.
+
+\begin{figure}[!ht]
+\includegraphics[width=\textwidth]{bpmn}
+\caption{Diagramma di collaborazione BPMN}
+\label{bpmn}
+\end{figure}
+
+Di seguito, riportiamo alcuni estratti rilevanti di questo diagramma.
+
+\begin{figure}[!ht]
+\begin{center}
+\fbox{\includegraphics[scale=0.5]{bpmn1}}
+\caption{Scambio di messaggi iniziale fra un cliente e ACMEat}
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\fbox{\includegraphics[scale=0.5]{bpmn2}}
+\vspace*{0.5cm}\\
+\fbox{\includegraphics[scale=0.5]{bpmn3}}
+\caption{Scambio di messaggi fra ACMEat e un ristorante per verificarne la disponibilità}
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\fbox{\includegraphics[scale=0.5]{bpmn4}}
+\vspace*{0.5cm}\\
+\fbox{\includegraphics[scale=0.5]{bpmn5}}
+\caption{Scelta del servizio di spedizione all'interno di ACMEat}
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\fbox{\includegraphics[width=\textwidth]{bpmn6}}
+\caption{Gestione pagamento dopo redirezione cliente da parte di ACMEat}
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\fbox{\includegraphics[width=\textwidth]{bpmn7}}
+\caption{Gestione (annullamento) ordine da parte di ACMEat }
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\fbox{\includegraphics[width=\textwidth]{bpmn8}}
+\fbox{\includegraphics[scale=0.5]{bpmn9}}
+\caption{Gestione richiesta aggiornamento informazioni ristorante da parte di ACMEat (sopra) e del ristorante (sotto)}
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\fbox{\includegraphics[scale=0.5]{bpmn10}}
+\caption{Gestione pagamento da parte della banca}
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\fbox{\includegraphics[scale=0.5]{bpmn11}}
+\caption{Verifica token da parte di ACMEat}
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\fbox{\includegraphics[width=\textwidth]{bpmn12}}
+\caption{Gestione rimborsi e pagamenti da parte della banca}
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\fbox{\includegraphics[scale=0.5]{bpmn13}}
+\caption{Notifica disponibilità servizio di spedizione}
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\fbox{\includegraphics[width=\textwidth]{bpmn14}}
+\caption{Gestione consegna da parte di servizio di spedizione e fattorino}
+\end{center}
+\end{figure}
+
+\clearpage
+
+\section{Progettazione}
+
+La terza fase di lavoro ha visto la progettazione di una SOA per la realizzazione del sistema, documentata utilizzando UML.
+
+\clearpage
+
+\section{Sviluppo}
+
+La quarta fase di lavoro ha visto la realizzazione del sistema. Sono state usate come tecnologie un BPMS (Camunda), Jolie e API Rest. In particolare:
+\begin{itemize}
+\item il servizio ACMEat rende accessibili capabilities realizzate attraverso il BPMS;
+\item i servizi esterni ad ACMEat sono GIS, servizi bancari, locali e società di consegna;
+\item i servizi bancari sono realizzati in Jolie;
+\item GIS, i locali e le società di consegna sono realizzati con API Rest.
+\item il dialogo fra Jolie e BPMS avviene via SOAP
+\end{itemize}
+
+\clearpage
+
+\section{Conclusioni}
 
 \end{document}

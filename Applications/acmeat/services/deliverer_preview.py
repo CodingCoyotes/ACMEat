@@ -5,18 +5,18 @@ import requests
 import json
 
 
-def deliverer_preview(order_id, success):
+def deliverer_preview(order_id, success, paid, payment_success, TTW, found_deliverer):
     print(f"[{order_id.value}] Order ready for delivery")
     print(f"[{order_id.value}] Starting deliverer preview routine...")
     GEOLOCATE_URL = setting_required("GEOLOCATE_SERVICE")
     candidates = []
-    #TODO: add a 15s timer
+    # TODO: add a 15s timer
     with Session(future=True) as db:
         order: Order = db.query(Order).filter_by(id=order_id.value).first()
         if not order:
-            return {"order_id": order_id.value, "success":success.value}
+            return {"order_id": order_id.value, "success": success.value}
         if order.status.value > OrderStatus.w_deliverer_ok.value:
-            return {"order_id": order_id.value, "success":success.value}
+            return {"order_id": order_id.value, "success": success.value}
         restaurant: Restaurant = order.contents[0].menu.restaurant
         deliverers: Deliverer = db.query(Deliverer).all()
         search_radius = 10  # Search radius in km, around the restaurant
@@ -42,28 +42,37 @@ def deliverer_preview(order_id, success):
             if data["distance_km"] < search_radius:
                 candidates.append(deliverer)
         if len(candidates) == 0:
-            order.status = OrderStatus.cancelled
-        if len(candidates) == 1:
+            found_deliverer.value = False
+        elif len(candidates) == 1:
             order.deliverer_id = candidates[0].id
+            found_deliverer.value = True
         else:
             preview = []
             for candidate in candidates:
                 candidate: Deliverer
-                r = requests.post(candidate.api_url + "/api/delivery/v1/preview",
-                                  headers={"Content-Type": "application/json",
-                                           "Accept": "application/json"}, data=json.dumps({
-                        "api_key": candidate.external_api_key,
-                        "request": {
-                            "cost": 0,
-                            "receiver": f"{order.nation};{order.city};{order.address};{order.number}",
-                            "source": f"{restaurant.city.nation};{restaurant.city.name};{restaurant.address};{restaurant.number}",
-                            "source_id": str(restaurant.id),
-                            "delivery_time": order.delivery_time.timestamp()
-                        }
-                    }))
+                try:
+                    r = requests.post(candidate.api_url + "/api/delivery/v1/preview",
+                                      headers={"Content-Type": "application/json",
+                                               "Accept": "application/json"}, data=json.dumps({
+                            "api_key": candidate.external_api_key,
+                            "request": {
+                                "cost": 0,
+                                "receiver": f"{order.nation};{order.city};{order.address};{order.number}",
+                                "source": f"{restaurant.city.nation};{restaurant.city.name};{restaurant.address};{restaurant.number}",
+                                "source_id": str(restaurant.id),
+                                "delivery_time": order.delivery_time.timestamp()
+                            }
+                        }), timeout=15)
+                except requests.exceptions.Timeout:
+                    continue
                 preview.append({"deliverer": candidate, "cost": r.json()['cost']})
-            sorted_by_price = sorted(preview, key=lambda d: d['cost'])
-            order.deliverer_id = sorted_by_price[0]["deliverer"].id
+            if len(preview) == 0:
+                found_deliverer.value = False
+            else:
+                found_deliverer.value = True
+                sorted_by_price = sorted(preview, key=lambda d: d['cost'])
+                order.deliverer_id = sorted_by_price[0]["deliverer"].id
         db.commit()
     print(f"[{order_id.value}] deliverer preview routine complete!")
-    return {"order_id": order_id.value, "success":success.value}
+    return {"order_id": order_id.value, "success": success.value, "paid": paid.value,
+            "payment_success": payment_success.value, "TTW": TTW.value, "found_deliverer": found_deliverer.value}

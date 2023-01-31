@@ -3,14 +3,14 @@ from acmeat.database.db import Session
 import time
 
 
-def restaurant_confirmation(order_id, success):
+def restaurant_confirmation(order_id, success, paid, payment_success, TTW, restaurant_accepted):
     print(f"[{order_id.value}] Starting restaurant confirmation routine")
-    success.value = False
-    # TODO: Consider changing this to a message-based approach
+    success.value = True
     with Session(future=True) as db:
         order: Order = db.query(Order).filter_by(id=order_id.value).first()
-        if not order:
-            pass
+        if order.status.value == OrderStatus.cancelled.value:
+            restaurant_accepted.value = False
         elif order.status.value >= OrderStatus.w_deliverer_ok.value:
-            success.value = True
-    return {"order_id":order_id.value, "success":success.value}
+            restaurant_accepted.value = True
+    return {"order_id": order_id.value, "success": success.value, "paid": paid.value,
+            "payment_success": payment_success.value, "TTW": TTW.value, 'restaurant_accepted': restaurant_accepted.value}

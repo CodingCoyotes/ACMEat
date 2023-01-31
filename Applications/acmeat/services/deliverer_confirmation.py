@@ -4,14 +4,14 @@ import requests
 import json
 
 
-def deliverer_confirmation(order_id, success):
+def deliverer_confirmation(order_id, success, paid, payment_success, TTW):
     print(f"[{order_id.value}] Starting deliverer confirmation routine...")
     with Session(future=True) as db:
         order: Order = db.query(Order).filter_by(id=order_id.value).first()
-        #if not order:
+        # if not order:
         #    return {"order_id": order_id.value}
         if order.status.value > OrderStatus.w_deliverer_ok.value:
-            return {"order_id": order_id.value, "success":success.value}
+            return {"order_id": order_id.value, "success": success.value}
         deliverer: Deliverer = order.deliverer
         restaurant: Restaurant = order.contents[0].menu.restaurant
         r = requests.post(deliverer.api_url + "/api/delivery/v1",
@@ -30,4 +30,5 @@ def deliverer_confirmation(order_id, success):
         order.status = OrderStatus.confirmed_by_thirds
         db.commit()
     print(f"[{order_id.value}] deliverer confirmation routine complete!")
-    return {"order_id": order_id.value, "success": success.value}
+    return {"order_id": order_id.value, "success": success.value, "paid": paid.value,
+            "payment_success": payment_success.value, "TTW": TTW.value}

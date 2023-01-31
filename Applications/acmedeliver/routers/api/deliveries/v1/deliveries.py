@@ -87,7 +87,7 @@ async def create_delivery(delivery_request: acmedeliver.schemas.edit.ClientDeliv
         raise errors.Forbidden
     user = db.query(models.User).first()
     return quick_create(db, models.Delivery(
-        cost=calculate_cost(delivery_request.request.source, delivery_request.request.receiver),
+        cost=round(calculate_cost(delivery_request.request.source, delivery_request.request.receiver), 2),
         receiver=delivery_request.request.receiver,
         delivery_time=delivery_request.request.delivery_time,
         deliverer_id=user.id, client_id=target.id,
@@ -105,7 +105,7 @@ async def create_delivery(delivery_request: acmedeliver.schemas.edit.ClientDeliv
     if not target:
         raise errors.Forbidden
     return acmedeliver.schemas.edit.DeliveryPreviewCost(
-        cost=calculate_cost(delivery_request.request.source, delivery_request.request.receiver))
+        cost=round(calculate_cost(delivery_request.request.source, delivery_request.request.receiver), 2))
 
 
 @router.put("/{delivery_id}", response_model=acmedeliver.schemas.read.DeliveryRead)

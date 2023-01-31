@@ -68,6 +68,7 @@ class Order(Base):
     city = Column(String, nullable=False)
     address = Column(String, nullable=False)
     number = Column(String, nullable=False)
+    camunda_id = Column(String, nullable=False)
 
     user_id = Column(UUID(as_uuid=True), ForeignKey("user.id"))
     user = relationship("User", back_populates="orders")

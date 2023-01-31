@@ -14,7 +14,9 @@ class OrderStatus(enum.Enum):
     confirmed_by_thirds = 3
     cancelled = 4
     w_payment = 5
-    w_kitchen = 6
-    w_transport = 7
-    delivering = 8
-    delivered = 9
+    w_cancellation = 6
+    w_kitchen = 7
+    w_transport = 8
+    delivering = 9
+    delivered = 10
+#TODO: Aggiungere un enum per l'attesa dell'utente

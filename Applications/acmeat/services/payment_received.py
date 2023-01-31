@@ -1,3 +1,5 @@
+import datetime
+
 from acmeat.database.models import OrderStatus, Order
 from acmeat.database.db import Session
 import requests
@@ -39,7 +41,6 @@ def getConfirm(sid, token):
     response = requests.post(BANK_URI, data=generate_soap(payload), headers={'content-type': 'text/xml',
                                                                              'SOAPAction': '"/operationReport"'})
     xml = BeautifulSoup(response.content, 'xml')
-    print(xml.contents)
     result = xml.find("successfull").text
     data = {}
     if result == "true":
@@ -47,22 +48,50 @@ def getConfirm(sid, token):
     return {"result": result, "data": data}
 
 
-def payment_received(order_id, success):
+def payment_received(order_id, success, paid, payment_success, TTW):
     print(f"[{order_id.value}] Starting payment verification routine...")
     with Session(future=True) as db:
         order: Order = db.query(Order).filter_by(id=order_id.value).first()
         payment = order.payment[0]
         sid = login()
         if payment.verified:
-            return {"order_id": order_id.value, "success": success.value}
+            payment_success.value = True
+            paid.value = True
+            current_time = datetime.datetime.now()
+            target_time = order.delivery_time
+            difference = target_time - current_time
+            if difference.total_seconds() < 0:
+                TTW.value = f"PT10S"
+            else:
+                # TTW.value = f"PT{difference.total_seconds()}S"
+                TTW.value = f"PT10S"
+            return {"order_id": order_id.value, "success": success.value, "paid": paid.value,
+                    "payment_success": payment_success.value, "TTW": TTW.value}
         result = getConfirm(sid, payment.token)
         if result["result"] == "true":
-            #if float(result["data"]["amount"]) != order.restaurant_total + order.deliverer_total:
-            #    # Che si fa se il pagamento è inferiore? Si cancella l'ordine? Si rimborsa la cifra e si richiede un nuovo pagamento?
-            #    pass
-            #else:
-            print(f"[{order_id.value}] payment verification complete!")
-            order.status = OrderStatus.w_kitchen
-            payment.verified = True
-            db.commit()
-    return {"order_id": order_id.value, "success": success.value}
+            paid.value = True
+            if float(result["data"]["amount"]) != order.restaurant_total + order.deliverer_total:
+                print(f"[{order_id.value}] Mismatching amounts in order payment. Aborting.")
+                payment_success.value = False
+                pass
+            else:
+                # TODO: al momento il TTW viene impostato di 10s, in produzione bisognerà usare il sistema corretto.
+                current_time = datetime.datetime.now()
+                target_time = order.delivery_time
+                difference = target_time - current_time
+                if difference.total_seconds() < 0:
+                    TTW.value = f"PT10S"
+                else:
+                    # TTW.value = f"PT{difference.total_seconds()}S"
+                    TTW.value = f"PT10S"
+                print(TTW.value)
+                order.status = OrderStatus.w_cancellation
+                payment.verified = True
+                db.commit()
+                payment_success.value = True
+                print(f"[{order_id.value}] payment verification complete!")
+        else:
+            paid.value = False
+            payment_success.value = False
+    return {"order_id": order_id.value, "success": success.value, "paid": paid.value,
+            "payment_success": payment_success.value, "TTW": TTW.value}

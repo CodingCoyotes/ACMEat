@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import sys
 import typing
 from threading import Thread
 
@@ -39,6 +39,7 @@ class Worker:
         :param max_tasks: Maximum number of tasks the worker fetches at once.
         :param async_response_timeout: Long polling in milliseconds.
         """
+        print("Starting up the ACMEat Camunda External Worker...")
         self.fetch_and_lock = pycamunda.externaltask.FetchAndLock(
             url, worker_id, max_tasks, async_response_timeout=async_response_timeout
         )
@@ -78,6 +79,7 @@ class Worker:
         :param deserialize_values: Whether serializable variables values are deserialized on server
                                    side.
         """
+        print(f"Worker subbed to topic '{topic}'")
         self.fetch_and_lock.add_topic(topic, lock_duration, variables, deserialize_values)
         self.topic_funcs[topic] = func
 
@@ -93,12 +95,22 @@ class Worker:
 
     def run(self):
         """Run the worker."""
+        print(f"All Green, worker ready to start.")
         threadlist = []
         while not self.stopped:
             tasks = self.fetch_and_lock()
             thread = Thread(target=work, args=(self, tasks))
+            print(f"Number of threads: {len(threadlist)}")
             threadlist.append(thread)
             thread.start()
+            newlist = []
+            for t in threadlist:
+                if not t.is_alive():
+                    t.join()
+                else:
+                    newlist.append(t)
+            threadlist = newlist
+
         print("Shutting down worker...")
         for thread in threadlist:
             try:
@@ -140,3 +152,4 @@ def work(worker, tasks):
                 complete_task.add_variable(name=variable, value=value)
             if 'success' not in return_variables.keys() or return_variables['success']:
                 complete_task()
+    sys.exit()

@@ -1,7 +1,10 @@
 import typing
 from uuid import UUID
 from fastapi import APIRouter, Depends, Request
+from pycamunda.message import CorrelateSingle
 from sqlalchemy.orm import Session
+
+from acmeat.configuration import CAMUNDA_URL
 from acmeat.database.enums import OrderStatus
 import acmeat.schemas.read
 from acmeat.authentication import get_current_user
@@ -10,6 +13,8 @@ from acmeat.schemas import *
 from acmeat.crud import *
 from acmeat.dependencies import dep_dbsession
 import acmeat.errors as errors
+import pycamunda
+import pycamunda.processdef
 
 router = APIRouter(
     prefix="/api/orders/v1",
@@ -56,13 +61,22 @@ async def create_order(restaurant_id: str, order_data: acmeat.schemas.edit.Order
         total += m.cost * elem.qty
     order.restaurant_total = total
     db.commit()
-    #Todo: Bisogna far partire la richiesta di conferma al locale e al trasportatore...
-
+    start_instance = pycamunda.processdef.StartInstance(url=CAMUNDA_URL, key='order_confirmation', tenant_id="acmeat")
+    start_instance.add_variable(name='order_id', value=order.id)
+    start_instance.add_variable(name='success', value=False)
+    start_instance.add_variable(name="paid", value=False)
+    start_instance.add_variable(name="payment_success", value=False)
+    start_instance.add_variable(name="TTW", value="PT")
+    start_instance.add_variable(name="found_deliverer", value=False)
+    start_instance.add_variable(name="restaurant_accepted", value=False)
+    camunda_id = start_instance()  # A CONTIENE L'ID DEL JOB
+    order.camunda_id = camunda_id
+    db.commit()
     return order
 
 
 @router.put("/{order_id}", response_model=acmeat.schemas.read.OrderRead)
-async def update_order(order_id: UUID, request:Request, order_data: acmeat.schemas.edit.OrderEdit,
+async def update_order(order_id: UUID, request: Request, order_data: acmeat.schemas.edit.OrderEdit,
                        db: Session = Depends(dep_dbsession),
                        current_user: models.User = Depends(get_current_user)):
     order = quick_retrieve(db, models.Order, id=order_id)
@@ -73,17 +87,27 @@ async def update_order(order_id: UUID, request:Request, order_data: acmeat.schem
     if order.user_id == current_user.id:
         if order_data.status != OrderStatus.cancelled:
             raise errors.Forbidden
-        #Todo: Aggiungi controllo orario
+        if order_data.status.value < OrderStatus.w_cancellation.value:
+            raise errors.Forbidden
+        msg = CorrelateSingle(CAMUNDA_URL, message_name="Message_Abort",
+                              process_instance_id=order.camunda_id
+                              )
+        msg()
+        return order
+    if order.status == OrderStatus.w_restaurant_ok and (order_data.status == OrderStatus.cancelled or order_data.status == OrderStatus.w_deliverer_ok):
         order.status = order_data.status
+        if order_data.status == OrderStatus.w_deliverer_ok:
+            if order_data.status == OrderStatus.w_deliverer_ok:
+                msg = CorrelateSingle(CAMUNDA_URL, message_name="Message_Restaurant",
+                                      process_instance_id=order.camunda_id
+                                      )
+                msg()
         db.commit()
         return order
-    if order.status == OrderStatus.w_restaurant_ok and order_data.status == OrderStatus.cancelled:
-        order.status = order_data.status
-        db.commit()
-        return order
-    if order.status.value > order_data.status.value or order_data.status.value not in [2,7]:
+    if order.status.value > order_data.status.value or order_data.status.value not in [2, 7]:
         raise errors.Forbidden
     order.status = order_data.status
+
     db.commit()
     return order
 
@@ -95,4 +119,8 @@ def pay_order(order_id: UUID, payment_data: acmeat.schemas.edit.PaymentEdit,
     order = quick_retrieve(db, models.Order, id=order_id)
     if not (order.user_id == current_user.id):
         raise errors.Forbidden
+    msg = CorrelateSingle(CAMUNDA_URL, message_name="Message_Payment",
+                          process_instance_id=order.camunda_id
+                          )
+    msg()
     return quick_create(db, models.Payment(bank_id=payment_data.bank_id, order_id=order.id))

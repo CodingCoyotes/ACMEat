@@ -13,3 +13,7 @@ button{
 .carrello{
     background-color: #71d4a6;
 }
+
+.loading{
+    margin: auto;
+}

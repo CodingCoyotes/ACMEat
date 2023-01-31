@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {useAppContext} from "../../Context";
 import {
     getMenu,
@@ -26,6 +26,8 @@ export default function MenuRegistration() {
     const [listIngredienti, setListIngredienti] = useState([]);
     const [nomeIngrediente, setNomeIngrediente] = useState("");
     const [descrizioneIngrediente, setDescrizioneIngrediente] = useState("");
+    const {state} = useLocation();
+
 
     useEffect(() => {
         if (token === null) {
@@ -41,9 +43,8 @@ export default function MenuRegistration() {
 
 
     function getMenuId(){
-        if (localStorage.getItem("id_menu")) {
-            let menuId = localStorage.getItem("id_menu")
-            //setRestaurantId(restId)
+        if (state !== null) {
+            const {menuId} = state;
             console.log("getmenuid")
             console.log(menuId)
             setMenuId(menuId);
@@ -60,9 +61,9 @@ export default function MenuRegistration() {
     }
 
     function getRestaurantId(){
-        if (localStorage.getItem("id_restaurant") &&  restaurantId== null) {
-            let restId = localStorage.getItem("id_restaurant")
-            setRestaurantId(restId);
+        if (state !== null) {
+            const {restaurantId} = state;
+            setRestaurantId(restaurantId);
         }
     }
 
@@ -84,10 +85,10 @@ export default function MenuRegistration() {
     const handleSubmit = async e => {
         e.preventDefault();
         console.log("sono in handlersub")
-        if(localStorage.getItem("id_menu")) {
+        if (state !== null) {
+            const {menuId} = state;
             console.log("ho il menu id")
-            let restId = localStorage.getItem("id_menu")
-            await editMenu(restId);
+            await editMenu(menuId);
         }
         else {
             console.log("non ho il menu id")

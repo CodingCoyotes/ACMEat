@@ -9,7 +9,6 @@ export default function RestaurantListCity() {
     const isDetailedView = "grid";
     const [restaurantsList, setRestaurantsList] = useState([]);
     const [cityName, setCityName] = useState();
-    const [cityId, setCityId] = useState(null);
     const navigate = useNavigate();
     const {state} = useLocation();
     const {param} = state;
@@ -23,17 +22,8 @@ export default function RestaurantListCity() {
     const containerRef = useRef(null);
 
     function getCityId(){
-        /*if (localStorage.getItem("id_city") &&  cityId== null) {
-            let restId = localStorage.getItem("id_city")
-            console.log("ho il city id")
-            console.log(restId)
-            setCityId(restId)
-            getCityFomId(restId)
-            getRest(restId);
-        }*/
         console.log("ho il city id")
         console.log(param);
-        setCityId(param);
         getCityFomId(param)
         getRest(param);
     }
@@ -96,7 +86,7 @@ export default function RestaurantListCity() {
                                 <div className="card-body">
                                     <h5 className="card-title">{item.name}</h5>
                                     <p className="card-text">{item.address}</p>
-                                    <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/dashorder"); localStorage.setItem("id_restaurant", item.id);}}>
+                                    <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/dashorder", { state: { param: item.id }});}}>
                                         Ordina
                                     </button>
                                 </div>

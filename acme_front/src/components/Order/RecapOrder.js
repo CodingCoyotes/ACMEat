@@ -1,16 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useLocation} from "react-router-dom";
 import {useAppContext} from "../../Context";
+import SlotPicker from 'slotpicker';
 import {
     getCities,
-    getMenu,
-    getRestaurant,
     getUserInfo,
-    modifyMenu,
-    registerNewMenu, registerNewOrder,
-    registerNewRestaurant
+    registerNewOrder,
 } from "../Database/DBacmeat";
-import classNames from "classnames";
 import '../css/Dash.css'
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {TimePicker} from "@mui/x-date-pickers/TimePicker";
@@ -33,6 +29,8 @@ export default function RecapOrder() {
     const [currCity, setCurrCity] = useState("");
     const [orderList, setOrderList] = useState([]);
     const [time, setTime] = useState(new Date());
+    const [currHour, setCurrHour] = useState("");
+    const [endHour, setEndHour] =useState("");
     const {state} = useLocation();
     const {list} = state; // Read values passed on state
     const {restaurantId} = state;
@@ -46,7 +44,22 @@ export default function RecapOrder() {
             getCity();
             setOrderList(list);
         }
+        setSlotPicker();
     }, [])
+
+    //https://www.npmjs.com/package/slotpicker?activeTab=readme
+    function setSlotPicker(){
+        var nowTime = new Date();
+        let h = ("0" + nowTime.getHours()).slice(-2);
+        setCurrHour(h+":00");
+        console.log("curr");
+        console.log(h+":00");
+        //nowTime.setHours(nowTime.getHours()+5);
+        //h = ("0" + nowTime.getHours()).slice(-2);
+        //setEndHour(h+":00")
+        //console.log("end");
+        //console.log(h+":00");
+    }
 
     async function getInfo() {
         console.debug(token)
@@ -107,6 +120,12 @@ export default function RecapOrder() {
         setTime(newValue);
     };
 
+    function handleTimePicker(from){
+        console.log("sono in handletimepicker")
+        console.log(from.$d)
+        setTime(from.$d);
+    };
+
     const handleSubmit = async e => {
         e.preventDefault();
         console.log("sono in handlersub")
@@ -135,7 +154,7 @@ export default function RecapOrder() {
             let values = await response.json()
 
         }
-        navigate("/loading");
+        navigate("/dashboard");
 
     }
 
@@ -194,16 +213,25 @@ export default function RecapOrder() {
                     </select>
                 </div>
                 <div className="form-group mt-4">
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <Stack spacing={1}>
-                            <TimePicker
-                                label="Per che ora vuoi ricevere il tuo ordine?"
-                                value={time}
-                                onChange={e => handleTime(e)}
-                                renderInput={(params) => <TextField {...params} />}
-                            />
-                        </Stack>
-                    </LocalizationProvider>
+                    <label>Seleziona una fascia oraria</label>
+                    <SlotPicker
+                        // Required, interval between two slots in minutes, 30 = 30 min
+                        interval={30}
+                        // Required, when user selects a time slot, you will get the 'from' selected value
+                        onSelectTime={(from) => {console.log(from); handleTimePicker(from)}}
+                        // Optional, array of unavailable time slots
+                        //unAvailableSlots={['10:00', '15:30']}
+                        // Optional, 8AM the start of the slots
+                        from={"9:00"}
+                        // Optional, 09:00PM the end of the slots
+                        to={'23:00'}
+                        // Optional, 01:00 PM, will be selected by default
+                        defaultSelectedTime={currHour}
+                        // Optional, selected slot color
+                        selectedSlotColor='#F09999'
+                        // Optional, language of the displayed text, default is english (en)
+                        lang='en'
+                    />
                 </div>
                 <div className="d-grid gap-2 mt-3">
                     <button type="submit" className="btn btn-primary">

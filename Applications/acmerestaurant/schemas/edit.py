@@ -2,8 +2,6 @@ import typing as t
 from uuid import UUID
 from datetime import datetime
 import enum
-
-from acmeat.database.enums import OrderStatus
 from acmerestaurant.database import models
 from acmerestaurant.schemas import base
 
@@ -11,6 +9,20 @@ __all__ = (
     "UserEdit",
     "UserNew"
 )
+
+
+class OrderStatus(enum.Enum):
+    created = 0
+    w_restaurant_ok = 1
+    w_deliverer_ok = 2
+    confirmed_by_thirds = 3
+    cancelled = 4
+    w_payment = 5
+    w_cancellation = 6
+    w_kitchen = 7
+    w_transport = 8
+    delivering = 9
+    delivered = 10
 
 
 class UserEdit(base.ACMEORMModel):

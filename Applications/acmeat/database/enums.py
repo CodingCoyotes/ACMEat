@@ -19,4 +19,3 @@ class OrderStatus(enum.Enum):
     w_transport = 8
     delivering = 9
     delivered = 10
-#TODO: Aggiungere un enum per l'attesa dell'utente

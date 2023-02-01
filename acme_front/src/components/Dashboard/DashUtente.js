@@ -49,6 +49,8 @@ export default function DashUtente(){
         if (response.status === 200) {
             let values = await response.json()
             setUser(values)
+            console.log("utente");
+            console.log(values);
         }
     }
 

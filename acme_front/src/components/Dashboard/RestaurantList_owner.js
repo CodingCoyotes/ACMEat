@@ -28,31 +28,10 @@ export default function RestaurantList_owner({ownerId}) {
         if (response.status === 200) {
             let values = await response.json();
             setUser(values);
-            //console.log(user);
-            getRest(values.id);
+            setRestaurantsList(values.restaurants);
+
         }
     }
-
-    async function getRest(owner_id){
-        let rest = await getRestaurants();
-        if (rest.status === 200) {
-            let list = await rest.json()
-            getMyRest(list, owner_id);
-        }
-    }
-
-    function getMyRest(restaurantsList, owner_id){
-        const newList = []
-        Object.entries(restaurantsList).forEach((entry) => {
-            const [key, value] = entry;
-            if(value.owner_id === owner_id){
-                newList.push(value);
-                //setHoRest(true);
-            }
-            setRestaurantsList(newList);
-        });
-    }
-
 
     return (
         <div>

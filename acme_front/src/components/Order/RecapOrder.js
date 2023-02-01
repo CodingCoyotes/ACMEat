@@ -12,6 +12,11 @@ import {
 } from "../Database/DBacmeat";
 import classNames from "classnames";
 import '../css/Dash.css'
+import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
+import {TimePicker} from "@mui/x-date-pickers/TimePicker";
+import TextField from "@mui/material/TextField";
+import Stack from '@mui/material/Stack';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 
 export default function RecapOrder() {
@@ -27,6 +32,7 @@ export default function RecapOrder() {
     const [currNation, setCurrNation] = useState("");
     const [currCity, setCurrCity] = useState("");
     const [orderList, setOrderList] = useState([]);
+    const [time, setTime] = useState(new Date());
     const {state} = useLocation();
     const {list} = state; // Read values passed on state
     const {restaurantId} = state;
@@ -96,6 +102,11 @@ export default function RecapOrder() {
         console.log(nation);
     }
 
+    const handleTime = (newValue) => {
+        //let time = newValue.toLocaleTimeString();
+        setTime(newValue);
+    };
+
     const handleSubmit = async e => {
         e.preventDefault();
         console.log("sono in handlersub")
@@ -111,7 +122,7 @@ export default function RecapOrder() {
          let info = {
 
              "contents": contentList,
-             "delivery_time": new Date().getTime(),
+             "delivery_time": time,
              "address": indirizzo,
              "number": numCivico,
              "city": currCity,
@@ -131,7 +142,7 @@ export default function RecapOrder() {
     return (
         <div className='container'>
             <div>
-                <button type="button" className="btn btn-primary " onClick={event => {navigate("/dashorder")}}>
+                <button type="button" className="btn btn-primary " onClick={event => {navigate("/dashorder", { state: { param: {restaurantId}.restaurantId }})}}>
                     Indietro
                 </button>
             </div>
@@ -181,6 +192,18 @@ export default function RecapOrder() {
                             return <option key={city.id} value={city.id}>{city.name}</option>;
                         })}
                     </select>
+                </div>
+                <div className="form-group mt-4">
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <Stack spacing={1}>
+                            <TimePicker
+                                label="Per che ora vuoi ricevere il tuo ordine?"
+                                value={time}
+                                onChange={e => handleTime(e)}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </Stack>
+                    </LocalizationProvider>
                 </div>
                 <div className="d-grid gap-2 mt-3">
                     <button type="submit" className="btn btn-primary">

@@ -14,6 +14,7 @@ export default function DashOrder(){
     const [user, setUser] = useState(null);
     const [restaurantName, setRestaurantName] = useState("");
     const [restaurantId, setRestaurantId] = useState("");
+    const [restaurantCity, setRestaurantCity] = useState("");
     const [menuList, setMenuList]  = useState([]);
     const [ordersList, setOrdersList]  = useState([]);
     const [totPrice, setTotPrice] = useState(0);
@@ -45,6 +46,7 @@ export default function DashOrder(){
             let values = await response.json();
             setMenuList(values.menus);
             setRestaurantName(values.name);
+            setRestaurantCity(values.city);
         }
     }
 
@@ -103,7 +105,7 @@ export default function DashOrder(){
     return(
         <div className='container'>
             <div >
-                <button type="button" className="btn btn-primary " onClick={event => {navigate("/dashboard")}}>
+                <button type="button" className="btn btn-primary " onClick={event => {navigate("/restaurantlistcity", { state: { param: restaurantCity.id }})}}>
                     Indietro
                 </button>
             </div>

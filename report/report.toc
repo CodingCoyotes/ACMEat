@@ -3,16 +3,18 @@
 ~\hfill \textbf {Page}\par 
 \thispagestyle {empty}
 \contentsline {section}{\numberline {1}Introduzione}{2}{section.1}%
-\contentsline {subsection}{\numberline {1.1}Descrizione del dominio e del problema}{2}{subsection.1.1}%
-\contentsline {subsection}{\numberline {1.2}Workflow e artefatti}{2}{subsection.1.2}%
-\contentsline {subsection}{\numberline {1.3}Consegna e discussione}{3}{subsection.1.3}%
-\contentsline {subsection}{\numberline {1.4}Opzioni}{4}{subsection.1.4}%
-\contentsline {section}{\numberline {2}Coreografia}{5}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Correctedness}{7}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Proiezioni}{7}{subsection.2.2}%
-\contentsline {subsubsection}{\numberline {2.2.1}ACMEat}{8}{subsubsection.2.2.1}%
-\contentsline {subsubsection}{\numberline {2.2.2}Banca}{11}{subsubsection.2.2.2}%
-\contentsline {subsubsection}{\numberline {2.2.3}Cliente}{14}{subsubsection.2.2.3}%
-\contentsline {subsubsection}{\numberline {2.2.4}Fattorino}{17}{subsubsection.2.2.4}%
-\contentsline {subsubsection}{\numberline {2.2.5}Ristorante}{20}{subsubsection.2.2.5}%
-\contentsline {subsubsection}{\numberline {2.2.6}Servizio di spedizione}{23}{subsubsection.2.2.6}%
+\contentsline {section}{\numberline {2}Descrizione del dominio e del problema}{3}{section.2}%
+\contentsline {section}{\numberline {3}Modellazione delle comunicazioni}{4}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Coreografia}{4}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Correctedness}{6}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Sistema di Ruoli}{7}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}ACMEat}{7}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}Banca}{10}{subsubsection.3.3.2}%
+\contentsline {subsubsection}{\numberline {3.3.3}Cliente}{13}{subsubsection.3.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.4}Fattorino}{16}{subsubsection.3.3.4}%
+\contentsline {subsubsection}{\numberline {3.3.5}Ristorante}{19}{subsubsection.3.3.5}%
+\contentsline {subsubsection}{\numberline {3.3.6}Servizio di spedizione}{22}{subsubsection.3.3.6}%
+\contentsline {section}{\numberline {4}Documentazione}{25}{section.4}%
+\contentsline {section}{\numberline {5}Progettazione}{34}{section.5}%
+\contentsline {section}{\numberline {6}Sviluppo}{35}{section.6}%
+\contentsline {section}{\numberline {7}Conclusioni}{36}{section.7}%

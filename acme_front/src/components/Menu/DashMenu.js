@@ -62,7 +62,7 @@ export default function DashMenu(){
                 <button type="button" className="btn btn-primary " onClick={event => {navigate("/dashboard")}}>
                     Indietro
                 </button>
-                <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/menuregistration");}}>
+                <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/menuregistration", { state: { rest: restaurantId, menuId: null }})}}>
                     Crea un nuovo menù
                 </button>
             </div>
@@ -89,7 +89,7 @@ export default function DashMenu(){
                                     {item.contents.map(i => (
                                         <div className="card-text">{i.name} : {i.desc} </div>
                                     ))}
-                                    <button type="button" className="btn btn-secondary" onClick={event => {navigate("/menuregistration", { state: { restaurantId: restaurantId, menuId: item.id }});}}>
+                                    <button type="button" className="btn btn-secondary" onClick={event => {navigate("/menuregistration", { state: { rest: restaurantId, menuId: item.id }});}}>
                                         Modifica
                                     </button>
                                 </div>

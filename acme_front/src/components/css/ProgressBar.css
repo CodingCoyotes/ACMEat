@@ -1,18 +1,49 @@
-.progressBarContainer {
-    grid-area: slider;
+.App {
+    font-family: sans-serif;
     text-align: center;
-    margin-top: 1px;
-    padding: 1px;
-    font-size: 0.5em;
 }
 
-.progressBar {
-    width: 80%;
-    cursor: pointer;
-    height: 1px;
-    color: rgb(0, 0, 0, 1);
+/* Root of the circle */
+.MuiSvgIcon-root {
+    width: 10px;
 }
 
-input[type="range"]:focus {
-    outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+/* The active circle check */
+.MuiStepIcon-root.MuiStepIcon-completed {
+    color: #E53945;
+}
+
+/* The active circle  */
+.MuiSvgIcon-root.MuiStepIcon-root.MuiStepIcon-active {
+    color: #E53945;
+}
+
+/* Text inside the circle */
+.MuiStepIcon-text {
+    display: none;
+}
+
+/* Color of the circle */
+.MuiStepIcon-root {
+    color: #C4C8C9;
+}
+
+/* Line that connects */
+.MuiStepConnector-alternativeLabel {
+    left: calc(-50% + 5px);
+    right: calc(50% + 5px);
+}
+.MuiStepConnector-line {
+    display: block;
+    border-color: #C4C8C9;
+}
+
+
+/* Font label */
+.MuiStepLabel-label {
+    color: #C4C8C9;
+}
+.MuiStepLabel-label.MuiStepLabel-completed {
+    color: #E53945;
+    font-weight: 500;
 }

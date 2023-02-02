@@ -15,7 +15,7 @@ import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 
-export default function RecapOrder() {
+export default function CheckoutOrdine() {
     console.log("Sono in MenuRegistration");
     const [user, setUser] = useState(null);
     const {token, setToken} = useAppContext();
@@ -123,7 +123,8 @@ export default function RecapOrder() {
     function handleTimePicker(from){
         console.log("sono in handletimepicker")
         console.log(from.$d)
-        setTime(from.$d);
+        setTime((from.$d).toDate());
+        console.log((from.$d).toDate());
     };
 
     const handleSubmit = async e => {

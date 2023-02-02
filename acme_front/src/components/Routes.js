@@ -10,8 +10,9 @@ import DashMenu from "./Menu/DashMenu";
 import MenuRegistration from "./Menu/MenuRegistration";
 import RestaurantListCity from "./Restaurant/RestaurantListCity";
 import DashOrder from "./Order/DashOrder";
-import RecapOrder from "./Order/RecapOrder";
+import CheckoutOrdine from "./Order/CheckoutOrdine";
 import Loading from "./Utils/Loading";
+import CronologiaOrdine from "./Order/CronologiaOrdine";
 
 export default function Routing(){
     return (
@@ -28,7 +29,8 @@ export default function Routing(){
                 <Route path="/menuregistration" element={<MenuRegistration/>}/>
                 <Route path="/restaurantlistcity" element={<RestaurantListCity/>}/>
                 <Route path="/dashorder" element={<DashOrder/>}/>
-                <Route path="/recaporder" element={<RecapOrder/>}/>
+                <Route path="/checkoutordine" element={<CheckoutOrdine/>}/>
+                <Route path="/cronologiaordine" element={<CronologiaOrdine/>}/>
                 <Route path="/loading" element={<Loading/>}/>
             </Routes>
         </Router>

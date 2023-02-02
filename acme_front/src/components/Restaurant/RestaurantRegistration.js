@@ -71,6 +71,8 @@ export default function RestaurantRegistration() {
     }
 
     function updateData(restaurant){
+        console.log("restaurant");
+        console.log(restaurant);
         setName(restaurant.name);
         setAddress(restaurant.address);
         setAddressNum(restaurant.number);

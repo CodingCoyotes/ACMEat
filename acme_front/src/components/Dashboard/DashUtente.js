@@ -12,6 +12,9 @@ export default function DashUtente(){
     const [nationList, setNationList] = useState([]);
     const [currNation, setCurrNation] = useState("");
     const [currCity, setCurrCity] = useState("");
+    const [activeOrderList, setActiveOrderList] = useState([]);
+    const [orderList, setOrderList] = useState([]);
+    const [cronologiaOrdini, setCronologiaOrdini] = useState(false);
 
     const navigate = useNavigate();
 
@@ -51,6 +54,14 @@ export default function DashUtente(){
             setUser(values)
             console.log("utente");
             console.log(values);
+            console.log("ordini");
+            console.log(values.orders);
+
+            if((values.orders).length > 0){
+                setCronologiaOrdini(true);
+                setOrderList(values.orders);
+                getActiveOrders(values.orders);
+            }
         }
     }
 
@@ -65,6 +76,18 @@ export default function DashUtente(){
         setCityList(tmpList);
         setCurrCity(tmpList[0].id);
     }
+
+    async function getActiveOrders(orders){
+        console.log("ordini attivi");
+        let tmpList = []
+        orders.map(ord => {
+            if(ord.status > 0 && ord.status < 10){
+                tmpList = tmpList.concat(ord);
+            }
+        })
+        console.log(tmpList);
+        setActiveOrderList(tmpList);
+    };
 
     const handleCurrNationChange = async e =>{
         e.preventDefault();
@@ -94,28 +117,43 @@ export default function DashUtente(){
         {user ? (
             <h2>Salve {user.name}.</h2>
         ) : (<div>...</div>)}
-        <h2>Effettua subito un ordine!</h2>
-        <form onSubmit={handleSubmit}>
-            <div className="form-group mt-4">
-                <label>Seleziona una nazione</label>
-                <select className="form-select" aria-label="Default select example" value={currNation} onChange={handleCurrNationChange}>
-                    {nationList.map(nation => {
-                        return <option key={nation} value={nation}>{nation}</option>;
-                    })}
-                </select>
-                <label>Seleziona una città</label>
-                <select className="form-select" aria-label="Default select example" value={currCity} onChange={handleCurrCityChange}>
-                    {cityList.map(city => {
-                        return <option key={city.id} value={city.id}>{city.name}</option>;
-                    })}
-                </select>
-            </div>
-            <div className="d-grid gap-2 mt-3">
-                <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/restaurantlistcity", { state:{param: currCity}});}}>
-                    Cerca
-                </button>
+
+
+
+        <form className="Auth-form-content card" onSubmit={handleSubmit}>
+            <h2>Effettua subito un ordine!</h2>
+            <div className="form-group mt-3">
+                <div className="form-group mt-4">
+                    <label>Seleziona una nazione</label>
+                    <select className="form-select" aria-label="Default select example" value={currNation} onChange={handleCurrNationChange}>
+                        {nationList.map(nation => {
+                            return <option key={nation} value={nation}>{nation}</option>;
+                        })}
+                    </select>
+                    <label>Seleziona una città</label>
+                    <select className="form-select" aria-label="Default select example" value={currCity} onChange={handleCurrCityChange}>
+                        {cityList.map(city => {
+                            return <option key={city.id} value={city.id}>{city.name}</option>;
+                        })}
+                    </select>
+                </div>
+                <div className="d-grid gap-2 mt-3">
+                    <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/restaurantlistcity", { state:{param: currCity}});}}>
+                        Cerca
+                    </button>
+                </div>
             </div>
         </form>
-    </div>
+        {(cronologiaOrdini)? (
+            <div className="Auth-form-content">
+                <div className="d-grid gap-2 mt-3">
+                    <button type="button" className="btn btn-secondary red" onClick={event => {navigate("/cronologiaordine", { state:{param: orderList}})}}>
+                        Vai al riepilogo ordini
+                    </button>
+                </div>
+            </div>
+        ): (<div>...</div>)
+        }
+        </div>
     )
 }

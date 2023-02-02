@@ -174,10 +174,16 @@ allcolors={BrickRed}
 
 \section{Introduzione}
 
+Scopo di questa relazione è quello di descrivere il lavoro fatto nelle varie fasi di modellazione e sviluppo del progetto di Ingegneria del Software Orientata ai Servizi, la cui descrizione del dominio e del problema è riportata nella Sez.~\ref{sez:ddp}.\\
+Le fasi di modellazione vengono descritte a partire dalla Sez.~\ref{sez:modellazione}, in cui viene esposta la modellazione delle comunicazioni avvenuta mediante un diagramma di coreografia dell'intero scenario, raffinata iterativamente allo scopo di migliorare quanto possibile le sue proprietà di correctedness, altresì riportate, e la successiva proiezione in un sistema di ruoli; viene inoltre riportato il corrispondente diagramma di coreografia BPMN.\\
+Tale lavoro di modellazione prosegue nella Sez.~\ref{sez:documentazione} con la realizzazione di un diagramma di collaborazione BPMN rappresentante l'intera realtà descritta, compresi i dettagli di ciascun partecipante. Questo diagramma è pensato a scopo documentativo e per tale motivo è stato scelto di riportarlo suddiviso in varie parti, ciascuna con un focus differente relativamente alle varie attività descritte e dettagliatamente commentata.\\
+La Sez.~\ref{sez:progettazione} descrive poi la fase di progettazione della SOA per la realizzazione del sistema, documentata per mezzo di diagrammi UML.\\
+Infine, la Sez.~\ref{sez:sviluppo} descrive il sistema sviluppato, analizzando brevemente il funzionamento di ciascun componente, come configurarlo, e come utlizzare l'applicazione in ambiente di testing, nonché alcune istruzioni illustrative su come effettuare un eventuale deployment in produzione.
+
 \clearpage
 
 \section{Descrizione del dominio e del problema}
-\label{intro}
+\label{sez:ddp}
 La società ACMEat propone ai propri clienti un servizio che permette di selezionare un menu da uno fra un insieme di locali convenzionati e farselo recapitare a domicilio.\\
 Per poter usufruire del servizio il cliente deve inizialmente selezionare un comune fra quelli nei quali il servizio è attivo. A fronte di questa selezione ACMEat presenta la lista dei locali convenzionati che operano in quel comune e dei menù che offrono. Il cliente può quindi specificare locale e menù di suo interesse e una fascia oraria per la consegna (si tratta di fasce di 15 minuti tra le 12 e le 14 e tra le 19 e le 21).\\
 Segue quindi una fase di pagamento che viene gestita attraverso un istituto bancario terzo al quale il cliente viene indirizzato. A fronte del pagamento l’istituto rilascia un token al cliente il quale lo comunica ad ACMEat, che a sua volta lo usa per verificare con la banca che il pagamento sia stato effettivamente completato. A questo punto l’ordine diventa operativo. I clienti possono comunque ancora annullare l’ordine ma non più tardi di un’ora prima rispetto all’orario di consegna. In tal caso ACMEat chiede alla banca l’annullamento del pagamento.\\
@@ -187,283 +193,206 @@ Per la consegna ACMEat si appoggia a più società esterne: per ogni consegna ve
 \clearpage
 
 \section{Modellazione delle comunicazioni}
+\label{sez:modellazione}
 
-La prima fase di lavoro ha visto la realizzazione di una \emph{coreografia} (riportata in Lst.~\ref{coreo}) con l'obiettivo di modellare le comunicazioni dello scenario descritto nella Sez.~\ref{intro}. Tale coreografia è stata iterativamente raffinata in modo da migliorare il più possibile le sue proprietà di \emph{correctedness}; per motivi di spazio, viene riportata solo l'ultima coreografia frutto di questo lavoro di raffinamento. La coreografia è stata poi proiettata in un \emph{sistema di ruoli}, riportato nella Sez.~\ref{sdr}, in cui vengono distinti i seguenti ruoli: \emph{ACMEat}, la \emph{banca}, il \emph{cliente}, il \emph{fattorino}, il \emph{ristorante} e il \emph{servizio di spedizione}. Infine, viene riportata una modellazione della coreografia anche attraverso un diagramma di coreografia BPMN.
+La prima fase di lavoro ha visto la realizzazione di una \emph{coreografia} (riportata in Lst.~\ref{coreo}) con l'obiettivo di modellare le comunicazioni dello scenario descritto nella Sez.~\ref{sez:ddp}. Tale coreografia è stata iterativamente raffinata in modo da migliorare quanto possibile le sue proprietà di \emph{correctedness}; per motivi di spazio, viene riportata solo l'ultima coreografia frutto di questo lavoro di raffinamento. La coreografia è stata poi proiettata in un \emph{sistema di ruoli}, riportato nella Sez.~\ref{sdr}, in cui vengono distinti i seguenti ruoli: \emph{ACMEat}, la \emph{banca}, il \emph{cliente}, il \emph{fattorino}, il \emph{ristorante} e la \emph{società di consegna}. Infine, viene riportata una modellazione della coreografia anche attraverso un diagramma di coreografia BPMN.
 
 \subsection{Coreografia}
 
 \begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1,label=coreo,caption=Coreografia dello scenario di utilizzo di ACMEat]
 Coreografia :== (
-	CoreografiaRichiestaMenu |
-	CoreografiaOrdine |
-	ModificaInformazioniLocali
-)
-
-CoreografiaRichiestaMenu :== (
-	SelezioneComune : Cliente -> ACMEat ;
-	InvioListaLocali : ACMEat -> Cliente
-)
-
-CoreografiaOrdine :==   (
-	Ordine : Cliente -> ACMEat ;
-	Richiesta disponibilità ristorante : ACMEat -> Ristorante;
-	DisponibilitàR: Ristorante -> ACMEat;
-	// Disponibile ?
-	(
-		// No
-		Annullamento procedura : ACMEat -> Cliente
-	) + (
-		// Sì
-		( 
-			Richiesta disponibilità SDS : ACMEat -> SDS;
-			( //In 15 secondi 
-				PreventivoDisponibilità: SDS -> ACMEat +
-				1
-			)
-		)* ;
-	// Lista vuota ?
-	(
-		// Sì
-		AnnullamentoC : ACMEat -> Cliente |
-		AnnullamentoR : ACMEat -> Ristorante ;
-	) + (
-		// No
-		Contatta SDS costo minore: ACMEat -> SDS ;
-		ACK: SDS -> ACMEat;
-		CreazioneRichiestaPagamento: ACMEat -> Banca ;
-		ConfermaCreazioneTransazione: Banca -> ACMEat ;
-		RedirezionePagamento: ACMEat -> Cliente ;
-		// Modellazione timeout 
-		(
-			Pagamento : Cliente -> Banca;
-			InvioTokenC : Banca -> Cliente;
-			InvioTokenA : Cliente -> ACMEat ;
-			RichiestaValidità : ACMEat -> Banca ;
-			ValiditàToken : Banca -> ACMEat ;
-			// Token valido ?
-			(
-				// No
-				ErrorePagamento: ACMEat -> Cliente   |
-				AnnullamentoR : ACMEat -> Ristorante |
-				AnnullamentoS : ACMEat -> SDS        |
-			) + (
-				// Sì
-				AttivazioneOrdineR : ACMEat -> Ristorante |
-				AttivazioneOrdineS : ACMEat -> SDS        |
-				ConfermaOrdine: ACMEat -> Cliente ;
-
-				// Manca meno di un'ora ?
-				(
-					// No
-					// Annullare ?
-					(
-						// Sì
-						AnnullamentoOrdine: Cliente -> ACMEat ;
-						(
-							AnnullamentoPagamento: ACMEat -> Banca;
-							Rimborso: Banca -> Cliente;
-						) |
-						(
-							AnnullamentoR : ACMEat -> Ristorante;
-							RicevutoAnnullamento: Ristorante -> ACMEat;
-						) |
-						(
-							AnnullamentoS : ACMEat -> SDS;
-							RicevutoAnnullamento: SDS -> ACMEat;
-						)
-					) + (
-						// No
-						1
-					)
-				) + (
-					// Sì
-					(
-						PagamentoR : ACMEat -> Banca;
-						RicezionePagamentoR : Banca -> Ristorante;
-					) |
-					(
-						PagamentoS : ACMEat -> Banca;
-						RicezionePagamentoS : Banca -> SDS ;
-					) |
-					(
-						ConsegnaMerceF : Ristorante -> Fattorino ;
-						ConcegnaMerceC : Fattorino -> Cliente;
-						ConfermaRicevutaSpedizione: Fattorino -> ACMEat;
-					)
-				)
-			) + (
-				//Scadenza timer
-				ErrorePagamento: ACMEat -> Cliente |
-				(
-					Annullamento: ACMEat -> Ristorante;
-					RicevutoAnnullamento: Ristorante -> ACMEat;    
-				) |
-				(
-					Annullamento: ACMEat -> Corriere ;
-					RicevutoAnnullamento: Corriere -> ACMEat;
-				)
-			)
-		)
-	)
+	ModificaInformazioniLocali |
+	CoreografiaOrdine
 )
 
 ModificaInformazioniLocali :==  (
 	RichiestaAggiornamento : Ristorante -> ACMEat ;
-	// Prima delle 10 ?
-	(
-		// No
-		RichiestaRifiutata : ACMEat -> Ristorante
-	) + (
-		// Sì
-		RichiestaAccettata : ACMEat -> Ristorante
-	)
+	// Sono passate le 10 ? (Sì/No)
+	RichiestaRifiutata : ACMEat -> Ristorante +
+	RichiestaAccettata : ACMEat -> Ristorante
 )
+
+CoreografiaOrdine :==   (
+	SelezioneComune : Cliente -> ACMEat ;
+	InvioListaLocali : ACMEat -> Cliente ;
+	Ordine : Cliente -> ACMEat ;
+	RichiestaDisponibilitàRistorante : ACMEat -> Ristorante ;
+	ConfermaDisponibilitàRistorante : Ristorante -> ACMEat ;
+	(
+		RifiutoOrdine : ACMEat -> Cliente	// Ristorante non disponibile
+	) + (
+		(
+			RichiestaDisponibilitàSDC : ACMEat -> SDC ;
+			PreventivoDisponibilità: SDC -> ACMEat + 1	// 1: timeout
+		)* ;	// Per ogni SDC entro 10 km
+		(
+			// Lista vuota (Nessun SDC disponibile)
+			AnnullamentoRistorante : ACMEat -> Ristorante;
+			RicevutoAnnullamentoRistorante: Ristorante -> ACMEat ;
+			RifiutoOrdine : ACMEat -> Cliente
+		) + (
+			// Contatta SDC costo minore
+			ContattaSDC : ACMEat -> SDC ;
+			PresaInCarico : SDC -> ACMEat ;
+			RedirezionePagamento: ACMEat -> Cliente ;
+			(
+				Pagamento : Cliente -> Banca ;
+				InvioTokenCliente : Banca -> Cliente ;
+				InvioTokenACMEat : Cliente -> ACMEat ;
+				RichiestaValidità : ACMEat -> Banca ;
+				ValiditàToken : Banca -> ACMEat
+			) + 1;	// 1: timeout
+			(
+				// Token non valido o timeout
+				CoreografiaAnnullamentoOrdine ;
+				RifiutoOrdine : ACMEat -> Cliente
+			) + (
+				// Token valido
+				(
+					AttivazioneOrdineRistorante : ACMEat -> Ristorante ;
+					RicevutaAttivazioneOrdineRistorante: Ristorante -> ACMEat
+				) | (
+					AttivazioneOrdineSDC : ACMEat -> SDC ;
+					RicevutaAttivazioneOrdineSDC: SDC -> ACMEat
+				) ;
+				ConfermaOrdine: ACMEat -> Cliente ;
+				(
+					// Manca piu' di un'ora, annullare ?
+					(
+						// Sì
+						CancellazioneOrdine: Cliente -> ACMEat ;
+						CoreografiaAnnullamentoOrdine |
+						(
+							AnnullamentoPagamento: ACMEat -> Banca ;
+							NotificaAnnullamentoPagamento : Banca -> ACMEat
+						)
+					) + 1	// No
+				) + (
+					// Manca meno di un'ora
+					(
+						PagamentoRistorante : ACMEat -> Banca ;
+						ConfermaPagamentoRistorante: Banca -> ACMEat
+					) | (
+						PagamentoSDC : ACMEat -> Banca ;
+						ConfermaPagamentoSDC: Banca -> ACMEat
+					);
+					ConsegnaMerceFattorino : Ristorante -> Fattorino ;
+					ConcegnaMerceCliente : Fattorino -> Cliente ;
+					ConfermaRicevutaSpedizione: Fattorino -> ACMEat
+				)
+	...
+)
+
+CoreografiaAnnullamentoOrdine :== ((
+		AnnullamentoRistorante : ACMEat -> Ristorante ;
+		RicevutoAnnullamentoRistorante: Ristorante -> ACMEat
+	) | ( 
+		AnnullamentoSDC : ACMEat -> SDC ;
+		RicevutoAnnullamentoSDC : SDC -> ACMEat
+))
 \end{lstlisting}
 
-\subsection{Correctedness}
+\subsection{Proprietà di correctedness}
 
-\ldots
-
-\clearpage
+Durante questa prima fase di lavoro, la coreografia è stata raffinata più volte allo scopo di migliorare tutte e tre le sue proprietà di correctedness, ovvero di composizione sequenziale, scelta, ed usi multipli della stessa operazione; ciò al fine di assicurare che la coreografia funzioni come atteso. In particolare, la correttezza della composizione sequenziale è stata migliorata aggiungendo ovunque possibile degli \emph{ACK}, mentre la correttezza dei punti di scelta è stata assicurata verificando che lo stesso ruolo compaia in ogni transizione iniziale per ogni punto di scelta e che i ruoli dei branches relativi siano gli stessi. La correttezza delle iterazioni è ottenuta rispettando i punti precedenti, in quanto possono essere viste come una combinazione di composizione sequenziali e punti di scelta. A tal proposito, evidenziamo come il blocco alle righe da 22 a 25 sia stato modellato come blocco iterativo ma pensato come blocco parallelo (più società di consegna sono interrogate contemporaneamente), per una limitazione espressiva delle coreografie.
 
 \subsection{Sistema di Ruoli}
 \label{sdr}
 
 \subsubsection{ACMEat}
 
-\begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1,caption=Proiezione della coreografia relativamente ad ACMEat]
+\begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1,caption=Proiezione della coreografia relativamente ad ACMEat, escapeinside={(*@}{@*)}]
 Coreografia :== (
-	CoreografiaRichiestaMenu |
-	CoreografiaOrdine |
-	ModificaInformazioniLocali 
-)  
-
-CoreografiaRichiestaMenu :==  (
-	SelezioneComune@Cliente; 
-	InvioListaLocali@Cliente 
-) 
-
-CoreografiaOrdine :==   ( 
-	Ordine@Cliente ;
-	Richiesta disponibilità ristorante@Ristorante ;
-	DisponibilitàR@Ristorante ;
-	// Disponibile ?
-	(
-		// No
-		Annullamento procedura@Cliente
-	) + (
-		// Sì
-		(
-			Richiesta disponibilità SDS@SDS ; 
-			(
-				// In 15 secondi
-				PreventivoDisponibilità@SDS +
-				1
-			)
-	)* ; 
-	// Lista vuota ? 
-	(
-		// Sì
-		AnnullamentoC@Cliente |
-		AnnullamentoR@Ristorante ;
-	) + (
-		// No
-		Contatta SDS costo minore@SDS ;
-		ACK@SDS ;
-		CreazioneRichiestaPagamento@Banca ;
-		ConfermaCreazioneTransazione@Banca ;
-		RedirezionePagamento@Cliente ;
-		// Modellazione timeout 
-		(
-			1;
-			1;
-			InvioTokenA@Cliente ;
-			RichiestaValidità@Banca ;
-			ValiditàToken@Banca ;
-			// Token valido ?
-			(
-				// No
-				ErrorePagamento@Cliente |
-				AnnullamentoR@Ristorante |
-				AnnullamentoS@SDS |
-			) + (
-				// Sì
-				AttivazioneOrdineR@Ristorante |
-				AttivazioneOrdineS@SDS |
-				ConfermaOrdine@Cliente ;
-				// Manca meno di un'ora ?
-				(
-					// No
-					// Annullare ?
-					(
-						// Sì
-						AnnullamentoOrdine@Cliente;
-						(
-							AnnullamentoPagamento@Banca ;
-							1 ;
-						) |
-						(
-							AnnullamentoR@Ristorante ;
-							RicevutoAnnullamento@RistorantE ;
-						) |
-						(
-							AnnullamentoS@SDS ;
-							RicevutoAnnullamento@SDS ;
-						)
-					) +
-					(
-						// No
-						1
-					) 
-				) +
-				(
-					// Sì
-					(
-						PagamentoR@Banca ;
-						1 ;
-					) |
-					(
-						PagamentoS@Banca ;
-						1 ;
-					) |
-					(
-						1 ;
-						1 ;
-						ConfermaRicevutaSpedizione@Fattorino ;
-					)
-				)
-			) +
-			(
-				//Scadenza timer
-				ErrorePagamento@Cliente |
-				(
-					Annullamento@Ristorante ;
-					RicevutoAnnullamento@Ristorante ;
-				) |
-				(
-					Annullamento@Corriere ;
-					RicevutoAnnullamento@Corriere ;
-				)
-			)
-		)
-	)
-) 
+	ModificaInformazioniLocali |
+	CoreografiaOrdine
+)
 
 ModificaInformazioniLocali :==  (
 	RichiestaAggiornamento@Ristorante ;
-	// Prima delle 10 ?
-	(
-		// No
-		RichiestaRifiutata@Ristorante
-	) +
-	(
-		// Sì
-		RichiestaAccettata@Ristorante
-	) 
-) 
-\end{lstlisting}
+	// Sono passate le 10 ? (Sì/No)
+	(*@$\overline{RichiestaRifiutata}$@*)@Ristorante +
+	(*@$\overline{RichiestaAccettata}$@*)@Ristorante
+)
 
-\clearpage
+CoreografiaOrdine :==   (
+	SelezioneComune@Cliente ;
+	(*@$\overline{InvioListaLocali}$@*)@Cliente ;
+	Ordine@Cliente ;
+	(*@$\overline{RichiestaDisponibilitaRistorante}$@*)@Ristorante ;
+	ConfermaDisponibilitàRistorante@Ristorante ;
+	(
+		(*@$\overline{RifiutoOrdine}$@*)@Cliente	// Ristorante non disponibile
+	) + (
+		(
+			(*@$\overline{RichiestaDisponibilitaSDC}$@*)@SDC ;
+			PreventivoDisponibilità@SDC + 1	// 1: timeout
+		)* ;	// Per ogni SDC entro 10 km
+		(
+			// Lista vuota (Nessun SDC disponibile)
+			(*@$\overline{AnnullamentoRistorante}$@*)@Ristorante ;
+			RicevutoAnnullamentoRistorante@Ristorante ;
+			(*@$\overline{RifiutoOrdine}$@*)@Cliente
+		) + (
+			// Contatta SDC costo minore
+			(*@$\overline{ContattaSDC }$@*)@SDC ;
+			PresaInCarico@SDC ;
+			(*@$\overline{RedirezionePagamento}$@*)@Cliente ;
+			(
+				1 ;
+				1 ;
+				InvioTokenACMEat@Cliente ;
+				(*@$\overline{RichiestaValidita}$@*)@Banca ;
+				ValiditàToken@Banca
+			) + 1;	// 1: timeout
+			(
+				// Token non valido o timeout
+				CoreografiaAnnullamentoOrdine ;
+				(*@$\overline{RifiutoOrdine}$@*)@Cliente
+			) + (
+				// Token valido
+				(
+					(*@$\overline{AttivazioneOrdineRistorante}$@*)Ristorante ;
+					RicevutaAttivazioneOrdineRistorante@Ristorante
+				) | (
+					(*@$\overline{AttivazioneOrdineSDC}$@*)SDC ;
+					RicevutaAttivazioneOrdineSDC@SDC
+				) ;
+				(*@$\overline{ConfermaOrdine:}$@*)Cliente ;
+				(
+					// Manca piu' di un'ora, annullare ?
+					(
+						// Sì
+						CancellazioneOrdine@ACMEat ;
+						CoreografiaAnnullamentoOrdine |
+						(
+							(*@$\overline{AnnullamentoPagamento}$@*)Banca ;
+							NotificaAnnullamentoPagamento@Banca
+						)
+					) + 1	// No
+				) + (
+					// Manca meno di un'ora
+					(
+						(*@$\overline{PagamentoRistorante}$@*)Banca ;
+						ConfermaPagamentoRistorante@Banca
+					) | (
+						(*@$\overline{PagamentoSDC}$@*)Banca ;
+						ConfermaPagamentoSDC@Banca
+					);
+					1 ;
+					1 ;
+					ConfermaRicevutaSpedizione@ACMEat
+				)
+	...
+)
+
+CoreografiaAnnullamentoOrdine :== ((
+		(*@$\overline{AnnullamentoRistorante}$@*)Ristorante ;
+		RicevutoAnnullamentoRistorante@Ristorante
+	) | ( 
+		(*@$\overline{AnnullamentoSDC}$@*)SDC ;
+		RicevutoAnnullamentoSDC@SDC
+))
+\end{lstlisting}
 
 \subsubsection{Banca}
 
@@ -601,8 +530,6 @@ ModificaInformazioniLocali :== (
 	)
 )
 \end{lstlisting}
-
-\clearpage
 
 \subsubsection{Cliente}
 
@@ -744,8 +671,6 @@ ModificaInformazioniLocali :== (
 )
 \end{lstlisting}
 
-\clearpage
-
 \subsubsection{Fattorino}
 
 \begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1, caption=Proiezione della coreografia relativamente al fattorino]
@@ -882,8 +807,6 @@ ModificaInformazioniLocali :== (
 	)
 )
 \end{lstlisting}
-
-\clearpage
 
 \subsubsection{Ristorante}
 
@@ -1024,9 +947,7 @@ ModificaInformazioniLocali :== (
 ) 
 \end{lstlisting}
 
-\clearpage
-
-\subsubsection{Servizio di spedizione}
+\subsubsection{Servizio di consegna}
 
 \begin{lstlisting}[extendedchars=true, literate={à}{{\'a}}1 {ì}{{\'i}}1, caption=Proiezione della coreografia relativamente al servizio di spedizione]
 Coreografia :== (
@@ -1163,9 +1084,50 @@ ModificaInformazioniLocali :== (
 ) 
 \end{lstlisting}
 
+\subsection{Diagramma di coreografia BPMN}
+
+Al termine di questa prima fase è stato realizzato un diagramma di coreografia BPMN rappresentante la medesima coreografia in Lst.~\ref{coreo}. Questo diagramma si è rilevato utile nelle fasi successive in quanto più visivo e semplice da leggere.
+
+\begin{figure}[!ht]
+\begin{center}
+\fbox{\includegraphics[width=\textwidth]{coreo1}}
+\caption{Diagramma di coreografia BPMN - proiezione su ACMEat}
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\fbox{\includegraphics[width=\textwidth]{coreo2}}
+\caption{Diagramma di coreografia BPMN - proiezione sul cliente}
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\fbox{\includegraphics[width=\textwidth]{coreo3}}
+\caption{Diagramma di coreografia BPMN - proiezione sulla banca}
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\fbox{\includegraphics[width=\textwidth]{coreo4}}
+\caption{Diagramma di coreografia BPMN - proiezione sul ristorante}
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\fbox{\includegraphics[width=\textwidth]{coreo5}}
+\caption{Diagramma di coreografia BPMN - proiezione sulla società di consegna}
+\end{center}
+\end{figure}
+
+
 \clearpage
 
 \section{Documentazione}
+\label{sez:documentazione}
 
 Durante la seconda fase di lavoro è stato realizzanto un diagramma di collaborazione BPMN (Fig.~\ref{bpmn}) con l'obiettivo di modellare l'intera realtà descritta a scopo documentativo, compresi i dettagli di ogni partecipante. Tale diagramma e la relativa export \verb|.png| sono forniti in allegato a questa relazione.
 
@@ -1262,12 +1224,14 @@ Di seguito, riportiamo alcuni estratti rilevanti di questo diagramma.
 \clearpage
 
 \section{Progettazione}
+\label{sez:progettazione}
 
 La terza fase di lavoro ha visto la progettazione di una SOA per la realizzazione del sistema, documentata utilizzando UML.
 
 \clearpage
 
 \section{Sviluppo}
+\label{sez:sviluppo}
 
 La quarta fase di lavoro ha visto la realizzazione del sistema. Come da specifica, sono stati realizzati i seguenti servizi:
 \begin{itemize}

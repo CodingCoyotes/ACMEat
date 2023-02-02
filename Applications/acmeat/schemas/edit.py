@@ -1,3 +1,6 @@
+"""
+Questo modulo contiene gli schemi JSON per la creazione e modifica di oggetti nel database.
+"""
 import typing
 import typing as t
 from uuid import UUID
@@ -14,39 +17,15 @@ __all__ = (
 
 
 class UserEdit(base.ACMEORMModel):
-    """
-    **Edit** model for :class:`.database.tables.User`.
-    """
-
     name: str
     surname: str
     password: bytes
     email: str
 
-    class Config(base.ACMEORMModel.Config):
-        schema_extra = {
-            "example": {
-                "name": "John",
-                "surname": "Doe"
-            },
-        }
-
 
 class UserBase(base.ACMEORMModel):
-    """
-    **Edit** model for :class:`.database.tables.User`.
-    """
-
     name: str
     surname: str
-
-    class Config(base.ACMEORMModel.Config):
-        schema_extra = {
-            "example": {
-                "name": "John",
-                "surname": "Doe"
-            },
-        }
 
 
 class UserNew(base.ACMEORMModel):
@@ -54,16 +33,6 @@ class UserNew(base.ACMEORMModel):
     surname: str
     email: str
     password: str
-
-    class Config(base.ACMEORMModel.Config):
-        schema_extra = {
-            "example": {
-                "name": "John",
-                "surname": "Doe",
-                "email": "jdh@who.us",
-                "password": "password"
-            },
-        }
 
 
 class Coords(base.ACMEModel):
@@ -165,3 +134,4 @@ class OrderCreation(base.ACMEModel):
 
 class PaymentEdit(base.ACMEORMModel):
     bank_id: UUID
+    token: UUID

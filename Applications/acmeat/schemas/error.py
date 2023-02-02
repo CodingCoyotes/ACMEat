@@ -7,7 +7,7 @@ __all__ = (
 
 class AcmeatErrorModel(base.ACMEModel):
     """
-    Model for errors returned by the API.
+    Modello per gli errori restituiti dal backend.
     """
 
     error_code: str

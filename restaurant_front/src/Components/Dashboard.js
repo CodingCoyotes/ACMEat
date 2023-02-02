@@ -20,7 +20,7 @@ export default function Dashboard() {
             return
         }
         if (token === null) {
-            navigator("/login")
+            //navigator("/login")
             return
         }
         getUserData();

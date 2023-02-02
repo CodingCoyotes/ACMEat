@@ -1,5 +1,5 @@
 """
-This module contains all :mod:`fastapi` error handlers used by :mod:`impressive_strawberry`.
+Questo modulo contiene tutti i gestori di errore per :mod:`fastapi`.
 """
 
 import typing as t

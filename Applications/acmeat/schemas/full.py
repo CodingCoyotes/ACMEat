@@ -1,3 +1,6 @@
+"""
+Questo modulo contiene i modelli per ottenere i dati completi su un'entità.
+"""
 import typing as t
 
 from acmeat.schemas import read
@@ -8,10 +11,6 @@ __all__ = (
 
 
 class UserFull(read.UserRead):
-    """
-    **Full** model (with expanded relationships) for :class:`.database.tables.User`.
-    """
-
     restaurants: t.List[read.RestaurantRead]
     orders: t.List[read.OrderRead]
 
@@ -34,7 +33,7 @@ class ContentFull(read.ContentRead):
 
 class OrderFull(read.OrderRead):
     user: read.UserRead
-    payment: t.Optional[read.PaymentRead]
+    payment: t.Optional[t.List[read.PaymentRead]]
     contents: t.List[ContentFull]
     deliverer: t.Optional[read.DelivererRead]
 

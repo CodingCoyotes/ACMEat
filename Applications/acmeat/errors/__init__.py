@@ -1,5 +1,5 @@
 """
-This module contains the possible errors that can be raised by :mod:`impressive_strawberry`, and then possibly be caught by one of the :mod:`impressive_strawberry.handlers`.
+Questo modulo contiene tutte le eccezioni personalizzate che possono venire sollevate dall'applicazione.
 """
 
 import fastapi

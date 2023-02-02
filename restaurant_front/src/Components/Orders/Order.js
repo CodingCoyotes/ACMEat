@@ -26,7 +26,7 @@ export default function Order(props) {
                 setStatus("In attesa di conferma (corriere)")
                 break;
             case 3:
-                setStatus("Confermato")
+                setStatus("Creazione ordine confermata")
                 break;
             case 4:
                 setStatus("Annullato")
@@ -35,15 +35,17 @@ export default function Order(props) {
                 setStatus("In attesa di pagamento")
                 break;
             case 6:
+                setStatus("Pagato, in attesa dell'attivazione")
+            case 7:
                 setStatus("In preparazione")
                 break;
-            case 7:
+            case 8:
                 setStatus("In attesa del corriere")
                 break;
-            case 8:
+            case 9:
                 setStatus("In consegna")
                 break;
-            case 9:
+            case 10:
                 setStatus("Consegnato.")
                 break;
             default:
@@ -87,7 +89,6 @@ export default function Order(props) {
                 restaurant_total: props.order.restaurant_total,
                 deliverer_total: props.order.deliverer_total,
                 status: status,
-                deliverer_id: props.order.deliverer_total
             })
         });
         if (response.status === 200) {
@@ -117,10 +118,17 @@ export default function Order(props) {
                     </Button>
                     </div>
                 }
-                {props.order.status === 6 &&
+                {props.order.status === 7 &&
                 <div style={{"display":"flex"}}>
-                    <Button bluelibClassNames={"color-lime"} style={{padding: "0px"}} onClick={event => {updateStatus(7)}}>
+                    <Button bluelibClassNames={"color-lime"} style={{padding: "0px"}} onClick={event => {updateStatus(8)}}>
                         Pronto
+                    </Button>
+                </div>
+                }
+                {props.order.status === 8 &&
+                <div style={{"display":"flex"}}>
+                    <Button bluelibClassNames={"color-lime"} style={{padding: "0px"}} onClick={event => {updateStatus(9)}}>
+                        Consegnato
                     </Button>
                 </div>
                 }
@@ -148,9 +156,10 @@ export default function Order(props) {
                             <p>
                                 Società di consegna: {details.deliverer ? (<>{details.deliverer.name}</>):(<>Non ancora selezionata</>)}
                             </p>
+                            {details.contents ? (
                             <Panel>
                                     {details.contents.map(content => <Content content={content} key={props.order.id+content.menu_id}/>)}
-                            </Panel>
+                            </Panel> ):(<p></p>)}
                         </div>
                     ) : (<p>Caricamento dettagli...</p>)}
                 </Panel>

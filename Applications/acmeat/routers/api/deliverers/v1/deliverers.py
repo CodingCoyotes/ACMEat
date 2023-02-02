@@ -47,7 +47,8 @@ async def create_deliverer(deliverer: acmeat.schemas.edit.DelivererEdit,
     return quick_create(db, models.Deliverer(name=deliverer.name, api_url=deliverer.api_url,
                                              address=deliverer.address, city=deliverer.city,
                                              nation=deliverer.nation, number=deliverer.number,
-                                             external_api_key=deliverer.external_api_key))
+                                             external_api_key=deliverer.external_api_key,
+                                             bank_address=deliverer.bank_address))
 
 
 @router.put("/{deliverer_id}", response_model=acmeat.schemas.read.DelivererRead)

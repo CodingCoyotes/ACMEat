@@ -29,8 +29,8 @@ class Worker:
             self,
             url: str,
             worker_id: str,
-            max_tasks: int = 1,
-            async_response_timeout: int = 5000
+            max_tasks: int = 10,
+            async_response_timeout: int = 1000
     ):
         """Worker that fetches and completes external Camunda service tasks.
 
@@ -151,5 +151,8 @@ def work(worker, tasks):
             for variable, value in return_variables.items():
                 complete_task.add_variable(name=variable, value=value)
             if 'success' not in return_variables.keys() or return_variables['success']:
-                complete_task()
+                try:
+                    complete_task()
+                except Exception:
+                    return
     sys.exit()

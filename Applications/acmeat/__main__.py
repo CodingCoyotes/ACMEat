@@ -31,7 +31,7 @@ app.include_router(cities.router)
 app.include_router(deliverers.router)
 app.include_router(orders.router)
 
-origins = ["http://localhost:3000"]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,

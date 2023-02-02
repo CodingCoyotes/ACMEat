@@ -62,7 +62,7 @@ async def create_order(restaurant_id: str, order_data: acmeat.schemas.edit.Order
     order.restaurant_total = total
     db.commit()
     start_instance = pycamunda.processdef.StartInstance(url=CAMUNDA_URL, key='order_confirmation', tenant_id="acmeat")
-    start_instance.add_variable(name='order_id', value=order.id)
+    start_instance.add_variable(name='order_id', value=str(order.id))
     start_instance.add_variable(name='success', value=False)
     start_instance.add_variable(name="paid", value=False)
     start_instance.add_variable(name="payment_success", value=False)
@@ -70,7 +70,7 @@ async def create_order(restaurant_id: str, order_data: acmeat.schemas.edit.Order
     start_instance.add_variable(name="found_deliverer", value=False)
     start_instance.add_variable(name="restaurant_accepted", value=False)
     camunda_id = start_instance()  # A CONTIENE L'ID DEL JOB
-    order.camunda_id = camunda_id
+    order.camunda_id = str(camunda_id.id_)
     db.commit()
     return order
 

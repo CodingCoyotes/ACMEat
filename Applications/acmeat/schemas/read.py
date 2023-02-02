@@ -15,14 +15,6 @@ class UserRead(edit.UserBase):
     email: str
     kind: UserType
 
-    class Config(edit.UserBase.Config):
-        schema_extra = {
-            "example": {
-                **edit.UserBase.Config.schema_extra["example"],
-                "id": "971851d4-b41f-46e1-a884-5b5e84a276f8",
-            },
-        }
-
 
 class RestaurantRead(edit.RestaurantEdit):
     id: UUID

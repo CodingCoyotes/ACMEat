@@ -11,11 +11,11 @@ class ExternalTaskException(Exception):
     def __init__(
             self, *args, message: str, details: str = '', retry_timeout: int = 10000, **kwargs
     ):
-        """Exception to be raised when a service task fails.
+        """Eccezione da sollevare quando la task fallisce.
 
-        :param message: Error message that describes the reason of the failure.
-        :param details: Error description.
-        :param retry_timeout: Timeout in milliseconds until the external task becomes available.
+        :param message: Messaggio d'errore
+        :param details: Descrizone del fallimento
+        :param retry_timeout: Timeout in ms
         """
         super().__init__(*args, **kwargs)
         self.message = message
@@ -29,15 +29,15 @@ class Worker:
             self,
             url: str,
             worker_id: str,
-            max_tasks: int = 1,
-            async_response_timeout: int = 5000
+            max_tasks: int = 10,
+            async_response_timeout: int = 1000
     ):
-        """Worker that fetches and completes external Camunda service tasks.
+        """Worker che rimane in ascolto per task da eseguire tramite camunda.
 
         :param url: Camunda Rest engine URL.
-        :param worker_id: Id of the worker.
-        :param max_tasks: Maximum number of tasks the worker fetches at once.
-        :param async_response_timeout: Long polling in milliseconds.
+        :param worker_id: Id del worker.
+        :param max_tasks: Numero massimo di task per fetch.
+        :param async_response_timeout: Attesa prima del fetch successivo.
         """
         print("Starting up the ACMEat Camunda External Worker...")
         self.fetch_and_lock = pycamunda.externaltask.FetchAndLock(
@@ -66,27 +66,26 @@ class Worker:
             self,
             topic: str,
             func: typing.Callable,
-            lock_duration: int = 10000,
+            lock_duration: int = 16000,
             variables: typing.Iterable[str] = None,
             deserialize_values: bool = False
     ):
-        """Subscribe the worker to a certain topic.
+        """Iscrive il worker ad un certo topic.
 
-        :param topic: The topic to subscribe to.
-        :param func: The callable that is executed for a task of the respective topic.
-        :param lock_duration: Duration the fetched tasks are locked for this worker in milliseconds.
-        :param variables: Variables to request from the Camunda process instance.
-        :param deserialize_values: Whether serializable variables values are deserialized on server
-                                   side.
+        :param topic: il topic a cui iscriversi.
+        :param func: La funzione che esegue la task.
+        :param lock_duration: Durata del lock sulla task per il worker.
+        :param variables: Variabili di processo.
+        :param deserialize_values: Flag, indica se i valori vengono deserializzati lato server.
         """
         print(f"Worker subbed to topic '{topic}'")
         self.fetch_and_lock.add_topic(topic, lock_duration, variables, deserialize_values)
         self.topic_funcs[topic] = func
 
     def unsubscribe(self, topic):
-        """Unsubscribe the worker from a topic.
+        """Rimuove un topic dal worker
 
-        :param topic: The topic to unsubscribe from.
+        :param topic: Il topic da rimuovere.
         """
         for i, topic_ in enumerate(self.fetch_and_lock.topics):
             if topic_['topicName'] == topic:
@@ -94,10 +93,14 @@ class Worker:
                 break
 
     def run(self):
-        """Run the worker."""
+        """
+        Esegue il worker
+        :return:
+        """
         print(f"All Green, worker ready to start.")
         threadlist = []
         while not self.stopped:
+            # Viene creata una lista di thread
             tasks = self.fetch_and_lock()
             thread = Thread(target=work, args=(self, tasks))
             print(f"Number of threads: {len(threadlist)}")
@@ -106,6 +109,7 @@ class Worker:
             newlist = []
             for t in threadlist:
                 if not t.is_alive():
+                    # I thread terminati vengono joinati
                     t.join()
                 else:
                     newlist.append(t)
@@ -120,6 +124,12 @@ class Worker:
 
 
 def work(worker, tasks):
+    """
+    Funzione parallelizzata, gestisce le task in parallelo con gli altri thread
+    :param worker: il worker
+    :param tasks: le task da gestire
+    :return:
+    """
     handle_failure = pycamunda.externaltask.HandleFailure(
         worker.url,
         id_=None,
@@ -150,6 +160,10 @@ def work(worker, tasks):
             complete_task.id_ = task.id_
             for variable, value in return_variables.items():
                 complete_task.add_variable(name=variable, value=value)
+            # Se la task non ha avuto successo, il worker non procede e rimane fermo su questa task
             if 'success' not in return_variables.keys() or return_variables['success']:
-                complete_task()
+                try:
+                    complete_task()
+                except Exception:
+                    return
     sys.exit()

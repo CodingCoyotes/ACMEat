@@ -3,6 +3,8 @@
 .idea/misc.xml
 .idea/modules.xml
 .idea/vcs.xml
+.idea/dataSources.xml
+.idea/sqldialects.xml
 Applications/.idea/Applications.iml
 Applications/.idea/misc.xml
 Applications/.idea/modules.xml

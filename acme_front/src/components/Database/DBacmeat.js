@@ -1,10 +1,11 @@
 
-const address = 'https://acmeat.isos.fermitech.info';
+const address = 'http://127.0.0.1:8004';
 
 // ---------------------------------------------------------------------------------------------
 //                                      FUNZIONI UTENTE
 // ---------------------------------------------------------------------------------------------
 //registra un nuovo utente date le credenziali
+// TODO: Fare funzionare il register
 export async function registerNewUser(credentials) {
   //localStorage.setItem('token', credentials)
   return fetch(address + "/token", {

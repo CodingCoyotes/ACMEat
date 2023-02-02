@@ -49,6 +49,9 @@ def getConfirm(sid, token):
 
 
 def payment_received(order_id, success, paid, payment_success, TTW):
+    """
+    Verifica pagamento ricevuto
+    """
     print(f"[{order_id.value}] Starting payment verification routine...")
     with Session(future=True) as db:
         order: Order = db.query(Order).filter_by(id=order_id.value).first()

@@ -133,5 +133,4 @@ class OrderCreation(base.ACMEModel):
 
 
 class PaymentEdit(base.ACMEORMModel):
-    bank_id: UUID
     token: UUID

@@ -1,6 +1,6 @@
-import pycamunda
-import pycamunda.processdef
-
+"""
+Questo modulo contiene l'implementazione del server che rimane in ascolto tramite un worker per task provenienti dai processi camunda
+"""
 from acmeat.services.deliverer_abort import deliverer_abort
 from acmeat.services.order_delete import order_delete
 from acmeat.services.pay_deliverer import pay_deliverer
@@ -21,6 +21,7 @@ if __name__ == '__main__':
     url = 'http://localhost:8080/engine-rest'
     worker_id = '1'
     worker = Worker(url=url, worker_id=worker_id)
+    # I Topic vengono assegnati al worker
     worker.subscribe(
         topic='restaurant_confirmation',
         func=restaurant_confirmation,

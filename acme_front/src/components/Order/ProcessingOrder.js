@@ -1,15 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {useAppContext} from "../../Context";
-import {getOrder, getRestaurant, getUserInfo} from "../Database/DBacmeat";
+import {getOrder, getUserInfo} from "../Database/DBacmeat";
 import './OrderProgress'
 import '../css/Dash.css'
 import OrderProgress from "./OrderProgress";
-import Loading from "../Utils/Loading";
 import ReactLoading from "react-loading";
 
-
-
+const address = "http://127.0.0.1:3001/pay/5ba5f372-78af-4e1f-ad8d-9bfd82020d24/"
 export default function ProcessingOrder(){
     const navigate = useNavigate()
     const {token, setToken} = useAppContext();
@@ -26,8 +24,9 @@ export default function ProcessingOrder(){
         }
         else if (user===null){
             getInfo();
+            getOrd();
+            pooling()
         }
-            pooling();
     }, [])
 
     async function getInfo() {
@@ -46,20 +45,23 @@ export default function ProcessingOrder(){
                 console.log("value status")
                 console.log(values.status);
                 setProcessState(values.status);
+                setOrder(values);
                 return values.status;
         }
         return 0;
     }
 
     async function pooling(){
-
-        /*for(let i = 0; i < 10 ; i = i+1){
-            setTimeout(() => {
-                //getOrd();
-                console.log("eccomi");
-
-            }, 1000);
-        }*/
+        console.log("pooling")
+        for(let i = 0; i < 100 ; i = i+1){
+            const timeout = setTimeout(() => {
+                if(getOrd() === 3){
+                    clearTimeout(timeout);
+                    let reindirizza = address + {param}.restaurant_total+"/cronologiaordine"+"/afterpay/"+order.restaurant_total+"/"
+                    window.location.href = reindirizza;
+                }
+            }, 30000); //every 30 sec + await time (?)
+        }
     }
 
 

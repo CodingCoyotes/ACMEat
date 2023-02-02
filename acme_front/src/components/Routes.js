@@ -11,7 +11,6 @@ import MenuRegistration from "./Menu/MenuRegistration";
 import RestaurantListCity from "./Restaurant/RestaurantListCity";
 import DashOrder from "./Order/DashOrder";
 import CheckoutOrdine from "./Order/CheckoutOrdine";
-import Loading from "./Utils/Loading";
 import CronologiaOrdine from "./Order/CronologiaOrdine";
 import ProcessingOrder from "./Order/ProcessingOrder";
 
@@ -33,7 +32,6 @@ export default function Routing(){
                 <Route path="/checkoutordine" element={<CheckoutOrdine/>}/>
                 <Route path="/cronologiaordine" element={<CronologiaOrdine/>}/>
                 <Route path="/processingorder" element={<ProcessingOrder/>}/>
-                <Route path="/loading" element={<Loading/>}/>
             </Routes>
         </Router>
     )

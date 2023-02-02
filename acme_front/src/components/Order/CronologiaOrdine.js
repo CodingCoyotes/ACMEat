@@ -64,7 +64,7 @@ export default function CronologiaOrdine(){
                         {ordersList.map(item => (
                             <div className="card">
                                 <div className="card-header">
-                                    <div>{(DateToString(item.date_order))}</div>
+                                    <div>{new Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit',day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'}).format(item.date_order)}</div>
                                 </div>
                                 <div className="card-body">
                                     <h5 className="card-title"></h5>

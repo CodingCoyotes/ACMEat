@@ -213,3 +213,17 @@ export async function registerNewOrder(restaurant_id, info, token) {
   })
       .then(data => data.json())
 }
+
+//Ottiene un ordine dal suo id
+export async function getOrder(id, token, domain) {
+  return fetch(address + "/api/orders/v1/details/" + id, {
+    method: "GET",
+    //credentials: "include",
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer " + token,
+    }
+  });
+}
+

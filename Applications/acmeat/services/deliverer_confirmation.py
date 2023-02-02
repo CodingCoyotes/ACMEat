@@ -5,6 +5,9 @@ import json
 
 
 def deliverer_confirmation(order_id, success, paid, payment_success, TTW):
+    """
+    Conferma la consegna con la società di consegna
+    """
     print(f"[{order_id.value}] Starting deliverer confirmation routine...")
     with Session(future=True) as db:
         order: Order = db.query(Order).filter_by(id=order_id.value).first()

@@ -1,3 +1,6 @@
+"""
+Script di prova per testare i messaggi
+"""
 from pycamunda.message import CorrelateSingle
 
 url = 'http://localhost:8080/engine-rest'

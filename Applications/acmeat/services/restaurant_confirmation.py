@@ -4,6 +4,9 @@ import time
 
 
 def restaurant_confirmation(order_id, success, paid, payment_success, TTW, restaurant_accepted):
+    """
+    Si valuta se il ristorante ha accettato o meno l'ordine
+    """
     print(f"[{order_id.value}] Starting restaurant confirmation routine")
     success.value = True
     with Session(future=True) as db:

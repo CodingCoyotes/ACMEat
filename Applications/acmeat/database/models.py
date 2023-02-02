@@ -85,7 +85,6 @@ class Payment(Base):
     __tablename__ = "payment"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    bank_id = Column(UUID(as_uuid=True), unique=True)
     token = Column(UUID(as_uuid=True), unique=True)
     date = Column(DateTime, default=datetime.datetime.now, nullable=False)
     verified = Column(Boolean, default=False, nullable=False)

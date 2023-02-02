@@ -5,6 +5,9 @@ import json
 
 
 def deliverer_abort(order_id, success, paid, payment_success, TTW):
+    """
+    Informa la società di consegna che l'operazione è stata annullata
+    """
     print(f"[{order_id.value}] Deliverer abort procedure started!")
     with Session(future=True) as db:
         order = db.query(Order).filter_by(id=order_id.value).first()

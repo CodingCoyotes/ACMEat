@@ -3,6 +3,9 @@ from acmeat.database.db import Session
 
 
 def order_delete(order_id, success, paid, payment_success, TTW):
+    """
+    Cancellazione
+    """
     print(f"[{order_id.value}] Order has been deleted")
     with Session(future=True) as db:
         order = db.query(Order).filter_by(id=order_id.value).first()

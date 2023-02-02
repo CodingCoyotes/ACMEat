@@ -46,6 +46,9 @@ def do_refund(sid, token):
 
 
 def user_refund(order_id, success, paid, payment_success, TTW):
+    """
+    Rimborso dell'utente
+    """
     print(f"[{order_id.value}] User refund procedure started!")
     with Session(future=True) as db:
         order = db.query(Order).filter_by(id=order_id.value).first()

@@ -1,4 +1,6 @@
-import pycamunda
+"""
+Script per l'avvio manuale di un istanza di processo camunda
+"""
 import pycamunda.processdef
 
 url = 'http://localhost:8080/engine-rest'

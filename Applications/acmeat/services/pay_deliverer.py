@@ -45,6 +45,9 @@ def pay(sid, amount, user_id):
 
 
 def pay_deliverer(order_id, success, paid, payment_success, TTW):
+    """
+    Pagamento alla società di consegna dal conto di ACMEat
+    """
     print(f"[{order_id.value}] Executing payment to deliverer...")
     with Session(future=True) as db:
         order = db.query(Order).filter_by(id=order_id.value).first()

@@ -45,6 +45,9 @@ def pay(sid, amount, user_id):
 
 
 def pay_restaurant(order_id, success, paid, payment_success, TTW):
+    """
+    Pagamento al ristorante dal conto di ACMEat
+    """
     print(f"[{order_id.value}] Executing payment to restaurant...")
     with Session(future=True) as db:
         order = db.query(Order).filter_by(id=order_id.value).first()

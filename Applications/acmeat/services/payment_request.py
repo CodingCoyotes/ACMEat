@@ -3,6 +3,9 @@ from acmeat.database.db import Session
 
 
 def payment_request(order_id, success, paid, payment_success, TTW):
+    """
+    Valutazione della presenza di un pagamento
+    """
     print(f"[{order_id.value}] Starting payment request routine...")
     success.value=True
     with Session(future=True) as db:

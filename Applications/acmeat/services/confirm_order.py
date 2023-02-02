@@ -3,6 +3,9 @@ from acmeat.database.db import Session
 
 
 def order_confirm(order_id, success, paid, payment_success, TTW):
+    """
+    Conferma l'attivazione dell'ordine
+    """
     with Session(future=True) as db:
         order = db.query(Order).filter_by(id=order_id.value).first()
         order.status = OrderStatus.w_kitchen

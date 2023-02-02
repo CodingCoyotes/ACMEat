@@ -89,22 +89,29 @@ async def update_order(order_id: UUID, request: Request, order_data: acmeat.sche
             raise errors.Forbidden
         if order_data.status.value < OrderStatus.w_cancellation.value:
             raise errors.Forbidden
-        msg = CorrelateSingle(CAMUNDA_URL, message_name="Message_Abort",
-                              process_instance_id=order.camunda_id
-                              )
-        msg()
+        try:
+            msg = CorrelateSingle(CAMUNDA_URL, message_name="Message_Abort",
+                                  process_instance_id=order.camunda_id
+                                  )
+            msg()
+        except Exception:
+            pass
         return order
-    if order.status == OrderStatus.w_restaurant_ok and (order_data.status == OrderStatus.cancelled or order_data.status == OrderStatus.w_deliverer_ok):
+    if order.status == OrderStatus.w_restaurant_ok and (
+            order_data.status == OrderStatus.cancelled or order_data.status == OrderStatus.w_deliverer_ok):
         order.status = order_data.status
+        db.commit()
         if order_data.status == OrderStatus.w_deliverer_ok:
             if order_data.status == OrderStatus.w_deliverer_ok:
-                msg = CorrelateSingle(CAMUNDA_URL, message_name="Message_Restaurant",
-                                      process_instance_id=order.camunda_id
-                                      )
-                msg()
-        db.commit()
+                try:
+                    msg = CorrelateSingle(CAMUNDA_URL, message_name="Message_Restaurant",
+                                          process_instance_id=order.camunda_id
+                                          )
+                    msg()
+                except Exception:
+                    pass
         return order
-    if order.status.value > order_data.status.value or order_data.status.value not in [2, 7]:
+    if order.status.value > order_data.status.value or order_data.status.value not in [2, 8, 9]:
         raise errors.Forbidden
     order.status = order_data.status
 
@@ -119,8 +126,11 @@ def pay_order(order_id: UUID, payment_data: acmeat.schemas.edit.PaymentEdit,
     order = quick_retrieve(db, models.Order, id=order_id)
     if not (order.user_id == current_user.id):
         raise errors.Forbidden
-    msg = CorrelateSingle(CAMUNDA_URL, message_name="Message_Payment",
-                          process_instance_id=order.camunda_id
-                          )
-    msg()
-    return quick_create(db, models.Payment(bank_id=payment_data.bank_id, order_id=order.id))
+    try:
+        msg = CorrelateSingle(CAMUNDA_URL, message_name="Message_Payment",
+                              process_instance_id=order.camunda_id
+                              )
+        msg()
+    except Exception:
+        pass
+    return quick_create(db, models.Payment(bank_id=payment_data.bank_id, order_id=order.id, token=payment_data.token))

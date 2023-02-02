@@ -3,6 +3,9 @@ from acmeat.database.db import Session
 from acmeat.configuration import setting_required
 import requests
 import json
+import datetime
+from threading import Thread
+import time
 
 
 def deliverer_preview(order_id, success, paid, payment_success, TTW, found_deliverer):
@@ -41,6 +44,8 @@ def deliverer_preview(order_id, success, paid, payment_success, TTW, found_deliv
             data = r.json()
             if data["distance_km"] < search_radius:
                 candidates.append(deliverer)
+            end_time = datetime.datetime.now()
+
         if len(candidates) == 0:
             found_deliverer.value = False
         elif len(candidates) == 1:
@@ -48,7 +53,9 @@ def deliverer_preview(order_id, success, paid, payment_success, TTW, found_deliv
             found_deliverer.value = True
         else:
             preview = []
-            for candidate in candidates:
+
+            def parallel_preview(candidate, id):
+                print(f"[{order_id.value}-{id}]     Parallel preview started.")
                 candidate: Deliverer
                 try:
                     r = requests.post(candidate.api_url + "/api/delivery/v1/preview",
@@ -62,10 +69,25 @@ def deliverer_preview(order_id, success, paid, payment_success, TTW, found_deliv
                                 "source_id": str(restaurant.id),
                                 "delivery_time": order.delivery_time.timestamp()
                             }
-                        }), timeout=15)
-                except requests.exceptions.Timeout:
-                    continue
+                        }), timeout=14)
+                except (requests.exceptions.Timeout, Exception):
+                    print(f"[{order_id.value}-{id}]     Host timed out.")
+                    return
+                print(f"[{order_id.value}-{id}]     Parallel preview completed.")
                 preview.append({"deliverer": candidate, "cost": r.json()['cost']})
+                return
+
+            threadlist = []
+            for candidate in candidates:
+                t = Thread(target=parallel_preview, args=(candidate, len(threadlist)))
+                threadlist.append(t)
+                t.start()
+
+            start_time = datetime.datetime.now()
+            while (datetime.datetime.now()-start_time).total_seconds() < 15 or len(preview)!=len(candidates):
+                time.sleep(1)
+            for t in threadlist:
+                t.join(1)
             if len(preview) == 0:
                 found_deliverer.value = False
             else:

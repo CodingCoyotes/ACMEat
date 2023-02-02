@@ -10,10 +10,12 @@ from camunda.client.engine_client import EngineClient
 import acmeat.schemas.read
 from acmeat.authentication import get_current_user
 from acmeat.database import models
+from acmeat.responses import NO_CONTENT
 from acmeat.schemas import *
 from acmeat.crud import *
 from acmeat.dependencies import dep_dbsession
 import acmeat.errors as errors
+import datetime
 
 router = APIRouter(
     prefix="/api/menus/v1",
@@ -36,6 +38,9 @@ async def create_menu(menu: acmeat.schemas.edit.MenuEdit, restaurant_id: UUID,
     """
     Creates an account for a new user.
     """
+    current_time = datetime.datetime.now()
+    if current_time.time().hour>10:
+        raise errors.Forbidden
     restaurant = quick_retrieve(db, models.Restaurant, id=restaurant_id)
     if restaurant.owner_id != current_user.id:
         raise errors.Forbidden
@@ -47,7 +52,27 @@ async def create_menu(menu: acmeat.schemas.edit.MenuEdit, restaurant_id: UUID,
 async def edit_menu(edits: acmeat.schemas.edit.MenuEdit, menu_id: UUID,
                     current_user: models.User = Depends(get_current_user),
                     db: Session = Depends(dep_dbsession)):
+    current_time = datetime.datetime.now()
+    if current_time.time().hour>10:
+        raise errors.Forbidden
     target = quick_retrieve(db, models.Menu, id=menu_id)
     if target.restaurant.owner_id != current_user.id:
         raise errors.Forbidden
     return quick_update(db, target, edits)
+
+
+@router.delete("/{menu_id}", status_code=204)
+async def delete_menu(menu_id: UUID, db: Session = Depends(dep_dbsession),
+                      current_user: models.User = Depends(get_current_user)):
+    current_time = datetime.datetime.now()
+    if current_time.time().hour>10:
+        raise errors.Forbidden
+    target = quick_retrieve(db, models.Menu, id=menu_id)
+    if current_user.id != target.restaurant.owner_id:
+        raise errors.Forbidden
+    if not target:
+        raise errors.ResourceNotFound
+    db.delete(target)
+    db.commit()
+    return NO_CONTENT
+

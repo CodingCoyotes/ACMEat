@@ -60,11 +60,10 @@ def payment_received(order_id, success, paid, payment_success, TTW):
             current_time = datetime.datetime.now()
             target_time = order.delivery_time
             difference = target_time - current_time
-            if difference.total_seconds() < 0:
+            if difference.total_seconds()-3600 < 0:
                 TTW.value = f"PT10S"
             else:
-                # TTW.value = f"PT{difference.total_seconds()}S"
-                TTW.value = f"PT10S"
+                TTW.value = f"PT{difference.total_seconds()-3600}S"
             return {"order_id": order_id.value, "success": success.value, "paid": paid.value,
                     "payment_success": payment_success.value, "TTW": TTW.value}
         result = getConfirm(sid, payment.token)
@@ -75,15 +74,13 @@ def payment_received(order_id, success, paid, payment_success, TTW):
                 payment_success.value = False
                 pass
             else:
-                # TODO: al momento il TTW viene impostato di 10s, in produzione bisognerà usare il sistema corretto.
                 current_time = datetime.datetime.now()
                 target_time = order.delivery_time
                 difference = target_time - current_time
-                if difference.total_seconds() < 0:
+                if difference.total_seconds()-3600 < 0:
                     TTW.value = f"PT10S"
                 else:
-                    # TTW.value = f"PT{difference.total_seconds()}S"
-                    TTW.value = f"PT10S"
+                    TTW.value = f"PT{difference.total_seconds()-3600}S"
                 print(TTW.value)
                 order.status = OrderStatus.w_cancellation
                 payment.verified = True

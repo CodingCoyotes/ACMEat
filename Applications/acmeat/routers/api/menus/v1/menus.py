@@ -39,8 +39,8 @@ async def create_menu(menu: acmeat.schemas.edit.MenuEdit, restaurant_id: UUID,
     Creates an account for a new user.
     """
     current_time = datetime.datetime.now()
-    if current_time.time().hour>10:
-        raise errors.Forbidden
+    #if current_time.time().hour > 10:
+    #    raise errors.Forbidden
     restaurant = quick_retrieve(db, models.Restaurant, id=restaurant_id)
     if restaurant.owner_id != current_user.id:
         raise errors.Forbidden
@@ -53,7 +53,7 @@ async def edit_menu(edits: acmeat.schemas.edit.MenuEdit, menu_id: UUID,
                     current_user: models.User = Depends(get_current_user),
                     db: Session = Depends(dep_dbsession)):
     current_time = datetime.datetime.now()
-    if current_time.time().hour>10:
+    if current_time.time().hour > 10:
         raise errors.Forbidden
     target = quick_retrieve(db, models.Menu, id=menu_id)
     if target.restaurant.owner_id != current_user.id:
@@ -65,7 +65,7 @@ async def edit_menu(edits: acmeat.schemas.edit.MenuEdit, menu_id: UUID,
 async def delete_menu(menu_id: UUID, db: Session = Depends(dep_dbsession),
                       current_user: models.User = Depends(get_current_user)):
     current_time = datetime.datetime.now()
-    if current_time.time().hour>10:
+    if current_time.time().hour > 10:
         raise errors.Forbidden
     target = quick_retrieve(db, models.Menu, id=menu_id)
     if current_user.id != target.restaurant.owner_id:
@@ -75,4 +75,3 @@ async def delete_menu(menu_id: UUID, db: Session = Depends(dep_dbsession),
     db.delete(target)
     db.commit()
     return NO_CONTENT
-

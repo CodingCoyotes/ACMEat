@@ -42,6 +42,7 @@ def deliverer_preview(order_id, success, paid, payment_success, TTW, found_deliv
                     }
                 }))
             data = r.json()
+            print(data, deliverer.name)
             if data["distance_km"] < search_radius:
                 candidates.append(deliverer)
             end_time = datetime.datetime.now()
@@ -69,7 +70,7 @@ def deliverer_preview(order_id, success, paid, payment_success, TTW, found_deliv
                                 "source_id": str(restaurant.id),
                                 "delivery_time": order.delivery_time.timestamp()
                             }
-                        }), timeout=14)
+                        }), timeout=3)
                 except (requests.exceptions.Timeout, Exception):
                     print(f"[{order_id.value}-{id}]     Host timed out.")
                     return
@@ -84,10 +85,10 @@ def deliverer_preview(order_id, success, paid, payment_success, TTW, found_deliv
                 t.start()
 
             start_time = datetime.datetime.now()
-            while (datetime.datetime.now()-start_time).total_seconds() < 15 or len(preview)!=len(candidates):
+            while (datetime.datetime.now()-start_time).total_seconds() <= 15 and len(preview)!=len(candidates):
                 time.sleep(1)
             for t in threadlist:
-                t.join(1)
+                t.join(0.1)
             if len(preview) == 0:
                 found_deliverer.value = False
             else:

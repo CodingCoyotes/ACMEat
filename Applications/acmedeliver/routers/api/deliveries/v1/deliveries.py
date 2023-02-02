@@ -20,6 +20,7 @@ from acmedeliver.database.enums import UserType
 from acmedeliver.configuration import setting_required
 import json
 from acmedeliver.responses import NO_CONTENT
+import random
 
 router = APIRouter(
     prefix="/api/delivery/v1",
@@ -85,7 +86,10 @@ async def create_delivery(delivery_request: acmedeliver.schemas.edit.ClientDeliv
     target = quick_retrieve(db, models.Client, api_key=delivery_request.api_key)
     if not target:
         raise errors.Forbidden
-    user = db.query(models.User).first()
+    users = db.query(models.User).filter_by(kind=UserType.worker).all()
+    if len(users) == 0:
+        raise errors.ResourceNotFound
+    user = random.choice(users)
     return quick_create(db, models.Delivery(
         cost=round(calculate_cost(delivery_request.request.source, delivery_request.request.receiver), 2),
         receiver=delivery_request.request.receiver,
@@ -96,7 +100,7 @@ async def create_delivery(delivery_request: acmedeliver.schemas.edit.ClientDeliv
 
 
 @router.post("/preview", response_model=acmedeliver.schemas.edit.DeliveryPreviewCost)
-async def create_delivery(delivery_request: acmedeliver.schemas.edit.ClientDeliveryRequest,
+async def preview_delivery(delivery_request: acmedeliver.schemas.edit.ClientDeliveryRequest,
                           db: Session = Depends(dep_dbsession)):
     """
     Creates an account for a new client.

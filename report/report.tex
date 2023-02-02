@@ -1273,17 +1273,17 @@ La quarta fase di lavoro ha visto la realizzazione del sistema. Come da specific
 \begin{itemize}
 \item Il servizio centrale ACMEat, il quale rende accessibili capabilities realizzate attraverso il BPMS Camunda;
 \item Il servizio bancario, realizzato in Jolie;
-\item Il servizio delle società di consegna ACMEDeliver;
-\item Il servizio delle società di ristorazione ACMERestaurant;
-\item Il servizio di geo-localizzazione ACMEGeolocate.
+\item Il servizio delle società di consegna, denominato ACMEDeliver;
+\item Il servizio delle società di ristorazione, denominato ACMERestaurant;
+\item Il servizio di geo-localizzazione, denominato ACMEGeolocate.
 \end{itemize}
-I backend realizzati, di conseguenza, sono i seguenti:
+Sono stati quindi realizzati i seguenti backends:
 \begin{itemize}
 \item \textbf{acmeat}, backend REST per interagire con il database di ACMEat e con il BPMS;
-\item \textbf{acmedeliver}, backend REST che rappresenta una società di consegna e ne consente la gestione e utilizzo;
-\item \textbf{acmerestaurant}, backend REST minimale per la gestione utenti di un ristorante e che consente l'autenticazione presso ACMEat per la gestione degli ordini;
-\item \textbf{acmegeolocate}, backend REST per la geo-localizzazione (implementata appoggiandosi ad openstreetmap);
-\item \textbf{bank}, backend Jolie per la gestione dei fondi dei clienti, fattorini, ristoranti e di acmeat;
+\item \textbf{acmedeliver}, backend REST che rappresenta una società di consegna e ne consente la gestione e l'utilizzo;
+\item \textbf{acmegeolocate}, backend REST per la geo-localizzazione (implementata appoggiandosi ad OpenStreetMap);
+\item \textbf{acmerestaurant}, backend REST per la gestione degli operatori di un ristorante e che consente l'autenticazione presso ACMEat per la gestione degli ordini;
+\item \textbf{bank}, backend Jolie per la gestione dei servizi bancari, usati per la gestione dei fondi dei clienti, fattorini, ristoranti e di acmeat;
 \item \textbf{bank\_intermediary}, backend REST per superare le restrizioni CORS di Jolie, usato solo ed esclusivamente dal frontend della banca.
 \end{itemize}
 Tutti i backend (fatta eccezione per bank) sono stati realizzati con le seguenti tecnologie:
@@ -1302,100 +1302,96 @@ Tutti i backend (fatta eccezione per bank) sono stati realizzati con le seguenti
 \item Poetry (Package Manager Python);
 \item Postgres.
 \end{itemize}
-Il diaologo fra Jolie e BPMS avviene via SOAP.
+Tutti i dialoghi fra i backends, incluso quello fra Jolie ed il BPMS, avvengono tramite l'uso del protocollo SOAP .
 
-\subsection{Backend Python}
+\subsection{Backends Python}
 
-In questa sezione verranno approfonditi i backend sviluppati in Python, ovvero tutti meno \textbf{bank}. La struttura utilizzata all'interno dei vari backend è identica (in alcuni, determinate cartelle potrebbero mancare, in quanto un certo componente potrebbe non venire utilizzato), ed è così costituita:
+In questa sezione verranno approfonditi i backends sviluppati in Python, ovvero tutti meno \textbf{bank}. La struttura utilizzata all'interno dei vari backend è la medesima (in alcuni, determinate cartelle potrebbero mancare, in quanto un certo componente potrebbe non venire utilizzato), ed è così costituita:
 \begin{itemize}
 \item /
 \begin{itemize}
-\item \textbf{database}: contiene la definizione delle tabelle che vengono create all'interno del DB, la definizione di enum e l'oggetto Session tramite il quale si interroga la base di dati;
+\item \textbf{database}: contiene la definizione delle tabelle che vengono create all'interno del DB, la definizione di \verb|enum| e l'oggetto \verb|Session| tramite il quale si interroga la base di dati;
 \item \textbf{deps}: contiene le dipendenze di Fastapi, un meccanismo che consente di ottenere informazioni prima di entrare nel corpo della funzione che gestisce un certo endpoint - ad esempio, sapere in anticipo se un utente è autenticato o meno.
 \item \textbf{errors}: contiene la definizione degli errori personalizzati;
-\item \textbf{routers}: contiene le funzioni che gestiscono le richieste ai vari endpoint del backend, nella struttura gerarchica di cartelle /api/[soggetto]/v1/[soggetto].py;
-\item \textbf{schemas}: contiene gli schemi di risposta e richiesta accettati dall'applicazione;
-services: contiene il server, il worker e le funzioni necessarie per eseguire le task della coreografia di ACMEat;
-\item \_\_main\_\_.py: runner del server;
-\item authentication.py: modulo per l'autenticazione tramite JWT;
-\item configuration.py: modulo per la configurazione dell'applicazione;
-\item crud.py: modulo che contiene funzioni di utility per la creazione, l'aggiornamento e la ricerca di dati all' interno del database;
-\item dependencies.py: modulo che contiene funzioni da cui dipendono altri moduli dell'applicazione;
-\item handlers.py: gestori di eccezioni specifici per l'applicazione;
-\item responses.py: risposte personalizzate non-json.
+\item \textbf{routers}: contiene le funzioni che gestiscono le richieste ai vari endpoint del backend seguendo la seguente truttura gerarchica di cartelle:\\ \verb|/api/[soggetto]/v1/[soggetto].py|;
+\item \textbf{schemas}: contiene gli schemi di richiesta e risposta accettati dal backend;
+\item \textbf{services}: contiene il server, il worker e le funzioni necessarie per eseguire le task della coreografia di ACMEat;
+\item \verb|__main__.py|: runner del server;
+\item \verb|authentication.py|: modulo per l'autenticazione tramite JWT;
+\item \verb|configuration.py|: modulo per la configurazione dell'applicazione;
+\item \verb|crud.py|: modulo che contiene funzioni di utility per la creazione, l'aggiornamento e la ricerca di dati all' interno del database;
+\item \verb|dependencies.py|: modulo che contiene funzioni da cui dipendono altri moduli dell'applicazione;
+\item \verb|handlers.py|: gestori di eccezioni specifici per l'applicazione;
+\item \verb|responses.py|: risposte personalizzate non-json.
 \end{itemize}
 \end{itemize}
 
 \subsubsection{Parametri di configurazione}
 
-Al fine di poter operare, è necessario che ai backend vengano fornite le corrette variabili d'ambiente.
+Al fine di poter operare, è necessario che ai backend vengano fornite le corrette variabili d'ambiente. Queste sono riportate di seguito.
 \begin{itemize}
-\item acmeat
+\item \textbf{acmeat}
 \begin{itemize}
-\item JWT\_KEY=pippo: la password con cui i JWT vengono cifrati;
-\item DB\_URI=postgresql://postgres:password@localhost/acmeat: l'uri del database di acmeat;
-\item BIND\_IP=127.0.0.1: l'indirizzo ip su cui eseguire il binding del socket;
-\item BIND\_PORT=8004: la porta su cui eseguire il binding del socket;
-\item BANK\_URI=http://127.0.0.1:2000: l'indirizzo a cui contattare la banca;
-\item BANK\_USERNAME=acmeat: l'username per l'accesso alla banca;
-\item BANK\_PASSWORD=password: la password per l'accesso alla banca.
+\item \verb|JWT_KEY=pippo| - la password con cui i JWT vengono cifrati;
+\item \verb|DB_URI=postgresql://postgres:password@localhost/acmeat| - l'uri del database di acmeat;
+\item \verb|BIND_IP=127.0.0.1| - l'indirizzo ip su cui eseguire il binding del socket;
+\item \verb|BIND_PORT=8004| - la porta su cui eseguire il binding del socket;
+\item \verb|BANK_URI=http://127.0.0.1:2000| - l'indirizzo a cui contattare la banca;
+\item \verb|BANK_USERNAME=acmeat| - l'username per l'accesso alla banca;
+\item \verb|BANK_PASSWORD=password| - la password per l'accesso alla banca.
 \end{itemize}
-\item acmedeliver
+\item \textbf{acmedeliver}
 \begin{itemize}
-\item JWT\_KEY=pippo: la password con cui i JWT vengono cifrati;
-\item DB\_URI=postgresql://postgres:password@localhost/acmedeliver: l'uri del database di acmedeliver;
-\item BIND\_IP=127.0.0.1: l'indirizzo ip su cui eseguire il binding del socket;
-\item BIND\_PORT=8003: la porta su cui eseguire il binding del socket;
-\item PRICE\_PER\_KM=2: il costo per chilometro della società di spedizioni;
-\item GEOLOCATE\_URL=http://127.0.0.1:8001: l'indirizzo a cui contattare il servizio di geo-localizzazione.
+\item \verb|JWT_KEY=pippo| - la password con cui i JWT vengono cifrati;
+\item \verb|DB_URI=postgresql://postgres:password@localhost/acmedeliver| - l'uri del database di acmedeliver;
+\item \verb|BIND_IP=127.0.0.1| - l'indirizzo ip su cui eseguire il binding del socket;
+\item \verb|BIND_PORT=8003| - la porta su cui eseguire il binding del socket;
+\item \verb|PRICE_PER_KM=2| - il costo per chilometro della società di spedizioni;
+\item \verb|GEOLOCATE_URL=http://127.0.0.1:8001| - l'indirizzo a cui contattare il servizio di geo-localizzazione.
 \end{itemize}
-\item acmegeolocatee
+\item \textbf{acmegeolocatee}
 \begin{itemize}
-\item BIND\_IP=127.0.0.1: l'indirizzo ip su cui eseguire il binding del socket;
-\item BIND\_PORT=8001: la porta su cui eseguire il binding del socket.
+\item \verb|BIND_IP=127.0.0.1| - l'indirizzo ip su cui eseguire il binding del socket;
+\item \verb|BIND_PORT=8001| - la porta su cui eseguire il binding del socket.
 \end{itemize}
-\item acmerestaurant
+\item \textbf{acmerestaurant}
 \begin{itemize}
-\item JWT\_KEY=pippo: la password con cui i JWT vengono cifrati;
-\item DB\_URI=postgresql://postgres:password@localhost/acmerestaurant: l'uri del database di acmerestaurant;
-\item BIND\_IP=127.0.0.1: l'indirizzo ip su cui eseguire il binding del socket;
-\item BIND\_PORT=8007: la porta su cui eseguire il binding del socket;
-\item ACME\_EMAIL=owner1@gmail.com: l'email del proprietario dell'attività tramite la quale accede ad ACMEat;
-\item ACME\_PASSWORD=password: la password del proprietario dell'attività tramite la quale accede ad ACMEat;
-\item ACME\_RESTAURANT\_ID=59294bd6-f61b-48a2-9f53-f76d378b95d9: l'id del ristorante su ACMEat;
-\item ACME\_URL=http://127.0.0.1:8004: l'indirizzo a cui contattare ACMEat.
+\item \verb|JWT_KEY=pippo| - la password con cui i JWT vengono cifrati;
+\item \verb|DB_URI=postgresql://postgres:password@localhost/acmerestaurant| - l'uri del database di acmerestaurant;
+\item \verb|BIND_IP=127.0.0.1| - l'indirizzo ip su cui eseguire il binding del socket;
+\item \verb|BIND_PORT=8007| - la porta su cui eseguire il binding del socket;
+\item \verb|ACME_EMAIL=owner1@gmail.com| - l'email del proprietario dell'attività tramite la quale accede ad ACMEat;
+\item \verb|ACME_PASSWORD=password| - la password del proprietario dell'attività tramite la quale accede ad ACMEat;
+\item \verb|ACME_RESTAURANT_ID=59294bd6-f61b-48a2-9f53-f76d378b95d9| - l'id del ristorante su ACMEat;
+\item \verb|ACME_URL=http://127.0.0.1:8004| - l'indirizzo a cui contattare ACMEat.
 \end{itemize}
-\item bank\_intermediary
+\item \textbf{bank\_intermediary}
 \begin{itemize}
-\item BIND\_IP=127.0.0.1: l'indirizzo ip su cui eseguire il binding del socket;
-\item BIND\_PORT=8006: la porta su cui eseguire il binding del socket;
-\item BANK\_URI=http://127.0.0.1:2000: l'indirizzo a cui contattare la banca.
+\item \verb|BIND_IP=127.0.0.1| - l'indirizzo ip su cui eseguire il binding del socket;
+\item \verb|BIND_PORT=8006| - la porta su cui eseguire il binding del socket;
+\item \verb|BANK_URI=http://127.0.0.1:2000| - l'indirizzo a cui contattare la banca.
 \end{itemize}
 \end{itemize}
 
-\subsubsection{Dettagli sui backend}
+\subsubsection{Dettagli sui backends}
 
-In questa sezione, verranno specificate le caratteristiche dei vari backend. Per informazioni sulle route disponibili per ogni backend, visitare la pagina /docs dei backend una volta avviati. Per la documentazione del codice, visionare il sorgente e relativi commenti.
+In questa sezione, verranno specificate le caratteristiche dei vari backends. Per informazioni sulle route disponibili per ogni backend, visitare la pagina \verb|/docs| dei backend una volta avviati. Per la documentazione del codice, visionare il sorgente e relativi commenti.
 
 \paragraph{acmeat}\mbox{}\\
-Acmeat è il backend principale, e consente di:
+\textbf{acmeat} è il backend principale, e consente di:
 \begin{itemize}
 \item Permettere a nuovi utenti di iscriversi al servizio, in veste di cliente o ristoratore;
 \item Registrare un ristorante e gestirne le caratteristiche, menu inclusi;
-\item Permettere agli utenti di eseguire ordinazioni presso un locale, e tramite la coreografia Camunda gestirne il ciclo di vita;
-\item Permettere agli amministratori di registrare città in cui il serizio è attivo, e gestire la lista dei fattorini affiliati ad ACMEat.
+\item Permettere agli utenti di eseguire ordinazioni presso un locale, e tramite il diagramma di processo BPMN di Camunda gestirne il ciclo di vita;
+\item Permettere agli amministratori di registrare città in cui il servizio è attivo e gestire la lista dei servizi di spedizione affiliati ad ACMEat.
 \end{itemize}
-Tutte le informazioni necessarie vengono immagazzinate all'interno di una base di dati così strutturata:
-\begin{figure}
-Immagine qui
-\end{figure}
-Il ciclo di vita di un ordine passa attraverso le seguenti fasi:
+Tutte le informazioni necessarie vengono immagazzinate all'interno di una base di dati, la cui struttura è riportata in Fig.~\ref{bd:acmeat}. Il ciclo di vita di un ordine segue le seguenti fasi:
 \begin{itemize}
 \item \textbf{Created}: l'ordine è stato appena creato;
 \item \textbf{w\_restaurant\_ok}: l'ordine è in attesa di conferma da parte del ristorante;
-\item \textbf{w\_deliverer\_ok}: l'ordine è in attesa di conferma da parte di un fattorino;
-\item \textbf{confirmed\_by\_thirds}: l'ordine è stato confermato dalle terze parti (ristorante e fattorino);
-\item \textbf{cancelled}: l'ordine è stato cancellato, dall'utente oppure dal processo camunda per problemi riscontrati;
+\item \textbf{w\_deliverer\_ok}: l'ordine è in attesa di conferma da parte di un servizio di spedizione;
+\item \textbf{confirmed\_by\_thirds}: l'ordine è stato confermato dalle terze parti (ristorante e servizio di spedizione);
+\item \textbf{cancelled}: l'ordine è stato cancellato dall'utente oppure dal processo Camunda per problemi riscontrati;
 \item \textbf{w\_payment}: l'ordine è in attesa di essere pagato. Se non pagato entro 5 minuti, o pagato in modo errato, verrà cancellato;
 \item \textbf{w\_cancellation}: l'ordine può venire cancellato dall'utente fino ad un'ora prima dall'orario indicato;
 \item \textbf{w\_kitchen}: l'ordine sta venendo preparato in cucina;
@@ -1403,20 +1399,20 @@ Il ciclo di vita di un ordine passa attraverso le seguenti fasi:
 \item \textbf{delivering}: l'ordine è in consegna;
 \item \textbf{delivered}: l'ordine è stato consegnato.
 \end{itemize}
-Gli utenti di acmeat possono appartenere ad una di tre categorie:
+Gli utenti di \textbf{acmeat} possono appartenere ad una fra le seguenti tre categorie:
 \begin{itemize}
-\item \textbf{Cliente}: Possono solo creare ordini e gestire i propri, può creare un ristorante (a quel punto il tipo di utente verrà modificato);
-\item \textbf{Ristoratore}: Può gestire il proprio locale e crearne di nuovi, oltre ai privilegi del cliente;
-\item \textbf{Amministratore}: Può gestire la lista delle città e dei fattorini.
+\item \textbf{Cliente}: possono solo creare ordini e gestirne i propri, può creare un ristorante (a quel punto il tipo di utente verrà modificato);
+\item \textbf{Ristoratore}: può gestire il proprio locale e crearne di nuovi, oltre ai privilegi del cliente;
+\item \textbf{Amministratore}: può gestire la lista delle città e dei servizi di spedizione.
 \end{itemize}
-Le società di consegna accedono ai sistemi di acmeat tramite un token, e questo consente loro di aggiornare lo stato dell'ordine (da "in consegna" a "consegnato").
+Le società di consegna accedono ai sistemi di \textbf{acmeat} tramite un token, e questo consente loro di aggiornare lo stato dell'ordine (da "in consegna" a "consegnato").
 
 \paragraph{ACMEmanager}\mbox{}\\
-ACMEmanager è il server a cui la coreografia camunda delega l'esecuzione dei job. Le task vengono svolte da un worker, il quale è in ascolto per i seguenti topic:
+\textbf{ACMEmanager} è il server a cui il diagramma di processo BPMN di Camunda delega l'esecuzione dei jobs. Le tasks vengono svolte da un worker, il quale è in ascolto per i seguenti topic:
 \begin{itemize}
 \item \textbf{restaurant\_confirmation}: ricezione di una conferma (o meno) da parte del ristorante;
-\item \textbf{deliverer\_preview}: ottenimento dei preventivi dei fattorini nel raggio di 10km dal locale;
-\item \textbf{deliverer\_confirmation}: conferma con il fattorino con il prezzo minore dell'ordine;
+\item \textbf{deliverer\_preview}: ottenimento dei preventivi dei servizi di consegna nel raggio di 10km dal locale;
+\item \textbf{deliverer\_confirmation}: conferma con la società di consegna di prezzo minore dell'ordine;
 \item \textbf{payment\_request}: attesa della ricezione di un pagamento da parte dell'utente;
 \item \textbf{payment\_received}: verifica del pagamento ricevuto con la banca;
 \item \textbf{confirm\_order}: conferma dell'ordine;
@@ -1437,34 +1433,26 @@ A questi topic corrispondono funzioni omonime, le quali utilizzano le seguenti v
 \item \textbf{found\_deliverer}: flag che indica se è stato trovato un fattorino;
 \item \textbf{restaurant\_accepted}: flag che indica se il ristorante ha accettato la richiesta.
 \end{itemize}
-Il worker è basato su Pycamunda, è multithreaded ed è in grado di interagire con il database tramite SQLAlchemy. Le richieste fatte alla banca vengono trasmesse tramite soap.
+Il worker è basato su Pycamunda, è multithreaded ed è in grado di interagire con il database tramite SQLAlchemy. Le richieste fatte alla banca vengono trasmesse tramite SOAP.
 
 \paragraph{acmedeliver}\mbox{}\\
-Acmedeliver è il backend che rappresenta un'azienda di consegne. Permette di:
+\textbf{acmedeliver} è il backend che rappresenta un'azienda di consegne. Permette di:
 \begin{itemize}
 \item Gestire il personale;
 \item Gestire e ricevere richieste di consegna;
 \item Gestire la lista dei propri clienti, a cui viene dato accesso;
 \item Aggiornare il cliente sullo stato della consegna.
 \end{itemize}
-Tutte le informazioni necessarie vengono immagazzinate all'interno di una base di dati così strutturata:
-\begin{figure}
-Immagine qui
-\end{figure}
-Gli utenti di acmedeliver possono essere fattorini oppure amministratori, dove gli amministratori sono in grado di aggiungere fattorini all'azienda.
+Tutte le informazioni necessarie vengono immagazzinate all'interno di una base di dati strutturata come riportato in Fig.~\ref{bd:deliver}. Gli utenti di acmedeliver possono essere fattorini oppure amministratori, dove gli amministratori sono in grado di aggiungere fattorini all'azienda.
 
 \paragraph{acmegeolocate}\mbox{}\\
-Acmegeolocate è il backend che fornisce il servizio di geo-localizzazione. Dato lo stato, la città, la via e il numero civico utilizza openstreetmap per ricavarne le coordinate, e in base alla richiesta fornire la distanza tra i due punti in km.
+\textbf{acmegeolocate} è il backend che fornisce il servizio di geo-localizzazione. Dato lo stato, la città, la via e il numero civico utilizza OpenStreetMap per ricavarne le coordinate, e in base alla richiesta fornire la distanza tra i due punti in km.
 
 \paragraph{acmerestaurant}\mbox{}\\
-Acmerestaurant è il backend che fornisce autenticazione alle richieste del ristorante, che comunica poi con acmeat. Gli utenti contenuti all'interno del database non sono utenti di acmeat, ma del ristorante (ad esempio, ogni cameriere può avere un account all'interno del ristorante), e le richieste vengono fatte a nome del titolare del ristorante (che ha un account su acmeat). Il backend consente di eseguire un numero limitato di operazioni, ovvero la lettura degli ordini e accettare/rifiutare/consegnare (ad un fattorino) un ordine. La gestione dei menu, così come degli orari di apertura e delle altre caratteristiche del ristorante è da eseguire su acmeat. 
-La struttura del database è la seguente:
-\begin{figure}
-Immagine qui
-\end{figure}
+\textbf{acmerestaurant} è il backend che fornisce autenticazione alle richieste del ristorante, che comunica poi con acmeat. Gli utenti contenuti all'interno del database non sono utenti di acmeat, ma del ristorante (ad esempio, ogni cameriere può avere un account all'interno del ristorante), e le richieste vengono fatte a nome del titolare del ristorante (che ha un account su acmeat). Il backend consente di eseguire un numero limitato di operazioni, ovvero la lettura degli ordini e accettare/rifiutare/consegnare (ad un fattorino) un ordine. La gestione dei menu, così come degli orari di apertura e delle altre caratteristiche del ristorante è da eseguire su acmeat. La struttura del database è riportata in Fig.~\ref{db:restaurant}.
 
 \paragraph{bank\_intermediary}\mbox{}\\
-Intermediario per superare il blocco CORS di Jolie, si limita a inoltrare le richieste che gli arrivano in " simil-soap" (soap dentro un oggetto json) al backend della banca. Viene usato solo ed esclusivamente dal frontend di acmebank.
+Intermediario per superare il blocco CORS di Jolie, si limita a inoltrare le richieste che gli arrivano in \emph{simil-soap} (soap all'interno di un oggetto json) al backend della banca. Viene usato solo ed esclusivamente dal frontend di \textbf{bank}.
 
 \subsubsection{Istruzioni per l'avvio in ambiente di testing}
 
@@ -1480,7 +1468,7 @@ Intermediario per superare il blocco CORS di Jolie, si limita a inoltrare le ric
 
 \subsubsection{Istruzioni per il deployment in produzione}
 
-In questa sezione, vengono indicati i passaggi necessari per il deployment dell'applicazione in produzione. Si suppone l'utilizzo del sistema operativo Ubuntu, e vengono omessi i passaggi per la realizzazione del reverse poxy e dei certificati per l'https.
+In questa sezione, vengono indicati i passaggi necessari per il deployment dell'applicazione in produzione a scopo illustrativo. Si suppone l'utilizzo del sistema operativo Ubuntu, e vengono omessi i passaggi per la realizzazione del reverse poxy e dei certificati per l'https.
 
 \paragraph{Setup iniziale}\mbox{}\\
 
@@ -1551,5 +1539,9 @@ Per poter testare l'applicazione senza dover riempire a mano il database, esegui
 \clearpage
 
 \section{Conclusioni}
+
+In questa relazione è stato descritto il lavoro fatto nelle varie fasi di modellazione e sviluppo del progetto di Ingegneria del Software Orientata ai Servizi, includendo i vari diagrammi prodotti nel processo quali: la coreografia dello scenario ed il relativo sistema di ruoli proiettato, nonché il corrispondente diagramma di coreografia BPMN, il diagramma documentativo di processo BPMN ed i diagrammi di progettazione UML. Sono stati inoltre commentati i sorgenti di tutti i servizi, incluso il servizio Jolie relativo ai servizi bancari; tali sorgenti sono stati allegati alla relazione assieme all'export del progetto del BPMS. Per concludere, è stata presentata una breve demo del sistema, comprensiva di istruzioni per l'installazione dell'ambiente di testing, per l'esecuzione, e per un eventuale deployment, a scopo illustrativo.\\
+Scopo del progetto è stato prendere dimestichezza con il workflow, le good practices e le tecnologie usate nell'ambito dell'Ingegneria del Software Orientata ai Servizi affrontate a lezione. Talvolta, si è presentato il bisogno di tornare sui propri passi in modo da rendere coerente la documentazione precedentemente creata con necessità dell'applicazione o dei singoli servizi difficilmente prevedibili; questo allo scopo di utilizzare questi strumenti non solo per la modellazione e progettazione, ma anche controllare formalmente che eventuali modifiche non andassero ad intaccare la correttezza del sistema, e con l'obiettivo che i diagrammi prodotti avessero valore documentativo in futuro. \\
+Per quanto riguarda il sistema ACMEat, numerosi miglioramenti e servizi possono essere implementati in futuro. Siamo tuttavia confidenti nel fatto che la documentazione prodotta possa fornire un ottimo ausilio in tal senso, sia da un punto di vista della sicurezza delle comunicazioni, sia nella semplicità di sviluppo e di successiva integrazione con l'applicazione esistente.
 
 \end{document}

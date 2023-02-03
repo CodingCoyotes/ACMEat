@@ -44,6 +44,18 @@ def pay(sid, amount, user_id):
     return result
 
 
+def logout(sid):
+    payload = f"""
+        <logout>
+            <message xsi:type="xsd:string">0</message>
+            <sid xsi:type="xsd:string">{sid}</sid>
+        </logout>
+        """
+    response = requests.post(BANK_URI, data=generate_soap(payload), headers={'content-type': 'text/xml',
+                                                                             'SOAPAction': '"/logout"'})
+    return
+
+
 def pay_deliverer(order_id, success, paid, payment_success, TTW):
     """
     Pagamento alla società di consegna dal conto di ACMEat
@@ -53,6 +65,7 @@ def pay_deliverer(order_id, success, paid, payment_success, TTW):
         order = db.query(Order).filter_by(id=order_id.value).first()
         sid = login()
         result = pay(sid, order.deliverer_total, order.deliverer.bank_address)
+        logout(sid)
     print(f"[{order_id.value}] Payment executed successfully!")
     return {"order_id": order_id.value, "success": success.value, "paid": paid.value,
             "payment_success": payment_success.value, "TTW": TTW.value}

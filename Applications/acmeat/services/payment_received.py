@@ -48,6 +48,18 @@ def getConfirm(sid, token):
     return {"result": result, "data": data}
 
 
+def logout(sid):
+    payload = f"""
+        <logout>
+            <message xsi:type="xsd:string">0</message>
+            <sid xsi:type="xsd:string">{sid}</sid>
+        </logout>
+        """
+    response = requests.post(BANK_URI, data=generate_soap(payload), headers={'content-type': 'text/xml',
+                                                                             'SOAPAction': '"/logout"'})
+    return
+
+
 def payment_received(order_id, success, paid, payment_success, TTW):
     """
     Verifica pagamento ricevuto
@@ -67,9 +79,11 @@ def payment_received(order_id, success, paid, payment_success, TTW):
                 TTW.value = f"PT10S"
             else:
                 TTW.value = f"PT{difference.total_seconds()-3600}S"
+            logout(sid)
             return {"order_id": order_id.value, "success": success.value, "paid": paid.value,
                     "payment_success": payment_success.value, "TTW": TTW.value}
         result = getConfirm(sid, payment.token)
+        logout(sid)
         if result["result"] == "true":
             paid.value = True
             if float(result["data"]["amount"]) != order.restaurant_total + order.deliverer_total:

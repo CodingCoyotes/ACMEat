@@ -45,6 +45,18 @@ def do_refund(sid, token):
     return result
 
 
+def logout(sid):
+    payload = f"""
+        <logout>
+            <message xsi:type="xsd:string">0</message>
+            <sid xsi:type="xsd:string">{sid}</sid>
+        </logout>
+        """
+    response = requests.post(BANK_URI, data=generate_soap(payload), headers={'content-type': 'text/xml',
+                                                                             'SOAPAction': '"/logout"'})
+    return
+
+
 def user_refund(order_id, success, paid, payment_success, TTW):
     """
     Rimborso dell'utente
@@ -54,7 +66,7 @@ def user_refund(order_id, success, paid, payment_success, TTW):
         order = db.query(Order).filter_by(id=order_id.value).first()
         sid = login()
         result = do_refund(sid, order.payment[0].token)
-        print(result)
+        logout(sid)
     print(f"[{order_id.value}] User refund complete!")
     return {"order_id": order_id.value, "success": success.value, "paid": paid.value,
             "payment_success": payment_success.value, "TTW": TTW.value}

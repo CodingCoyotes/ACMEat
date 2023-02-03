@@ -44,6 +44,19 @@ def pay(sid, amount, user_id):
     return result
 
 
+def logout(sid):
+    payload = f"""
+        <logout>
+            <message xsi:type="xsd:string">0</message>
+            <sid xsi:type="xsd:string">{sid}</sid>
+        </logout>
+        """
+    response = requests.post(BANK_URI, data=generate_soap(payload), headers={'content-type': 'text/xml',
+                                                                             'SOAPAction': '"/logout"'})
+    return
+
+
+
 def pay_restaurant(order_id, success, paid, payment_success, TTW):
     """
     Pagamento al ristorante dal conto di ACMEat
@@ -54,6 +67,7 @@ def pay_restaurant(order_id, success, paid, payment_success, TTW):
         restaurant = order.contents[0].menu.restaurant
         sid = login()
         result = pay(sid, order.restaurant_total, restaurant.bank_address)
+        logout(sid)
         print(f"[{order_id.value}] Payment executed successfully!")
     return {"order_id": order_id.value, "success": success.value, "paid": paid.value,
             "payment_success": payment_success.value, "TTW": TTW.value}

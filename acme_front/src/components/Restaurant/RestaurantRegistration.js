@@ -99,8 +99,7 @@ export default function RestaurantRegistration() {
     }
 
     function setHourString(day, time){
-        let s = [];
-        s = splitTime(time);
+        let s = splitTime(time);
         switch(day){
             case "lunedi":
                 setLunPra1(s[0]);

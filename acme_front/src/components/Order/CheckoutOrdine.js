@@ -1,22 +1,96 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useLocation} from "react-router-dom";
 import {useAppContext} from "../../Context";
-import SlotPicker from 'slotpicker';
 import {
-    getCities,
+    getCities, getRestaurant,
     getUserInfo,
     registerNewOrder,
 } from "../Database/DBacmeat";
 import '../css/Dash.css'
-import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
-import {TimePicker} from "@mui/x-date-pickers/TimePicker";
-import TextField from "@mui/material/TextField";
-import Stack from '@mui/material/Stack';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
+function splitTime(time){
+    let pran1 = ""
+    let pran2 = ""
+    let cen1 = ""
+    let cen2 = ""
+    let split = time.split("/")
+    if(split[0] !== ""){
+        let s = split[0].split("-")
+        pran1= s[0];
+        pran2= s[1];
+    }
+    if(split[1] !== ""){
+        let s = split[1].split("-")
+        cen1= s[0];
+        cen2= s[1];
+    }
+    return [pran1, pran2, cen1, cen2];
+
+}
+
+function getSlots(ora1, ora2){
+    let list = [];
+    let time = new Date();
+    let h = "";
+    let now = new Date();
+    if(ora1 !== ""){
+        time.setHours(ora1);
+        time.setMinutes(0);
+        h = time.getHours();
+        while (h < ora2){
+            time.setMinutes(time.getMinutes() + 15);
+            h = time.getHours();
+
+            if(time > now)
+                list = list.concat(time.getHours() + ":" + time.getMinutes());
+        }
+    }
+    return list;
+}
+
+function getTimeList(time){
+    let today = new Date();
+    let sDay ="";
+    let list = [];
+    switch(today.getDay()){
+        case 0:
+            sDay="lunedi"
+            break;
+        case 1:
+            sDay="martedi"
+            break;
+        case 2:
+            sDay="mercoledi"
+            break;
+        case 3:
+            sDay="giovedi"
+            break;
+        case 4:
+            sDay="venerdi"
+            break;
+        case 5:
+            sDay="sabato"
+            break;
+        case 6:
+            sDay="domenica"
+            break;
+    }
+    let orari = [];
+    time.map(item =>{
+        if(item.day === sDay){
+            console.log("oggi è "+ sDay);
+            console.log(item.time);
+            orari = splitTime(item.time)
+            list = list.concat(getSlots(orari[0], orari[1]));
+            list = list.concat(getSlots(orari[2], orari[3]));
+            console.log(list);
+        }
+    })
+    return list;
+}
 
 export default function CheckoutOrdine() {
-    console.log("Sono in MenuRegistration");
+    console.log("Sono in CheckoutOrdine");
     const [user, setUser] = useState(null);
     const {token, setToken} = useAppContext();
     const navigate = useNavigate();
@@ -28,9 +102,8 @@ export default function CheckoutOrdine() {
     const [currNation, setCurrNation] = useState("");
     const [currCity, setCurrCity] = useState("");
     const [orderList, setOrderList] = useState([]);
-    const [time, setTime] = useState(new Date());
-    const [currHour, setCurrHour] = useState("");
-    const [endHour, setEndHour] =useState("");
+    const [timeList, setTimeList] = useState([]);
+    const [time, setTime] = useState("");
     const {state} = useLocation();
     const {list} = state; // Read values passed on state
     const {restaurantId} = state;
@@ -43,23 +116,9 @@ export default function CheckoutOrdine() {
             getInfo();
             getCity();
             setOrderList(list);
+            getRest();
         }
-        setSlotPicker();
     }, [])
-
-    //https://www.npmjs.com/package/slotpicker?activeTab=readme
-    function setSlotPicker(){
-        var nowTime = new Date();
-        let h = ("0" + nowTime.getHours()).slice(-2);
-        setCurrHour(h+":00");
-        console.log("curr");
-        console.log(h+":00");
-        //nowTime.setHours(nowTime.getHours()+5);
-        //h = ("0" + nowTime.getHours()).slice(-2);
-        //setEndHour(h+":00")
-        //console.log("end");
-        //console.log(h+":00");
-    }
 
     async function getInfo() {
         console.debug(token)
@@ -67,6 +126,17 @@ export default function CheckoutOrdine() {
         if (response.status === 200) {
             let values = await response.json();
             setUser(values);
+        }
+    }
+
+    async function getRest() {
+        console.log("restaurantid");
+        console.log({restaurantId});
+        let response = await getRestaurant({restaurantId}.restaurantId);
+        if (response.status === 200) {
+            let values = await response.json();
+            console.log(values);
+            setTimeList(getTimeList(values.open_times));
         }
     }
 
@@ -115,20 +185,6 @@ export default function CheckoutOrdine() {
         console.log(nation);
     }
 
-    const handleTime = (newValue) => {
-        //let time = newValue.toLocaleTimeString();
-        setTime(newValue);
-    };
-
-    const handleTimePicker = (from) =>{
-        console.log("sono in handletimepicker")
-        console.log(from.$d)
-        let newTime = new Date();
-        newTime.setHours(from.$H, from.$m);
-        console.log(newTime.toISOString());
-        setTime(newTime.toISOString());
-    };
-
     const handleSubmit = async e => {
         e.preventDefault();
         console.log("sono in handlersub")
@@ -141,10 +197,14 @@ export default function CheckoutOrdine() {
            }
            contentList = contentList.concat(obj);
         });
+        let timeOk = new Date();
+        let split = time.split(":");
+        timeOk.setHours(split[0]);
+        timeOk.setMinutes(split[1]);
          let info = {
 
              "contents": contentList,
-             "delivery_time": time,
+             "delivery_time": timeOk,
              "address": indirizzo,
              "number": numCivico,
              "city": currCity,
@@ -218,24 +278,11 @@ export default function CheckoutOrdine() {
                 </div>
                 <div className="form-group mt-4">
                     <label>Seleziona una fascia oraria</label>
-                    <SlotPicker
-                        // Required, interval between two slots in minutes, 30 = 30 min
-                        interval={30}
-                        // Required, when user selects a time slot, you will get the 'from' selected value
-                        onSelectTime={(from) => {console.log(from); handleTimePicker(from)}}
-                        // Optional, array of unavailable time slots
-                        //unAvailableSlots={['10:00', '15:30']}
-                        // Optional, 8AM the start of the slots
-                        from={"9:00"}
-                        // Optional, 09:00PM the end of the slots
-                        to={'23:00'}
-                        // Optional, 01:00 PM, will be selected by default
-                        defaultSelectedTime={currHour}
-                        // Optional, selected slot color
-                        selectedSlotColor='#F09999'
-                        // Optional, language of the displayed text, default is english (en)
-                        lang='en'
-                    />
+                    <select className="form-select" aria-label="Default select example" value={time} onChange={e => setTime(e.target.value)}>
+                        {timeList.map(time => {
+                            return <option key={time} value={time}>{time}</option>;
+                        })}
+                    </select>
                 </div>
                 <div className="d-grid gap-2 mt-3">
                     <button type="submit" className="btn btn-primary" onClick={handleSubmit}>

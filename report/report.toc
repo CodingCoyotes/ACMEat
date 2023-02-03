@@ -9,29 +9,29 @@
 \contentsline {subsection}{\numberline {3.2}Proprietà di correctedness}{6}{subsection.3.2}%
 \contentsline {subsection}{\numberline {3.3}Sistema di Ruoli}{6}{subsection.3.3}%
 \contentsline {subsubsection}{\numberline {3.3.1}ACMEat}{6}{subsubsection.3.3.1}%
-\contentsline {subsubsection}{\numberline {3.3.2}Banca}{8}{subsubsection.3.3.2}%
-\contentsline {subsubsection}{\numberline {3.3.3}Cliente}{10}{subsubsection.3.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.2}Banca}{9}{subsubsection.3.3.2}%
+\contentsline {subsubsection}{\numberline {3.3.3}Cliente}{11}{subsubsection.3.3.3}%
 \contentsline {subsubsection}{\numberline {3.3.4}Fattorino}{13}{subsubsection.3.3.4}%
-\contentsline {subsubsection}{\numberline {3.3.5}Ristorante}{16}{subsubsection.3.3.5}%
-\contentsline {subsubsection}{\numberline {3.3.6}Servizio di consegna}{18}{subsubsection.3.3.6}%
-\contentsline {subsection}{\numberline {3.4}Diagramma di coreografia BPMN}{21}{subsection.3.4}%
-\contentsline {section}{\numberline {4}Documentazione}{25}{section.4}%
-\contentsline {section}{\numberline {5}Progettazione}{34}{section.5}%
-\contentsline {section}{\numberline {6}Sviluppo}{35}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Backends Python}{36}{subsection.6.1}%
-\contentsline {subsubsection}{\numberline {6.1.1}Parametri di configurazione}{37}{subsubsection.6.1.1}%
-\contentsline {subsubsection}{\numberline {6.1.2}Dettagli sui backends}{38}{subsubsection.6.1.2}%
-\contentsline {paragraph}{acmeat}{38}{section*.19}%
-\contentsline {paragraph}{ACMEmanager}{39}{section*.20}%
-\contentsline {paragraph}{acmedeliver}{40}{section*.21}%
-\contentsline {paragraph}{acmegeolocate}{40}{section*.22}%
-\contentsline {paragraph}{acmerestaurant}{41}{section*.23}%
-\contentsline {paragraph}{bank\_intermediary}{41}{section*.24}%
-\contentsline {subsubsection}{\numberline {6.1.3}Istruzioni per l'avvio in ambiente di testing}{41}{subsubsection.6.1.3}%
-\contentsline {subsubsection}{\numberline {6.1.4}Istruzioni per il deployment in produzione}{41}{subsubsection.6.1.4}%
-\contentsline {paragraph}{Setup iniziale}{41}{section*.25}%
-\contentsline {paragraph}{Installazione dipendenze software}{42}{section*.26}%
-\contentsline {paragraph}{Setup del singolo backend}{42}{section*.27}%
-\contentsline {paragraph}{Configurazione del server come servizio systemd}{42}{section*.28}%
-\contentsline {subsubsection}{\numberline {6.1.5}Post-Installazione}{43}{subsubsection.6.1.5}%
-\contentsline {section}{\numberline {7}Conclusioni}{44}{section.7}%
+\contentsline {subsubsection}{\numberline {3.3.5}Ristorante}{15}{subsubsection.3.3.5}%
+\contentsline {subsubsection}{\numberline {3.3.6}Società di consegna}{17}{subsubsection.3.3.6}%
+\contentsline {subsection}{\numberline {3.4}Diagramma di coreografia BPMN}{19}{subsection.3.4}%
+\contentsline {section}{\numberline {4}Documentazione}{23}{section.4}%
+\contentsline {section}{\numberline {5}Progettazione}{32}{section.5}%
+\contentsline {section}{\numberline {6}Sviluppo}{33}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Backends Python}{34}{subsection.6.1}%
+\contentsline {subsubsection}{\numberline {6.1.1}Parametri di configurazione}{35}{subsubsection.6.1.1}%
+\contentsline {subsubsection}{\numberline {6.1.2}Dettagli sui backends}{36}{subsubsection.6.1.2}%
+\contentsline {paragraph}{acmeat}{36}{section*.19}%
+\contentsline {paragraph}{ACMEmanager}{37}{section*.20}%
+\contentsline {paragraph}{acmedeliver}{38}{section*.21}%
+\contentsline {paragraph}{acmegeolocate}{38}{section*.22}%
+\contentsline {paragraph}{acmerestaurant}{39}{section*.23}%
+\contentsline {paragraph}{bank\_intermediary}{39}{section*.24}%
+\contentsline {subsubsection}{\numberline {6.1.3}Istruzioni per l'avvio in ambiente di testing}{39}{subsubsection.6.1.3}%
+\contentsline {subsubsection}{\numberline {6.1.4}Istruzioni per il deployment in produzione}{39}{subsubsection.6.1.4}%
+\contentsline {paragraph}{Setup iniziale}{39}{section*.25}%
+\contentsline {paragraph}{Installazione dipendenze software}{40}{section*.26}%
+\contentsline {paragraph}{Setup del singolo backend}{40}{section*.27}%
+\contentsline {paragraph}{Configurazione del server come servizio systemd}{40}{section*.28}%
+\contentsline {subsubsection}{\numberline {6.1.5}Post-Installazione}{41}{subsubsection.6.1.5}%
+\contentsline {section}{\numberline {7}Conclusioni}{42}{section.7}%

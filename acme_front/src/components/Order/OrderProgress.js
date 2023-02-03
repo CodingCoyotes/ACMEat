@@ -57,7 +57,8 @@ export default function OrderProgress({orderStatus}) {
 
     useEffect(() => {
         console.log("sono in order progress")
-        setActiveStep(orderStatus);
+        console.log({orderStatus}.orderStatus)
+        setActiveStep({orderStatus}.orderStatus);
     }, [])
 
 

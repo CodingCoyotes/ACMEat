@@ -104,6 +104,7 @@ export default function CheckoutOrdine() {
     const [orderList, setOrderList] = useState([]);
     const [timeList, setTimeList] = useState([]);
     const [time, setTime] = useState("");
+    const [timeDate, setTimeDate] = useState(new Date());
     const {state} = useLocation();
     const {list} = state; // Read values passed on state
     const {restaurantId} = state;
@@ -136,7 +137,13 @@ export default function CheckoutOrdine() {
         if (response.status === 200) {
             let values = await response.json();
             console.log(values);
-            setTimeList(getTimeList(values.open_times));
+            let list = getTimeList(values.open_times)
+            setTimeList(list);
+            let timeOk = new Date();
+            let split = list[0].split(":");
+            timeOk.setHours(split[0]);
+            timeOk.setMinutes(split[1]);
+            setTimeDate(timeOk);
         }
     }
 
@@ -201,10 +208,11 @@ export default function CheckoutOrdine() {
         let split = time.split(":");
         timeOk.setHours(split[0]);
         timeOk.setMinutes(split[1]);
+        setTimeDate(timeOk)
          let info = {
 
              "contents": contentList,
-             "delivery_time": timeOk,
+             "delivery_time": timeDate,
              "address": indirizzo,
              "number": numCivico,
              "city": currCity,
@@ -217,6 +225,7 @@ export default function CheckoutOrdine() {
             let values = await response.json()
         }
         else{
+            console.log("response")
             console.log(response)
             navigate("/processingorder", { state: { param: response.id}});
         }

@@ -224,6 +224,7 @@ simil-soap" (soap dentro un oggetto json) al backend della banca. Viene usato so
 acmebank.
 
 ### Istruzioni per l'avvio in ambiente di testing
+
 1. Installare postgresql, python3 e poetry;
 2. Creare un database per l'applicazione che si vuole avviare;
 3. Clonare il repository github;
@@ -231,13 +232,20 @@ acmebank.
 5. Eseguire il comando ```poetry shell```;
 6. Impostare le variabili d'ambiente richieste dal servizio desiderato;
 7. Eseguire il comando ```python -m ${service_name}```;
+
+Se si vuol eseguire il servizio acmeat, è necessario preparare anche Camunda:
+
 8. Installare Camunda Platform e Camunda Modeler;
 9. Caricare i processi "acmeat_order_confirmation" e "acmeat_restaurant_closings_reset" con tenant_id "acmeat";
+10. Eseguire tramite la poetry shell lo script ```Applications/acmeat/services/ACMEManager.py``` e con le stesse
+    variabili d'ambiente di acmeat;
 
 ### Istruzioni per il deployment in produzione
+
 In questa sezione, vengono indicati i passaggi necessari per il deployment dell'applicazione in produzione.  
 Si suppone l'utilizzo del sistema operativo Ubuntu, e vengono omessi i passaggi per la realizzazione del reverse poxy e
 dei certificati per l'https.
+
 #### Setup iniziale
 
 1. Da root, inserire il comando ```useradd ${nome_servizio}```;
@@ -256,18 +264,24 @@ dei certificati per l'https.
 1. Spostarsi nella cartella "/srv" e scaricare il repository git;
 2. Spostarsi nella sottocartella del repository "Applications";
 3. Eseguire l'accesso come l'utente ```${nome_servizio}```
-4. Installare le dipendenze tramite poetry install. Sarà necessario capire quale sia il percorso dell'ambiente creato, il quale dovrebbe essere sotto la cartella ```/home/${nome_servizio}/.cache/pypoetry/virtualenvs/``` e a cui ci si riferirà come ```${poetry_path}```;
+4. Installare le dipendenze tramite poetry install. Sarà necessario capire quale sia il percorso dell'ambiente creato,
+   il quale dovrebbe essere sotto la cartella ```/home/${nome_servizio}/.cache/pypoetry/virtualenvs/``` e a cui ci si
+   riferirà come ```${poetry_path}```;
 5. Eseguire l'accesso con l'utente postgres, eseguire il comando psql;
 6. Creare il database ```${nome_database}```;
 7. Creare l'utente ${nome_servizio} con ```“CREATE USER ‘${nome_servizio}’ WITH ENCRYPTED PASSWORD ‘${password}’;”```;
-8. Fornire all'utente appena creato i privilegi sul database con ```da “GRANT ALL PRIVILEGES ON DATABASE ${nome_database} TO "${nome_servizio}";”```
+8. Fornire all'utente appena creato i privilegi sul database
+   con ```da “GRANT ALL PRIVILEGES ON DATABASE ${nome_database} TO "${nome_servizio}";”```
 9. Inserire il comando ```exit``` 2 volte;
-10. Trasferire il possesso della cartella del servizio interessato all'utente ```${nome_servizio}``` con il comando ```sudo chown ${nome_servizio} ${cartella_servizio}```
+10. Trasferire il possesso della cartella del servizio interessato all'utente ```${nome_servizio}``` con il
+    comando ```sudo chown ${nome_servizio} ${cartella_servizio}```
 
 #### Configurazione del server come servizio systemd
 
-1. Creare il file ```${nome_servizio}.service``` nella cartella "/etc/systemd/system" tramite il comando ```sudo touch /etc/systemd/system/${nome_servizio}.service```;
-2. Creare la cartella ```${nome_servizio}.service.d``` nella cartella "/etc/systemd/system" tramite il comando ```sudo mkdir /etc/systemd/system/${nome_servizio}.service.d```;
+1. Creare il file ```${nome_servizio}.service``` nella cartella "/etc/systemd/system" tramite il
+   comando ```sudo touch /etc/systemd/system/${nome_servizio}.service```;
+2. Creare la cartella ```${nome_servizio}.service.d``` nella cartella "/etc/systemd/system" tramite il
+   comando ```sudo mkdir /etc/systemd/system/${nome_servizio}.service.d```;
 3. Inserire nel file ```${nome_servizio}.service``` le seguenti righe:
 
 ```
@@ -289,18 +303,33 @@ ExecStart=/home/${nome_servizio}/.cache/pypoetry/virtualenvs/${poetry_path}/bin/
 [Install]
 WantedBy=multi-user.target
 ```
-4. Creare un file nella cartella appena creata chiamato ```override.conf``` e popolarlo in questo modo, tenendo conto delle variabili d'ambiente necessarie per quel particolare servizio:
+
+4. Creare un file nella cartella appena creata chiamato ```override.conf``` e popolarlo in questo modo, tenendo conto
+   delle variabili d'ambiente necessarie per quel particolare servizio:
+
 ```
 [Service]
 Environment=KEY=value
 ```
-5. Ricaricare i file di configurazione dei servizi con ```sudo systemctl daemon-reload```, per poi avviarlo con il comando ```sudo systemd start ${nome_servizio}```.
+
+5. Ricaricare i file di configurazione dei servizi con ```sudo systemctl daemon-reload```, per poi avviarlo con il
+   comando ```sudo systemd start ${nome_servizio}```.
 
 #### Configurazione di Camunda
+
+Questa sezione è necessaria se si sta tentando il deploy del servizio acmeat.
+
 1. Installare tramite docker Camunda Platform;
-2. Tramite Camunda Modeler, caricare sul server i processi ""acmeat_order_confirmation" e "acmeat_restaurant_closings_reset" con tenant_id "acmeat"";
+2. Tramite Camunda Modeler, caricare sul server i processi ""acmeat_order_confirmation" e "
+   acmeat_restaurant_closings_reset" con tenant_id "acmeat"";
+3. Creare, in modo pressochè analogo al precedente, un servizio systemd per lo
+   script ```Applications/acmeat/services/ACMEManager.py``` con le stesse variabili d'ambiente utilizzate per ACMEat
 
 ### Post-Installazione
-Per poter testare l'applicazione senza dover riempire a mano il database, eseguire lo script ```post_install.py``` nella cartella "Applications".
+
+Per poter testare l'applicazione senza dover riempire a mano il database, eseguire lo script ```post_install.py``` nella
+cartella "Applications".
+
 ## Backend Jolie
+
 [Something something]

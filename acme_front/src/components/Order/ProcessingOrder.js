@@ -53,15 +53,15 @@ export default function ProcessingOrder(){
 
     async function pooling(){
         console.log("pooling")
-        for(let i = 0; i < 100 ; i = i+1){
-            const timeout = setTimeout(() => {
-                if(getOrd() === 3){
-                    clearTimeout(timeout);
-                    let reindirizza = address + {param}.restaurant_total+"/cronologiaordine"+"/afterpay/"+order.restaurant_total+"/"
-                    window.location.href = reindirizza;
-                }
-            }, 30000); //every 30 sec + await time (?)
+        while(getOrd() !== 3){
+            setTimeout(() => {
+                console.log("controllo");
+            }, 5000); //every 5 sec + await time (?)
         }
+        console.log("out");
+        let reindirizza = address + {param}.restaurant_total+ {param}.deliverer_total+"/http:127.0.0.1:3000/landingorder/"+{param}.id
+        window.location.href = reindirizza;
+
     }
 
 

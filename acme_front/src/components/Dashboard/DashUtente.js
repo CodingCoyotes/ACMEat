@@ -12,7 +12,6 @@ export default function DashUtente(){
     const [nationList, setNationList] = useState([]);
     const [currNation, setCurrNation] = useState("");
     const [currCity, setCurrCity] = useState("");
-    const [activeOrderList, setActiveOrderList] = useState([]);
     const [orderList, setOrderList] = useState([]);
     const [cronologiaOrdini, setCronologiaOrdini] = useState(false);
 

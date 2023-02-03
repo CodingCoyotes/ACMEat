@@ -13,6 +13,7 @@ import DashOrder from "./Order/DashOrder";
 import CheckoutOrdine from "./Order/CheckoutOrdine";
 import CronologiaOrdine from "./Order/CronologiaOrdine";
 import ProcessingOrder from "./Order/ProcessingOrder";
+import LandingOrder from "./Order/LandingOrder";
 
 export default function Routing(){
     return (
@@ -32,6 +33,7 @@ export default function Routing(){
                 <Route path="/checkoutordine" element={<CheckoutOrdine/>}/>
                 <Route path="/cronologiaordine" element={<CronologiaOrdine/>}/>
                 <Route path="/processingorder" element={<ProcessingOrder/>}/>
+                <Route path="/landingorder" element={<LandingOrder/>}/>
             </Routes>
         </Router>
     )

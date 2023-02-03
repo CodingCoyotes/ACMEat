@@ -202,8 +202,8 @@ export async function modifyMenu(token, info, id) {
 //                                      FUNZIONI ORDER
 // ---------------------------------------------------------------------------------------------
 //Registra un nuovo ordine
-export async function registerNewOrder(restaurant_id, info, token) {
-  return fetch(address + "/api/orders/v1/" + restaurant_id, {
+export async function registerNewOrder(order_id, info, token) {
+  return fetch(address + "/api/orders/v1/" + order_id, {
     method: 'POST',
 
     headers: {
@@ -229,3 +229,20 @@ export async function getOrder(id, token, domain) {
   });
 }
 
+// ---------------------------------------------------------------------------------------------
+//                                      FUNZIONI PAYMENT
+// ---------------------------------------------------------------------------------------------
+//Registra un nuovo ordine
+export async function payment(order_id, info, token) {
+  return fetch(address + "/api/orders/v1/" + order_id +"/payment", {
+    method: 'POST',
+
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer " + token,
+    },
+    body: JSON.stringify(info)
+  })
+      .then(data => data.json())
+}

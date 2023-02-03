@@ -16,7 +16,7 @@ from acmedeliver.schemas import *
 from acmedeliver.crud import *
 from acmedeliver.dependencies import dep_dbsession
 import acmedeliver.errors as errors
-from acmedeliver.database.enums import UserType
+from acmedeliver.database.enums import UserType, DeliveryStatus
 from acmedeliver.configuration import setting_required
 import json
 from acmedeliver.responses import NO_CONTENT
@@ -96,12 +96,13 @@ async def create_delivery(delivery_request: acmedeliver.schemas.edit.ClientDeliv
         delivery_time=delivery_request.request.delivery_time,
         deliverer_id=user.id, client_id=target.id,
         source=delivery_request.request.source,
-        source_id=delivery_request.request.source_id))
+        source_id=delivery_request.request.source_id,
+        status=DeliveryStatus.working))
 
 
 @router.post("/preview", response_model=acmedeliver.schemas.edit.DeliveryPreviewCost)
 async def preview_delivery(delivery_request: acmedeliver.schemas.edit.ClientDeliveryRequest,
-                          db: Session = Depends(dep_dbsession)):
+                           db: Session = Depends(dep_dbsession)):
     """
     Creates an account for a new client.
     """

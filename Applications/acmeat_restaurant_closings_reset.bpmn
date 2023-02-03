@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0a6yf3a" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.0.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
+  <bpmn:process id="Process_04t5bkl" name="Closings Reset" isExecutable="true" camunda:versionTag="0.1">
+    <bpmn:startEvent id="StartEvent_1" name="Ogni ora...">
+      <bpmn:outgoing>Flow_1ovplt6</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_0my3t4z">
+        <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">0 0 * * * ?</bpmn:timeCycle>
+      </bpmn:timerEventDefinition>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1ovplt6" sourceRef="StartEvent_1" targetRef="closings_reset" />
+    <bpmn:endEvent id="Event_0vmzjnq">
+      <bpmn:incoming>Flow_0t3yhmb</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0t3yhmb" sourceRef="closings_reset" targetRef="Event_0vmzjnq" />
+    <bpmn:serviceTask id="closings_reset" name="Closings reset" camunda:type="external" camunda:topic="closings_reset">
+      <bpmn:incoming>Flow_1ovplt6</bpmn:incoming>
+      <bpmn:outgoing>Flow_0t3yhmb</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:textAnnotation id="TextAnnotation_0d2elyv">
+      <bpmn:text>Idealmente, si dovrebbe controllare solo per la mezzanotte, ma qualsiasi tentativo di impostare un timer con un'ora specifica è fallito.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1vw1mhh" sourceRef="StartEvent_1" targetRef="TextAnnotation_0d2elyv" />
+    <bpmn:textAnnotation id="TextAnnotation_133w57l">
+      <bpmn:text>Controlla internamente se è mezzanotte</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0l6cbaq" sourceRef="closings_reset" targetRef="TextAnnotation_133w57l" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_04t5bkl">
+      <bpmndi:BPMNShape id="TextAnnotation_0d2elyv_di" bpmnElement="TextAnnotation_0d2elyv">
+        <dc:Bounds x="220" y="80" width="425" height="41" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_133w57l_di" bpmnElement="TextAnnotation_133w57l">
+        <dc:Bounds x="200" y="270" width="266" height="30" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1ovplt6_di" bpmnElement="Flow_1ovplt6">
+        <di:waypoint x="215" y="187" />
+        <di:waypoint x="270" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0t3yhmb_di" bpmnElement="Flow_0t3yhmb">
+        <di:waypoint x="370" y="187" />
+        <di:waypoint x="432" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_17jdafi_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="169" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="172" y="212" width="52" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0vmzjnq_di" bpmnElement="Event_0vmzjnq">
+        <dc:Bounds x="432" y="169" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1vq1b8c_di" bpmnElement="closings_reset">
+        <dc:Bounds x="270" y="147" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1vw1mhh_di" bpmnElement="Association_1vw1mhh">
+        <di:waypoint x="208" y="173" />
+        <di:waypoint x="249" y="121" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0l6cbaq_di" bpmnElement="Association_0l6cbaq">
+        <di:waypoint x="291" y="227" />
+        <di:waypoint x="261" y="270" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

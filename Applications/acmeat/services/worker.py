@@ -103,7 +103,6 @@ class Worker:
             # Viene creata una lista di thread
             tasks = self.fetch_and_lock()
             thread = Thread(target=work, args=(self, tasks))
-            print(f"Number of threads: {len(threadlist)}")
             threadlist.append(thread)
             thread.start()
             newlist = []

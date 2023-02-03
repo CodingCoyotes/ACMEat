@@ -12,7 +12,7 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
-
+import "../css/Dash.css"
 
 
 export default function RestaurantRegistration() {
@@ -28,16 +28,124 @@ export default function RestaurantRegistration() {
     const [nationList, setNationList] = useState([]);
     const [currNation, setCurrNation] = useState("");
     const [currCity, setCurrCity] = useState("");
-    const [lunTime, setLunTime] = React.useState(new Date());
-    const [marTime, setMarTime] = React.useState(new Date());
-    const [merTime, setMerTime] = React.useState(new Date());
-    const [gioTime, setGioTime] = React.useState(new Date());
-    const [venTime, setVenTime] = React.useState(new Date());
-    const [sabTime, setSabTime] = React.useState(new Date());
-    const [domTime, setDomTime] = React.useState(new Date());
+
+    const [lunPra1, setLunPra1] = React.useState("12");
+    const [lunPra2, setLunPra2] = React.useState("15");
+    const [lunCen1, setLunCen1] = React.useState("19");
+    const [lunCen2, setLunCen2] = React.useState("22");
+
+    const [marPra1, setMarPra1] = React.useState("12");
+    const [marPra2, setMarPra2] = React.useState("15");
+    const [marCen1, setMarCen1] = React.useState("19");
+    const [marCen2, setMarCen2] = React.useState("22");
+
+    const [merPra1, setMerPra1] = React.useState("12");
+    const [merPra2, setMerPra2] = React.useState("15");
+    const [merCen1, setMerCen1] = React.useState("19");
+    const [merCen2, setMerCen2] = React.useState("22");
+
+    const [gioPra1, setGioPra1] = React.useState("12");
+    const [gioPra2, setGioPra2] = React.useState("15");
+    const [gioCen1, setGioCen1] = React.useState("19");
+    const [gioCen2, setGioCen2] = React.useState("22");
+
+    const [venPra1, setVenPra1] = React.useState("12");
+    const [venPra2, setVenPra2] = React.useState("15");
+    const [venCen1, setVenCen1] = React.useState("19");
+    const [venCen2, setVenCen2] = React.useState("22");
+
+    const [sabPra1, setSabPra1] = React.useState("12");
+    const [sabPra2, setSabPra2] = React.useState("15");
+    const [sabCen1, setSabCen1] = React.useState("19");
+    const [sabCen2, setSabCen2] = React.useState("22");
+
+    const [domPra1, setDomPra1] = React.useState("12");
+    const [domPra2, setDomPra2] = React.useState("15");
+    const [domCen1, setDomCen1] = React.useState("19");
+    const [domCen2, setDomCen2] = React.useState("22");
+
+
     const [aperturaBool, setAperturaBool] = useState(true);
     const {state} = useLocation();
 
+    function getHourString(pra1, pra2, cen1, cen2){
+        let pranzo = ""
+        let cena = ""
+        if(!(pra1 === "" || pra2 === ""))
+            pranzo = pra1+"-"+pra2;
+        if(!(cen1 === "" || cen2 === ""))
+            cena = cen1+"-"+cen2;
+        return pranzo+"/"+cena;
+    }
+
+    function splitTime(time){
+        let pran1 = ""
+        let pran2 = ""
+        let cen1 = ""
+        let cen2 = ""
+        let split = time.split("/")
+        if(split[0] !== ""){
+            let s = split[0].split("-")
+            pran1= s[0];
+            pran2= s[1];
+        }
+        if(split[1] !== ""){
+            let s = split[1].split("-")
+            cen1= s[0];
+            cen2= s[1];
+        }
+        return [pran1, pran2, cen1, cen2];
+
+    }
+
+    function setHourString(day, time){
+        let s = [];
+        s = splitTime(time);
+        switch(day){
+            case "lunedi":
+                setLunPra1(s[0]);
+                setLunPra2(s[1]);
+                setLunCen1(s[2]);
+                setLunCen2(s[3]);
+                break;
+            case "martedi":
+                setMarPra1(s[0]);
+                setMarPra2(s[1]);
+                setMarCen1(s[2]);
+                setMarCen2(s[3]);
+                break;
+            case "mercoledi":
+                setMerPra1(s[0]);
+                setMerPra2(s[1]);
+                setMerCen1(s[2]);
+                setMerCen2(s[3]);
+                break;
+            case "giovedi":
+                setGioPra1(s[0]);
+                setGioPra2(s[1]);
+                setGioCen1(s[2]);
+                setGioCen2(s[3]);
+                break;
+            case "venerdi":
+                setVenPra1(s[0]);
+                setVenPra2(s[1]);
+                setVenCen1(s[2]);
+                setVenCen2(s[3]);
+                break;
+            case "sabato":
+                setSabPra1(s[0]);
+                setSabPra2(s[1]);
+                setSabCen1(s[2]);
+                setSabCen2(s[3]);
+                break;
+            case "domenica":
+                setDomPra1(s[0]);
+                setDomPra2(s[1]);
+                setDomCen1(s[2]);
+                setDomCen2(s[3]);
+                break;
+        }
+    }
 
     useEffect(() => {
         if (token === null) {
@@ -82,34 +190,7 @@ export default function RestaurantRegistration() {
         let day = "";
         let time = "";
         for (let i = 0; i < orario.length; i = i+1){
-            day = orario[i].day;
-            time = orario[i].time;
-            console.log("time")
-            console.log(time)
-
-            switch(day){
-                case "lunedi":
-                    setLunTime(time);//Date.parse(time.toString()))
-                    break;
-                case "martedi":
-                    setMarTime(time);//Date.parse(time.toString()));
-                    break;
-                case "mercoledi":
-                    setMerTime(time);
-                    break;
-                case "giovedi":
-                    setGioTime(time);
-                    break;
-                case "venerdi":
-                    setVenTime(time);
-                    break;
-                case "sabato":
-                    setSabTime(time);
-                    break;
-                case "domenica":
-                    setDomTime(time);
-                    break;
-            }
+            setHourString(orario[i].day, orario[i].time)
         }
        setCurrCity(restaurant.city_id);
     }
@@ -164,29 +245,6 @@ export default function RestaurantRegistration() {
         setCurrCity(nation);
     }
 
-    const handleLunTime = (newValue) => {
-        //let time = newValue.toLocaleTimeString();
-        setLunTime(newValue);
-    };
-    const handleMarTime = (newValue) => {
-        setMarTime(newValue);
-    };
-    const handleMerTime = (newValue) => {
-        setMerTime(newValue);
-    };
-    const handleGioTime = (newValue) => {
-        setGioTime(newValue);
-    };
-    const handleVenTime = (newValue) => {
-        setVenTime(newValue);
-    };
-    const handleSabTime = (newValue) => {
-        setSabTime(newValue);
-    };
-    const handleDomTime = (newValue) => {
-        setDomTime(newValue);
-    };
-
     const handleSubmit = async e => {
     e.preventDefault();
         if(state !== null){
@@ -208,31 +266,31 @@ export default function RestaurantRegistration() {
             "open_times": [
                 {
                     "day": "lunedi",
-                    "time": lunTime
+                    "time": getHourString(lunPra1, lunPra2, lunCen1, lunCen2)
                 },
                 {
                     "day": "martedi",
-                    "time": marTime
+                    "time": getHourString(marPra1, marPra2, marCen1, marCen2)
                 },
                 {
                     "day": "mercoledi",
-                    "time": merTime
+                    "time": getHourString(merPra1, merPra2, merCen1, merCen2)
                 },
                 {
                     "day": "giovedi",
-                    "time": gioTime
+                    "time": getHourString(gioPra1, gioPra2, gioCen1, gioCen2)
                 },
                 {
                     "day": "venerdi",
-                    "time": venTime
+                    "time": getHourString(venPra1, venPra2, venCen1, venCen2)
                 },
                 {
                     "day": "sabato",
-                    "time": sabTime
+                    "time": getHourString(sabPra1, sabPra2, sabCen1, sabCen2)
                 },
                 {
                     "day": "domenica",
-                    "time": domTime
+                    "time": getHourString(domPra1, domPra2, domCen1, domCen2)
                 }
             ],
             "closed": aperturaBool,
@@ -265,31 +323,31 @@ export default function RestaurantRegistration() {
             "open_times": [
                 {
                     "day": "lunedi",
-                    "time": lunTime
+                    "time": getHourString(lunPra1, lunPra2, lunCen1, lunCen2)
                 },
                 {
                     "day": "martedi",
-                    "time": marTime
+                    "time": getHourString(marPra1, marPra2, marCen1, marCen2)
                 },
                 {
                     "day": "mercoledi",
-                    "time": merTime
+                    "time": getHourString(merPra1, merPra2, merCen1, merCen2)
                 },
                 {
                     "day": "giovedi",
-                    "time": gioTime
+                    "time": getHourString(gioPra1, gioPra2, gioCen1, gioCen2)
                 },
                 {
                     "day": "venerdi",
-                    "time": venTime
+                    "time": getHourString(venPra1, venPra2, venCen1, venCen2)
                 },
                 {
                     "day": "sabato",
-                    "time": sabTime
+                    "time": getHourString(sabPra1, sabPra2, sabCen1, sabCen2)
                 },
                 {
                     "day": "domenica",
-                    "time": domTime
+                    "time": getHourString(domPra1, domPra2, domCen1, domCen2)
                 }
             ],
             "closed": aperturaBool,
@@ -370,54 +428,251 @@ export default function RestaurantRegistration() {
                 </FormControl>
             </div>
               <div className="form-group mt-3">
-                  <h5>Seleziona orari apertura</h5>
+                  <h5>Seleziona orari apertura (pranzo/cena)</h5>
                   <div>
-                      <LocalizationProvider dateAdapter={AdapterDateFns}>
-                          <Stack spacing={1}>
-                              <TimePicker
-                                  label="Lunedì"
-                                  value={lunTime}
-                                  onChange={e => handleLunTime(e)}
-                                  renderInput={(params) => <TextField {...params} />}
-                              />
-                              <TimePicker
-                                  label="Martedì"
-                                  value={marTime}
-                                  onChange={e => handleMarTime(e)}
-                                  renderInput={(params) => <TextField {...params} />}
-                              />
-                              <TimePicker
-                                  label="Mercoledì"
-                                  value={merTime}
-                                  onChange={e => handleMerTime(e)}
-                                  renderInput={(params) => <TextField {...params} />}
-                              />
-                              <TimePicker
-                                  label="Giovedì"
-                                  value={gioTime}
-                                  onChange={e => handleGioTime(e)}
-                                  renderInput={(params) => <TextField {...params} />}
-                              />
-                              <TimePicker
-                                  label="Venerdì"
-                                  value={venTime}
-                                  onChange={e => handleVenTime(e)}
-                                  renderInput={(params) => <TextField {...params} />}
-                              />
-                              <TimePicker
-                                  label="Sabato"
-                                  value={sabTime}
-                                  onChange={e => handleSabTime(e)}
-                                  renderInput={(params) => <TextField {...params} />}
-                              />
-                              <TimePicker
-                                  label="Domenica"
-                                  value={domTime}
-                                  onChange={e => handleDomTime(e)}
-                                  renderInput={(params) => <TextField {...params} />}
-                              />
-                          </Stack>
-                      </LocalizationProvider>
+                      <h6>Lunedì: </h6>
+                      <label className="label-margin">Pranzo </label>
+                      <input
+                          type="number"
+                          value={lunPra1}
+                          className="form-control short"
+                          placeholder="12"
+                          onChange={e => setLunPra1(e.target.value)}
+                      />
+                      <label className="label-margin"> - </label>
+                      <input
+                          type="number"
+                          value={lunPra2}
+                          className="form-control short"
+                          placeholder="15"
+                          onChange={e => setLunPra2(e.target.value)}
+                      />
+                      <label className="label-margin">Cena </label>
+                      <input
+                          type="number"
+                          value={lunCen1}
+                          className="form-control mt-1 short"
+                          placeholder="19"
+                          onChange={e => setLunCen1(e.target.value)}
+                      />
+                      <label className="label-margin"> - </label>
+                      <input
+                          type="number"
+                          value={lunCen2}
+                          className="form-control mt-1 short"
+                          placeholder="21"
+                          onChange={e => setLunCen2(e.target.value)}
+                      />
+                  </div>
+                  <div>
+                      <h6>Martedì: </h6>
+                      <label className="label-margin">Pranzo </label>
+                      <input
+                          type="number"
+                          value={marPra1}
+                          className="form-control short"
+                          placeholder="12"
+                          onChange={e => setMarPra1(e.target.value)}
+                      />
+                      <label className="label-margin"> - </label>
+                      <input
+                          type="number"
+                          value={marPra2}
+                          className="form-control short"
+                          placeholder="15"
+                          onChange={e => setMarPra2(e.target.value)}
+                      />
+                      <label className="label-margin">Cena </label>
+                      <input
+                          type="number"
+                          value={marCen1}
+                          className="form-control mt-1 short"
+                          placeholder="19"
+                          onChange={e => setMarCen1(e.target.value)}
+                      />
+                      <label className="label-margin"> - </label>
+                      <input
+                          type="number"
+                          value={marCen2}
+                          className="form-control mt-1 short"
+                          placeholder="21"
+                          onChange={e => setMarCen2(e.target.value)}
+                      />
+                  </div>
+                  <div>
+                      <h6>Mercoledì: </h6>
+                      <label className="label-margin">Pranzo </label>
+                      <input
+                          type="number"
+                          value={merPra1}
+                          className="form-control short"
+                          placeholder="12"
+                          onChange={e => setMerPra1(e.target.value)}
+                      />
+                      <label className="label-margin"> - </label>
+                      <input
+                          type="number"
+                          value={merPra2}
+                          className="form-control short"
+                          placeholder="15"
+                          onChange={e => setMerPra2(e.target.value)}
+                      />
+                      <label className="label-margin">Cena </label>
+                      <input
+                          type="number"
+                          value={merCen1}
+                          className="form-control mt-1 short"
+                          placeholder="19"
+                          onChange={e => setMerCen1(e.target.value)}
+                      />
+                      <label className="label-margin"> - </label>
+                      <input
+                          type="number"
+                          value={merCen2}
+                          className="form-control mt-1 short"
+                          placeholder="21"
+                          onChange={e => setMerCen2(e.target.value)}
+                      />
+                  </div>
+                  <div>
+                      <h6>Giovedì: </h6>
+                      <label className="label-margin">Pranzo </label>
+                      <input
+                          type="number"
+                          value={gioPra1}
+                          className="form-control short"
+                          placeholder="12"
+                          onChange={e => setGioPra1(e.target.value)}
+                      />
+                      <label className="label-margin"> - </label>
+                      <input
+                          type="number"
+                          value={gioPra2}
+                          className="form-control short"
+                          placeholder="15"
+                          onChange={e => setGioPra2(e.target.value)}
+                      />
+                      <label className="label-margin">Cena </label>
+                      <input
+                          type="number"
+                          value={gioCen1}
+                          className="form-control mt-1 short"
+                          placeholder="19"
+                          onChange={e => setGioCen1(e.target.value)}
+                      />
+                      <label className="label-margin"> - </label>
+                      <input
+                          type="number"
+                          value={gioCen2}
+                          className="form-control mt-1 short"
+                          placeholder="21"
+                          onChange={e => setGioCen2(e.target.value)}
+                      />
+                  </div>
+                  <div>
+                      <h6>Venerdì: </h6>
+                      <label className="label-margin">Pranzo </label>
+                      <input
+                          type="number"
+                          value={venPra1}
+                          className="form-control short"
+                          placeholder="12"
+                          onChange={e => setVenPra1(e.target.value)}
+                      />
+                      <label className="label-margin"> - </label>
+                      <input
+                          type="number"
+                          value={venPra2}
+                          className="form-control short"
+                          placeholder="15"
+                          onChange={e => setVenPra2(e.target.value)}
+                      />
+                      <label className="label-margin">Cena </label>
+                      <input
+                          type="number"
+                          value={venCen1}
+                          className="form-control mt-1 short"
+                          placeholder="19"
+                          onChange={e => setVenCen1(e.target.value)}
+                      />
+                      <label className="label-margin"> - </label>
+                      <input
+                          type="number"
+                          value={venCen2}
+                          className="form-control mt-1 short"
+                          placeholder="21"
+                          onChange={e => setVenCen2(e.target.value)}
+                      />
+                  </div>
+                  <div>
+                      <h6>Sabato: </h6>
+                      <label className="label-margin">Pranzo </label>
+                      <input
+                          type="number"
+                          value={sabPra1}
+                          className="form-control short"
+                          placeholder="12"
+                          onChange={e => setSabPra1(e.target.value)}
+                      />
+                      <label className="label-margin"> - </label>
+                      <input
+                          type="number"
+                          value={sabPra2}
+                          className="form-control short"
+                          placeholder="15"
+                          onChange={e => setSabPra2(e.target.value)}
+                      />
+                      <label className="label-margin">Cena </label>
+                      <input
+                          type="number"
+                          value={sabCen1}
+                          className="form-control mt-1 short"
+                          placeholder="19"
+                          onChange={e => setSabCen1(e.target.value)}
+                      />
+                      <label className="label-margin"> - </label>
+                      <input
+                          type="number"
+                          value={sabCen2}
+                          className="form-control mt-1 short"
+                          placeholder="21"
+                          onChange={e => setSabCen2(e.target.value)}
+                      />
+                  </div>
+                  <div>
+                      <h6>Domenica: </h6>
+                      <label className="label-margin">Pranzo </label>
+                      <input
+                          type="number"
+                          value={domPra1}
+                          className="form-control short"
+                          placeholder="12"
+                          onChange={e => setDomPra1(e.target.value)}
+                      />
+                      <label className="label-margin"> - </label>
+                      <input
+                          type="number"
+                          value={domPra2}
+                          className="form-control short"
+                          placeholder="15"
+                          onChange={e => setDomPra2(e.target.value)}
+                      />
+                      <label className="label-margin">Cena </label>
+                      <input
+                          type="number"
+                          value={domCen1}
+                          className="form-control mt-1 short"
+                          placeholder="19"
+                          onChange={e => setDomCen1(e.target.value)}
+                      />
+                      <label className="label-margin"> - </label>
+                      <input
+                          type="number"
+                          value={domCen2}
+                          className="form-control mt-1 short"
+                          placeholder="21"
+                          onChange={e => setDomCen2(e.target.value)}
+                      />
                   </div>
               </div>
               <div className="form-group mt-4">

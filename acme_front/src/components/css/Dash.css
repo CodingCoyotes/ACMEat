@@ -17,3 +17,11 @@ button{
 .loading{
     margin: auto;
 }
+.short{
+    width: 100px;
+    display: inline-block !important;
+}
+
+.label-margin{
+    margin: 1px 5px;
+}

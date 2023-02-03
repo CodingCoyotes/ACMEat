@@ -320,10 +320,10 @@ Environment=KEY=value
 Questa sezione è necessaria se si sta tentando il deploy del servizio acmeat.
 
 1. Installare tramite docker Camunda Platform;
-2. Tramite Camunda Modeler, caricare sul server i processi ""acmeat_order_confirmation" e "
-   acmeat_restaurant_closings_reset" con tenant_id "acmeat"";
+2. Tramite Camunda Modeler, caricare sul server i processi "acmeat_order_confirmation" e "
+   acmeat_restaurant_closings_reset" con tenant_id "acmeat";
 3. Creare, in modo pressochè analogo al precedente, un servizio systemd per lo
-   script ```Applications/acmeat/services/ACMEManager.py``` con le stesse variabili d'ambiente utilizzate per ACMEat
+   script ```Applications/acmeat/services/ACMEManager.py``` con le stesse variabili d'ambiente utilizzate per ACMEat;
 
 ### Post-Installazione
 

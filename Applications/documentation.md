@@ -231,6 +231,8 @@ acmebank.
 5. Eseguire il comando ```poetry shell```;
 6. Impostare le variabili d'ambiente richieste dal servizio desiderato;
 7. Eseguire il comando ```python -m ${service_name}```;
+8. Installare Camunda Platform e Camunda Modeler;
+9. Caricare i processi "acmeat_order_confirmation" e "acmeat_restaurant_closings_reset" con tenant_id "acmeat";
 
 ### Istruzioni per il deployment in produzione
 In questa sezione, vengono indicati i passaggi necessari per il deployment dell'applicazione in produzione.  
@@ -293,6 +295,10 @@ WantedBy=multi-user.target
 Environment=KEY=value
 ```
 5. Ricaricare i file di configurazione dei servizi con ```sudo systemctl daemon-reload```, per poi avviarlo con il comando ```sudo systemd start ${nome_servizio}```.
+
+#### Configurazione di Camunda
+1. Installare tramite docker Camunda Platform;
+2. Tramite Camunda Modeler, caricare sul server i processi ""acmeat_order_confirmation" e "acmeat_restaurant_closings_reset" con tenant_id "acmeat"";
 
 ### Post-Installazione
 Per poter testare l'applicazione senza dover riempire a mano il database, eseguire lo script ```post_install.py``` nella cartella "Applications".

@@ -15,7 +15,7 @@ import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 
-export default function RecapOrder() {
+export default function CheckoutOrdine() {
     console.log("Sono in MenuRegistration");
     const [user, setUser] = useState(null);
     const {token, setToken} = useAppContext();
@@ -120,10 +120,13 @@ export default function RecapOrder() {
         setTime(newValue);
     };
 
-    function handleTimePicker(from){
+    const handleTimePicker = (from) =>{
         console.log("sono in handletimepicker")
         console.log(from.$d)
-        setTime(from.$d);
+        let newTime = new Date();
+        newTime.setHours(from.$H, from.$m);
+        console.log(newTime.toISOString());
+        setTime(newTime.toISOString());
     };
 
     const handleSubmit = async e => {
@@ -152,10 +155,11 @@ export default function RecapOrder() {
         const response = await registerNewOrder(restaurantId,info, token);
         if (response.status === 200) {
             let values = await response.json()
-
         }
-        navigate("/dashboard");
-
+        else{
+            console.log(response)
+            navigate("/processingorder", { state: { param: response.id}});
+        }
     }
 
     return (
@@ -165,7 +169,7 @@ export default function RecapOrder() {
                     Indietro
                 </button>
             </div>
-            <form className="Auth-form-content card" onSubmit={handleSubmit}>
+            <div className="Auth-form-content card">
                 <h3 className="Auth-form-title">Completa ordine</h3>
                 <div className="form-group mt-3">
                     <h5>Menu selezionati</h5>
@@ -234,11 +238,11 @@ export default function RecapOrder() {
                     />
                 </div>
                 <div className="d-grid gap-2 mt-3">
-                    <button type="submit" className="btn btn-primary">
+                    <button type="submit" className="btn btn-primary" onClick={handleSubmit}>
                         Ordina ora!
                     </button>
                 </div>
-            </form>
+            </div>
         </div>
     )
 }

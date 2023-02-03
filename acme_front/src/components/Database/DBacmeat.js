@@ -1,19 +1,20 @@
 
-const address = 'http://127.0.0.1:8004';
-
+//const address = 'http://127.0.0.1:8004';
+const address = 'https://acmeat.isos.fermitech.info';
 // ---------------------------------------------------------------------------------------------
 //                                      FUNZIONI UTENTE
 // ---------------------------------------------------------------------------------------------
 //registra un nuovo utente date le credenziali
-// TODO: Fare funzionare il register
-export async function registerNewUser(credentials) {
-  //localStorage.setItem('token', credentials)
-  return fetch(address + "/token", {
+export async function registerNewUser(info) {
+  return fetch(address + "/api/user/v1/", {
     method: 'POST',
+
     headers: {
-      'Content-Type': 'application/json'
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      //'Authorization': "Bearer " + token,
     },
-    body: JSON.stringify(credentials)
+    body: JSON.stringify(info)
   })
       .then(data => data.json())
 }
@@ -214,3 +215,17 @@ export async function registerNewOrder(restaurant_id, info, token) {
   })
       .then(data => data.json())
 }
+
+//Ottiene un ordine dal suo id
+export async function getOrder(id, token, domain) {
+  return fetch(address + "/api/orders/v1/details/" + id, {
+    method: "GET",
+    //credentials: "include",
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer " + token,
+    }
+  });
+}
+

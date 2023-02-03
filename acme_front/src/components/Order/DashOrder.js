@@ -1,9 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {useAppContext} from "../../Context";
-import Container from "react-bootstrap/Container";
-import {getMenus, getRestaurant, getRestaurants, getUserInfo} from "../Database/DBacmeat";
-import classNames from "classnames";
+import {getRestaurant, getRestaurants, getUserInfo} from "../Database/DBacmeat";
 import '../css/Dash.css'
 
 
@@ -129,7 +127,7 @@ export default function DashOrder(){
                                         ))}
                                     </ul>
                                     <h6>Totale: {totPrice} €</h6>
-                                    <button type="button" className="btn btn-primary " onClick={event => {navigate("/recaporder", { state: { list: ordersList, restaurantId: restaurantId }}) }}>
+                                    <button type="button" className="btn btn-primary " onClick={event => {navigate("/checkoutordine", { state: { list: ordersList, restaurantId: restaurantId }}) }}>
                                         Ordina
                                     </button>
                                 </div>

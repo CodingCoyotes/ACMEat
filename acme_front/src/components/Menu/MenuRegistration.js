@@ -20,7 +20,7 @@ export default function MenuRegistration() {
     const navigate = useNavigate();
     const [menuId, setMenuId] = useState("");
     const [name, setName] = useState();
-    const [restaurantId, setRestaurantId] = useState(null);
+    const [restaurantId, setRestaurantId] = useState("");
     const [prezzo, setPrezzo] = useState();
     const [addIngrediente, setAddIngrediente] = useState(false);
     const [listIngredienti, setListIngredienti] = useState([]);
@@ -35,35 +35,37 @@ export default function MenuRegistration() {
         }
         else if (user===null){
             getInfo();
-
+            getInfoMenu();
         }
-        getRestaurantId();
-        getMenuId();
     }, [])
 
 
-    function getMenuId(){
+    function getInfoMenu(){
+        console.log("getinfomenu")
+        console.log(state)
         if (state !== null) {
-            const {menuId} = state;
-            console.log("getmenuid")
-            console.log(menuId)
-            setMenuId(menuId);
-            getMen(menuId);
+            const {rest, menuId} = state;
+            console.log("ho il restid")
+            console.log(rest)
+            setRestaurantId(rest);
+            if(menuId !== null){
+                console.log("ho il menuid")
+                console.log(menuId)
+                setMenuId(menuId);
+                getMen(menuId);
+            }
+            else{
+                console.log("non ho il menuid")
+            }
         }
     }
 
     async function getMen(menuId){
+
         let response = await getMenu(menuId);
         if (response.status === 200) {
             let values = await response.json();
             updateData(values);
-        }
-    }
-
-    function getRestaurantId(){
-        if (state !== null) {
-            const {restaurantId} = state;
-            setRestaurantId(restaurantId);
         }
     }
 
@@ -85,14 +87,20 @@ export default function MenuRegistration() {
     const handleSubmit = async e => {
         e.preventDefault();
         console.log("sono in handlersub")
+        console.log("ho il restid")
+        console.log(restaurantId)
         if (state !== null) {
-            const {menuId} = state;
-            console.log("ho il menu id")
-            await editMenu(menuId);
-        }
-        else {
-            console.log("non ho il menu id")
-            await newMenu();
+            const {rest, menuId} = state;
+            console.log("ho il restid")
+            console.log(rest)
+            if(menuId !== null){
+                console.log("ho il menu id")
+                await editMenu(menuId);
+            }
+            else {
+                console.log("non ho il menu id")
+                await newMenu();
+            }
         }
     }
 
@@ -128,7 +136,7 @@ export default function MenuRegistration() {
             let values = await response.json()
         }
         else {
-            navigate("/dashmenu");
+            navigate("/dashmenu",{ state: { param: restaurantId }});
         }
     }
 

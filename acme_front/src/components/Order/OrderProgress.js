@@ -1,68 +1,74 @@
-import React, {useEffect, useState} from 'react';
-import {useNavigate, useLocation} from "react-router-dom";
-import {useAppContext} from "../../Context";
-import {
-    getCities,
-    getMenu,
-    getRestaurant,
-    getUserInfo,
-    modifyMenu,
-    registerNewMenu, registerNewOrder,
-    registerNewRestaurant
-} from "../Database/DBacmeat";
-import classNames from "classnames";
-import '../css/Dash.css'
-import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
-import {TimePicker} from "@mui/x-date-pickers/TimePicker";
-import TextField from "@mui/material/TextField";
-import Stack from '@mui/material/Stack';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import React, {useEffect} from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import "../css/ProgressBar.css"
+import {useNavigate} from "react-router-dom";
 
+//https://codesandbox.io/s/react-step-progress-ok1gy?file=/src/styles.css:0-785
+const useStyles = makeStyles((theme) => ({
+    root: {
+        width: '100%',
+    },
+    backButton: {
+        marginRight: theme.spacing(1),
+    },
+    instructions: {
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(1),
+    },
+}));
 
-export default function RecapOrder() {
-    console.log("Sono in MenuRegistration");
-    const [user, setUser] = useState(null);
-    const {token, setToken} = useAppContext();
+//     created = 0
+//     w_restaurant_ok = 1
+//     w_deliverer_ok = 2
+//     confirmed_by_thirds = 3
+//     cancelled = 4
+//     w_payment = 5
+//     w_cancellation = 6
+//     w_kitchen = 7
+//     w_transport = 8
+//     delivering = 9
+//     delivered = 10
+
+function getSteps() {
+    return [
+        'Ordine inviato',
+        'Conferma ristorante',
+        'Conferma fattorino',
+        'Conferma da terzi',
+        'Ordine cancellato',
+        'Pagamento confermato',
+        'Pagamento cancellato',
+        'Preparazione ordine in atto',
+        'Il tuo ordine è stato spedito',
+        'In consegna',
+        'Consegnato'];
+}
+
+export default function OrderProgress({orderStatus}) {
+    const classes = useStyles();
+    const [activeStep, setActiveStep] = React.useState(0);
+    const steps = getSteps();
     const navigate = useNavigate();
-    const {state} = useLocation();
-
 
     useEffect(() => {
-        if (token === null) {
-            navigate("/")
-        }
-        else if (user===null){
-            getInfo();
-
-        }
+        console.log("sono in order progress")
+        setActiveStep(orderStatus);
     }, [])
 
 
     return (
-        <div className='container'>
-            <div>
-                <button type="button" className="btn btn-primary " onClick={event => {navigate("/dashorder", { state: { param: {restaurantId}.restaurantId }})}}>
-                    Indietro
-                </button>
-            </div>
-            <form className="Auth-form-content card" onSubmit={handleSubmit}>
-                <h3 className="Auth-form-title">Completa ordine</h3>
-                <div className="form-group mt-3">
-                    <h5>Menu selezionati</h5>
-                    {orderList.map(item => (
-                        <div className="card">
-                            <div className="card-header">
-                                <h6 className="card-title">{item.name}</h6>
-                            </div>
-                            <div className="card-body">
-                                <label className="card-text">Prezzo:{item.cost}€    Quantità:{item.qty}</label>
-
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-            </form>
-        </div>
-    )
+        <Stepper activeStep={activeStep} alternativeLabel>
+            {steps.map((label) => (
+                <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                </Step>
+            ))}
+        </Stepper>
+    );
 }
+

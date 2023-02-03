@@ -71,6 +71,8 @@ export default function RestaurantRegistration() {
     }
 
     function updateData(restaurant){
+        console.log("restaurant");
+        console.log(restaurant);
         setName(restaurant.name);
         setAddress(restaurant.address);
         setAddressNum(restaurant.number);
@@ -82,27 +84,30 @@ export default function RestaurantRegistration() {
         for (let i = 0; i < orario.length; i = i+1){
             day = orario[i].day;
             time = orario[i].time;
+            console.log("time")
+            console.log(time)
+
             switch(day){
                 case "lunedi":
-                    setLunTime(Date.parse(time.toString()))
+                    setLunTime(time);//Date.parse(time.toString()))
                     break;
                 case "martedi":
-                    setMarTime(Date.parse(time.toString()));
+                    setMarTime(time);//Date.parse(time.toString()));
                     break;
                 case "mercoledi":
-                    setMerTime(Date.parse(time.toString()));
+                    setMerTime(time);
                     break;
                 case "giovedi":
-                    setGioTime(Date.parse(time.toString()));
+                    setGioTime(time);
                     break;
                 case "venerdi":
-                    setVenTime(Date.parse(time.toString()));
+                    setVenTime(time);
                     break;
                 case "sabato":
-                    setSabTime(Date.parse(time.toString()));
+                    setSabTime(time);
                     break;
                 case "domenica":
-                    setDomTime(Date.parse(time.toString()));
+                    setDomTime(time);
                     break;
             }
         }
@@ -184,9 +189,9 @@ export default function RestaurantRegistration() {
 
     const handleSubmit = async e => {
     e.preventDefault();
-        if(localStorage.getItem("id_restaurant")) {
-            let restId = localStorage.getItem("id_restaurant")
-            await modRest(restId);
+        if(state !== null){
+            const {param} = state;
+            await modRest(param);
         }
         else {
             await newRest();
@@ -194,6 +199,7 @@ export default function RestaurantRegistration() {
     }
 
     async function newRest(){
+        console.log("new rest")
         let obj = {
 
             "name": name,

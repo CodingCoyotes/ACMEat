@@ -1,7 +1,7 @@
 import React, { useState }from "react"
 import {useNavigate} from "react-router-dom";
 import {useAppContext} from "../../Context";
-import { registerNewUser } from "../Database/DBacmeat";
+import {registerNewOrder, registerNewUser} from "../Database/DBacmeat";
 
 export default function Registration() {
   const [name, setName] = useState();
@@ -21,13 +21,17 @@ export default function Registration() {
     // bisogna aggiungere dei controlli visivi sugli input
     if(password === repassword){
         console.log("pass uguali");
-        registerNewUser({
+        let info ={
           "name": name,
           "surname": surname,
           "email": email,
           "password": password,
-        //   "kind": usertype
-        });
+
+        };
+      const response = await registerNewUser(info);
+      if (response.status === 200) {
+        let values = await response.json()
+      }
         navigate("/login");
     }
     console.log("pass diverse");

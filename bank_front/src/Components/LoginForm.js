@@ -12,6 +12,7 @@ export default function LoginForm() {
     const [password, setPassword] = useState("")
 
     async function login(){
+        console.debug(address)
         const response = await fetch(address, {
             method: "POST",
             headers: {

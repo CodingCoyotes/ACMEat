@@ -999,87 +999,131 @@ Durante la seconda fase di lavoro è stato realizzanto un diagramma di collabora
 \label{bpmn}
 \end{figure}
 
-Di seguito, riportiamo alcuni estratti rilevanti di questo diagramma.
+Questo diagramma è stato suddiviso in diverse parti per facilitarne la leggibilità e la consultazione - riportate di seguito. Per ogni figura, le pool coinvolte sono specificate nella caption (tranne nel caso del cliente, il cui comportamento è mostrato in relazione ad ACMEat), così come una breve descrizione di quale parte del processo è modellata. Tale diagramma è stato reso il più possibile compliant con la coreografia in Lst.~\ref{coreo} precedentemente realizzata. E' stato scelto di documentarla il più possibile ma non rendere eseguibili le pool, lasciando la raffinazione a un diverso diagramma BPMN che offrisse capabilities attraverso il BPMS Camunda da sviluppare in una fase successiva.
 
 \begin{figure}[!ht]
 \begin{center}
-\fbox{\includegraphics[scale=0.5]{bpmn1}}
+\fbox{\includegraphics[width=\textwidth]{bpmn1}}
 \caption{Scambio di messaggi iniziale fra un cliente e ACMEat}
 \end{center}
 \end{figure}
 
 \begin{figure}[!ht]
 \begin{center}
-\fbox{\includegraphics[scale=0.5]{bpmn2}}
-\vspace*{0.5cm}\\
-\fbox{\includegraphics[scale=0.5]{bpmn3}}
-\caption{Scambio di messaggi fra ACMEat e un ristorante per verificarne la disponibilità}
+\fbox{\includegraphics[width=\textwidth]{bpmn2}}
+\caption{Richiesta disponibilità locale e servizi di consegna - lato ACMEat}
 \end{center}
 \end{figure}
 
 \begin{figure}[!ht]
 \begin{center}
-\fbox{\includegraphics[scale=0.5]{bpmn4}}
-\vspace*{0.5cm}\\
-\fbox{\includegraphics[scale=0.5]{bpmn5}}
-\caption{Scelta del servizio di spedizione all'interno di ACMEat}
+\fbox{\includegraphics[width=\textwidth]{bpmn3}}
+\caption{Scelta servizio di consegna e redirezione pagamento - lato ACMEat}
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\fbox{\includegraphics[width=\textwidth]{bpmn4}}
+\caption{Rimbalzo del token per convalida - lato ACMEat}
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\fbox{\includegraphics[width=\textwidth]{bpmn5}}
+\caption{Gestione annullamento ordine - lato ACMEat}
 \end{center}
 \end{figure}
 
 \begin{figure}[!ht]
 \begin{center}
 \fbox{\includegraphics[width=\textwidth]{bpmn6}}
-\caption{Gestione pagamento dopo redirezione cliente da parte di ACMEat}
+\caption{Gestione attivazione ordine - lato ACMEat}
 \end{center}
 \end{figure}
 
 \begin{figure}[!ht]
 \begin{center}
 \fbox{\includegraphics[width=\textwidth]{bpmn7}}
-\caption{Gestione (annullamento) ordine da parte di ACMEat }
+\caption{Gestione annullamento ordine da parte del cliente/gestione pagamenti - lato ACMEat}
 \end{center}
 \end{figure}
 
 \begin{figure}[!ht]
 \begin{center}
 \fbox{\includegraphics[width=\textwidth]{bpmn8}}
-\fbox{\includegraphics[scale=0.5]{bpmn9}}
-\caption{Gestione richiesta aggiornamento informazioni ristorante da parte di ACMEat (sopra) e del ristorante (sotto)}
+\caption{Gestione richiesta modifica informazioni locali - lato ACMEat}
 \end{center}
 \end{figure}
 
 \begin{figure}[!ht]
 \begin{center}
-\fbox{\includegraphics[scale=0.5]{bpmn10}}
-\caption{Gestione pagamento da parte della banca}
+\fbox{\includegraphics[width=\textwidth]{bpmn9}}
+\caption{Gestione pagamento cliente - lato banca}
 \end{center}
 \end{figure}
 
 \begin{figure}[!ht]
 \begin{center}
-\fbox{\includegraphics[scale=0.5]{bpmn11}}
-\caption{Verifica token da parte di ACMEat}
+\fbox{\includegraphics[width=\textwidth]{bpmn10}}
+\caption{Gestione verifica token - lato banca}
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\fbox{\includegraphics[width=\textwidth]{bpmn11}}
+\caption{Gestione rimborso/pagamento ristorante e servizio di consegna - lato banca}
 \end{center}
 \end{figure}
 
 \begin{figure}[!ht]
 \begin{center}
 \fbox{\includegraphics[width=\textwidth]{bpmn12}}
-\caption{Gestione rimborsi e pagamenti da parte della banca}
+\caption{Gestione richiesta modifica informazioni locali/notifica (non) disonibilità - lato ristorante}
 \end{center}
 \end{figure}
 
-\begin{figure}[!ht]
-\begin{center}
-\fbox{\includegraphics[scale=0.5]{bpmn13}}
-\caption{Notifica disponibilità servizio di spedizione}
-\end{center}
-\end{figure}
+%\begin{figure}[!ht]
+%\begin{center}
+%\fbox{\includegraphics[width=\textwidth]{bpmn13}}
+%\caption{Esempio annullamento ordine - lato ristorante}
+%\end{center}
+%\end{figure}
 
 \begin{figure}[!ht]
 \begin{center}
 \fbox{\includegraphics[width=\textwidth]{bpmn14}}
-\caption{Gestione consegna da parte di servizio di spedizione e fattorino}
+\caption{Gestione ordine - lato ristorante}
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\fbox{\includegraphics[width=\textwidth]{bpmn15}}
+\caption{Gestione notifica disponibilità società di consegna - lato società di consegna}
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\fbox{\includegraphics[width=\textwidth]{bpmn16}}
+\caption{Gestione creazione ordine - lato società di consegna}
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\fbox{\includegraphics[width=\textwidth]{bpmn17}}
+\caption{Gestione annullamento/attivazione ordine - società di consegna}
+\end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+\begin{center}
+\fbox{\includegraphics[width=\textwidth]{bpmn18}}
+\caption{Gestione consegna da parte di società di consegna e fattorino}
 \end{center}
 \end{figure}
 

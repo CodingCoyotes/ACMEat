@@ -54,35 +54,41 @@
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
 \newlabel{bpmn}{{3}{21}{Diagramma di collaborazione BPMN\relax }{figure.caption.4}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Scambio di messaggi iniziale fra un cliente e ACMEat\relax }}{22}{figure.caption.5}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Scambio di messaggi fra ACMEat e un ristorante per verificarne la disponibilità\relax }}{23}{figure.caption.6}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Scelta del servizio di spedizione all'interno di ACMEat\relax }}{24}{figure.caption.7}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Gestione pagamento dopo redirezione cliente da parte di ACMEat\relax }}{25}{figure.caption.8}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Gestione (annullamento) ordine da parte di ACMEat \relax }}{25}{figure.caption.9}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Gestione richiesta aggiornamento informazioni ristorante da parte di ACMEat (sopra) e del ristorante (sotto)\relax }}{26}{figure.caption.10}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Gestione pagamento da parte della banca\relax }}{27}{figure.caption.11}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Verifica token da parte di ACMEat\relax }}{27}{figure.caption.12}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Gestione rimborsi e pagamenti da parte della banca\relax }}{28}{figure.caption.13}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Notifica disponibilità servizio di spedizione\relax }}{28}{figure.caption.14}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Gestione consegna da parte di servizio di spedizione e fattorino\relax }}{29}{figure.caption.15}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5}Progettazione}{30}{section.5}\protected@file@percent }
-\newlabel{sez:progettazione}{{5}{30}{Progettazione}{section.5}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Sviluppo}{31}{section.6}\protected@file@percent }
-\newlabel{sez:sviluppo}{{6}{31}{Sviluppo}{section.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Backends Python}{32}{subsection.6.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.1.1}Parametri di configurazione}{33}{subsubsection.6.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.1.2}Dettagli sui backends}{34}{subsubsection.6.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{acmeat}{34}{section*.16}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{ACMEmanager}{35}{section*.17}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{acmedeliver}{36}{section*.18}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{acmegeolocate}{36}{section*.19}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{acmerestaurant}{37}{section*.20}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{bank\_intermediary}{37}{section*.21}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.1.3}Istruzioni per l'avvio in ambiente di testing}{37}{subsubsection.6.1.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.1.4}Istruzioni per il deployment in produzione}{37}{subsubsection.6.1.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Setup iniziale}{37}{section*.22}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Installazione dipendenze software}{38}{section*.23}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Setup del singolo backend}{38}{section*.24}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Configurazione del server come servizio systemd}{38}{section*.25}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.1.5}Post-Installazione}{39}{subsubsection.6.1.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusioni}{40}{section.7}\protected@file@percent }
-\gdef \@abspage@last{41}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Richiesta disponibilità locale e servizi di consegna - lato ACMEat\relax }}{23}{figure.caption.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Scelta servizio di consegna e redirezione pagamento - lato ACMEat\relax }}{24}{figure.caption.7}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Rimbalzo del token per convalida - lato ACMEat\relax }}{25}{figure.caption.8}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Gestione annullamento ordine - lato ACMEat\relax }}{26}{figure.caption.9}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Gestione attivazione ordine - lato ACMEat\relax }}{27}{figure.caption.10}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Gestione annullamento ordine da parte del cliente/gestione pagamenti - lato ACMEat\relax }}{28}{figure.caption.11}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Gestione richiesta modifica informazioni locali - lato ACMEat\relax }}{29}{figure.caption.12}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Gestione pagamento cliente - lato banca\relax }}{29}{figure.caption.13}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Gestione verifica token - lato banca\relax }}{30}{figure.caption.14}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Gestione rimborso/pagamento ristorante e servizio di consegna - lato banca\relax }}{30}{figure.caption.15}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces Gestione richiesta modifica informazioni locali/notifica (non) disonibilità - lato ristorante\relax }}{31}{figure.caption.16}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces Gestione ordine - lato ristorante\relax }}{31}{figure.caption.17}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces Gestione notifica disponibilità società di consegna - lato società di consegna\relax }}{32}{figure.caption.18}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {18}{\ignorespaces Gestione creazione ordine - lato società di consegna\relax }}{32}{figure.caption.19}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {19}{\ignorespaces Gestione annullamento/attivazione ordine - società di consegna\relax }}{33}{figure.caption.20}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {20}{\ignorespaces Gestione consegna da parte di società di consegna e fattorino\relax }}{33}{figure.caption.21}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Progettazione}{34}{section.5}\protected@file@percent }
+\newlabel{sez:progettazione}{{5}{34}{Progettazione}{section.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Sviluppo}{35}{section.6}\protected@file@percent }
+\newlabel{sez:sviluppo}{{6}{35}{Sviluppo}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Backends Python}{36}{subsection.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.1.1}Parametri di configurazione}{37}{subsubsection.6.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.1.2}Dettagli sui backends}{38}{subsubsection.6.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{acmeat}{38}{section*.22}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{ACMEmanager}{39}{section*.23}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{acmedeliver}{40}{section*.24}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{acmegeolocate}{40}{section*.25}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{acmerestaurant}{41}{section*.26}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{bank\_intermediary}{41}{section*.27}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.1.3}Istruzioni per l'avvio in ambiente di testing}{41}{subsubsection.6.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.1.4}Istruzioni per il deployment in produzione}{41}{subsubsection.6.1.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Setup iniziale}{41}{section*.28}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Installazione dipendenze software}{42}{section*.29}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Setup del singolo backend}{42}{section*.30}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Configurazione del server come servizio systemd}{42}{section*.31}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.1.5}Post-Installazione}{43}{subsubsection.6.1.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusioni}{44}{section.7}\protected@file@percent }
+\gdef \@abspage@last{45}

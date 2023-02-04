@@ -1,9 +1,8 @@
 {
-  "name": "deliver_front",
+  "name": "restaurant_front",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@fortawesome/free-solid-svg-icons": "^6.2.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@steffo/bluelib-react": "^4.5.1",
     "@testing-library/jest-dom": "^5.16.5",

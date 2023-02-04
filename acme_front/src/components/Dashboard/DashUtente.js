@@ -85,7 +85,6 @@ export default function DashUtente(){
             }
         })
         console.log(tmpList);
-        setActiveOrderList(tmpList);
     };
 
     const handleCurrNationChange = async e =>{

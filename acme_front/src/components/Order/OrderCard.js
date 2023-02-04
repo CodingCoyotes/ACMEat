@@ -38,8 +38,9 @@ export default function OrderCard({orderId}){
         if (response.status === 200) {
             let values = await response.json();
             setMenuList(values.contents);
+            //console.log(values.contents);
             //console.log("restID")
-            //console.log(((values.contents)[0].menu).restaurant_id);
+            //console.log((values.contents)[0].menu);
             await getRest(((values.contents)[0].menu).restaurant_id)
         }
     }
@@ -60,7 +61,7 @@ export default function OrderCard({orderId}){
             <h5 className="card-title">{restaurantName}</h5>
             <ul>
                 {menuList.map(menu =>(
-                   <li>{(menu.menu).name}</li>
+                   <li>{menu.qty}:{(menu.menu).name}</li>
                 ))}
             </ul>
        </div>

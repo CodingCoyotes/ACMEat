@@ -229,6 +229,21 @@ export async function getOrder(id, token, domain) {
   });
 }
 
+//Modifica un menu
+export async function modifyOrder(token, info, id) {
+  return fetch(address + "/api/orders/v1/" + id, {
+    method: 'PUT',
+
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer " + token
+    },
+    body: JSON.stringify(info)
+  })
+      .then(data => data.json())
+}
+
 // ---------------------------------------------------------------------------------------------
 //                                      FUNZIONI PAYMENT
 // ---------------------------------------------------------------------------------------------

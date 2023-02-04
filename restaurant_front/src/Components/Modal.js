@@ -1,8 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import {Button} from "@steffo/bluelib-react";
 import styles from './Modal.module.css';
-import {faClose} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 const Modal = ({ modalStyle, children, show, onClose, backdropStyle }) => {
     const modalRef = useRef(null);
@@ -49,7 +47,7 @@ const Modal = ({ modalStyle, children, show, onClose, backdropStyle }) => {
                         style={{ width: 60, height: 40, position: 'absolute', top: 0, right: 0, margin: '1rem' }}
                         className={styles.close__btn}
                     >
-                        <FontAwesomeIcon icon={faClose} className={styles.close__icon} height="20px" width="20px"/>
+                        X
                     </Button>
                     <div style={{
                         "margin":"20px",

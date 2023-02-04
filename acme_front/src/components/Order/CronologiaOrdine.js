@@ -3,14 +3,29 @@ import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {useAppContext} from "../../Context";
 import {getOrder, getRestaurant, getRestaurants, getUserInfo} from "../Database/DBacmeat";
 import '../css/Dash.css'
+import OrderCard from "./OrderCard";
 
+function getSteps() {
+    return [
+        'Ordine inviato',
+        'Conferma ristorante',
+        'Conferma fattorino',
+        'Conferma da terzi',
+        'Ordine cancellato',
+        'Pagamento confermato',
+        'Pagamento cancellato',
+        'Preparazione ordine in atto',
+        'Il tuo ordine è stato spedito',
+        'In consegna',
+        'Consegnato'];
+}
 
 function DateToString(info){
     const dateFormat = new Date(info * 1000)
-    let string =  dateFormat.getDate()+
+    let string =  "Il "+dateFormat.getDate()+
         "/"+(dateFormat.getMonth()+1)+
         "/"+dateFormat.getFullYear()+
-        " "+dateFormat.getHours()+
+        " alle "+dateFormat.getHours()+
         ":"+dateFormat.getMinutes()+
         ":"+dateFormat.getSeconds();
   return string;
@@ -21,6 +36,7 @@ export default function CronologiaOrdine(){
     const {token, setToken} = useAppContext();
     const [user, setUser] = useState(null);
     const [ordersList, setOrdersList]  = useState([]);
+    const steps = getSteps();
     const {state} = useLocation();
 
     useEffect(() => {
@@ -58,7 +74,7 @@ export default function CronologiaOrdine(){
                 console.log(values.contents)
             return(
                 <div className="card-body">
-                    <h5 className="card-title">((values.contents).menu).name</h5>
+                    <h5 className="card-title">(orderId)</h5>
                 </div>
             );
         }
@@ -81,9 +97,17 @@ export default function CronologiaOrdine(){
                         {ordersList.map(item => (
                             <div className="card">
                                 <div className="card-header">
-                                    <div>{DateToString(item.date_order)}</div>
+                                    <div>{DateToString(item.date_order)+ " | Stato dell'ordine: "+ steps[item.status]}</div>
                                 </div>
-                                {createCard(item.id)}
+                                <div className="card-body">
+                                    <ul className="list-group list-group-flush">
+                                        <li className="list-group-item"><OrderCard orderId={item.id} ></OrderCard></li>
+                                        <li className="list-group-item">
+                                            Spesa ristorante: {item.restaurant_total}
+                                            {(item.deliverer_total !== null)? (<div>+ {item.deliverer_total} di spedizione</div>):(<div></div>)}
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         ))}
                     </div>

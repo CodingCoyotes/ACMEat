@@ -4,6 +4,70 @@ import classNames from "classnames";
 import {getCity, getRestaurants} from "../Database/DBacmeat";
 import {useLocation, useNavigate} from "react-router-dom";
 
+function splitTime(time){
+    let pran1 = ""
+    let pran2 = ""
+    let cen1 = ""
+    let cen2 = ""
+    let split = time.split("/")
+    if(split[0] !== ""){
+        let s = split[0].split("-")
+        pran1= s[0];
+        pran2= s[1];
+    }
+    if(split[1] !== ""){
+        let s = split[1].split("-")
+        cen1= s[0];
+        cen2= s[1];
+    }
+    return [pran1, pran2, cen1, cen2];
+
+}
+
+function checkClosed(time){
+    let today = new Date();
+    let sDay ="";
+    let list = [];
+    switch(today.getDay()){
+        case 0:
+            sDay="lunedi"
+            break;
+        case 1:
+            sDay="martedi"
+            break;
+        case 2:
+            sDay="mercoledi"
+            break;
+        case 3:
+            sDay="giovedi"
+            break;
+        case 4:
+            sDay="venerdi"
+            break;
+        case 5:
+            sDay="sabato"
+            break;
+        case 6:
+            sDay="domenica"
+            break;
+    }
+    let orari = [];
+    let chiusura = new Date()
+    time.map(item =>{
+        if(item.day === sDay){
+            console.log("oggi è "+ sDay);
+            console.log(item.time);
+            orari = splitTime(item.time)
+            chiusura.setHours(orari[3])
+            console.log(chiusura)
+            console.log(today)
+            if(chiusura < today){
+                return true;
+            }
+        }
+    })
+    return false;
+}
 
 export default function RestaurantListCity() {
     const isDetailedView = "grid";
@@ -81,7 +145,7 @@ export default function RestaurantListCity() {
                         {restaurantsList.map(item => (
                             <div className="card">
                                 <div className="card-header">
-                                    {(item.closed === false)? (<div>Aperto</div>) : (<div>Chiuso</div>)}
+                                    {(item.closed === true || checkClosed(item.open_times) === true)? (<div className="red_text">Chiuso</div>):(<div>Aperto</div>)}
                                 </div>
                                 <div className="card-body">
                                     <h5 className="card-title">{item.name}</h5>

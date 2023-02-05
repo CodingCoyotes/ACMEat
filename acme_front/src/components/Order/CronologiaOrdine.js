@@ -48,7 +48,6 @@ export default function CronologiaOrdine(){
         }
         else if (user===null){
             getInfo();
-            getOrders();
         }
     }, [])
 
@@ -60,13 +59,6 @@ export default function CronologiaOrdine(){
             console.log("userorder")
             console.log(values.orders)
             setOrdersList((values.orders).reverse());
-        }
-    }
-
-    function getOrders(){
-        if(state !== null){
-            let {param} = state;
-            setOrdersList(param.reverse());
         }
     }
 
@@ -88,21 +80,6 @@ export default function CronologiaOrdine(){
         }
         else{
             getInfo();
-        }
-    }
-
-    async function handlePaga(item){
-        console.log("handlepaga");
-        console.log(item);
-        let response = await getOrder(item.id, token);
-        if (response.status === 200) {
-            let values = await response.json();
-            let response = await getRestaurant(((values.contents)[0].menu).restaurant_id, token);
-            if (response.status === 200) {
-                let values = await response.json();
-                let totPrice = (item.restaurant_total + item.deliverer_total);
-                window.location.href = address + (Math.round((item.restaurant_total + item.deliverer_total) * 100) / 100) + "/127.0.0.1:3002_landingorder_" + values.name;
-            }
         }
     }
 
@@ -137,7 +114,7 @@ export default function CronologiaOrdine(){
                                         {(item.status === 3 || item.status === 6)?(
                                             <li className="list-group-item">
                                                 {(item.status === 3)?(
-                                                    <button type="button" className="btn btn-primary short" onClick={event =>{handlePaga(item)}}>
+                                                    <button type="button" className="btn btn-primary short" onClick={event => {console.debug((item.restaurant_total + item.deliverer_total)); window.location.href = address + (Math.round((item.restaurant_total + item.deliverer_total)*100)/100) + "/127.0.0.1:3002_landingorder_" + item.id}}>
                                                         Paga
                                                     </button>
                                                 ): (<div></div>)}

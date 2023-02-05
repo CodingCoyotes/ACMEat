@@ -25,3 +25,7 @@ button{
 .label-margin{
     margin: 1px 5px;
 }
+
+.red_text{
+    color: #E53945;
+}

@@ -32,8 +32,8 @@ export default function DashOrder(){
     function getRestaurantId(){
         if (state !== null) {
             const {param} = state;
-            console.log("ho il rest id")
-            console.log(param)
+            //console.log("ho il rest id")
+            //console.log(param)
             setRestaurantId(param)
             getRest(param)
         }
@@ -58,7 +58,7 @@ export default function DashOrder(){
 
     async function handleCounter (e, val, menu) {
         e.preventDefault();
-        console.log("sono in handlercount")
+        //console.log("sono in handlercount")
         //console.log(menu)
         let presente = false;
         let tmpList = [];

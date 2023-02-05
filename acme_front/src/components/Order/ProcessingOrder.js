@@ -57,7 +57,6 @@ export default function ProcessingOrder() {
     const {token, setToken} = useAppContext();
     const [user, setUser] = useState(null);
     const [order, setOrder] = useState(null);
-    const [restaurant, setRestaurant] = useState();
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getSteps();
     const {state} = useLocation();
@@ -88,7 +87,7 @@ export default function ProcessingOrder() {
     async function getOrd() {
         console.log("get ord");
         console.log(param);
-        let response = await getOrder(param.id, token);
+        let response = await getOrder(param, token);
         if (response.status === 200) {
             let values = await response.json();
             setOrder(values)
@@ -96,11 +95,6 @@ export default function ProcessingOrder() {
             console.log(values.status);
             setActiveStep(values.status)
             setOrder(values);
-            let response = await getRestaurant(((values.contents)[0].menu).restaurant_id, token);
-            if (response.status === 200) {
-                let values = await response.json();
-                setRestaurant(values);
-            }
             return values;
         }
         else return "0";
@@ -111,7 +105,7 @@ export default function ProcessingOrder() {
         const order = await getOrd();
         console.debug(order)
         if (order.status === 3) {
-            window.location.href = address + (Math.round((order.restaurant_total + order.deliverer_total)*100)/100) + "/127.0.0.1:3002_landingorder_" + restaurant.name;
+            window.location.href = address + (Math.round((order.restaurant_total + order.deliverer_total)*100)/100) + "/127.0.0.1:3002_landingorder_" + order.id;
         }
         return;
     }

@@ -14,7 +14,7 @@ export default function OrderCard({orderId}){
     const {state} = useLocation();
 
     useEffect(() => {
-        //console.log("ordercard")
+        console.log("ordercard")
         if (token === null) {
             navigate("/")
         }
@@ -33,12 +33,13 @@ export default function OrderCard({orderId}){
     }
 
     async function getOrd(){
-        //console.log("get Ord")
-        let response = await getOrder({orderId}.orderId, token);
+        console.log("get Ord")
+        console.log(orderId)
+        let response = await getOrder(orderId, token);
         if (response.status === 200) {
             let values = await response.json();
             setMenuList(values.contents);
-            //console.log(values.contents);
+            console.log(values.contents);
             //console.log("restID")
             //console.log((values.contents)[0].menu);
             await getRest(((values.contents)[0].menu).restaurant_id)

@@ -38,6 +38,7 @@ function getSlots(ora1, ora2){
         time.setMinutes(0);
         h = time.getHours();
         while (h < ora2){
+            console.log(time)
             time.setMinutes(time.getMinutes() + 15);
             h = time.getHours();
 
@@ -46,6 +47,50 @@ function getSlots(ora1, ora2){
         }
     }
     return list;
+}
+function checkClosed(time){
+    let today = new Date();
+    let sDay ="";
+    let list = [];
+    switch(today.getDay()){
+        case 0:
+            sDay="lunedi"
+            break;
+        case 1:
+            sDay="martedi"
+            break;
+        case 2:
+            sDay="mercoledi"
+            break;
+        case 3:
+            sDay="giovedi"
+            break;
+        case 4:
+            sDay="venerdi"
+            break;
+        case 5:
+            sDay="sabato"
+            break;
+        case 6:
+            sDay="domenica"
+            break;
+    }
+    let orari = [];
+    let chiusura = new Date()
+    time.map(item =>{
+        if(item.day === sDay){
+            console.log("oggi è "+ sDay);
+            console.log(item.time);
+            orari = splitTime(item.time)
+            chiusura.setHours(orari[3])
+            console.log(chiusura)
+            console.log(today)
+            if(chiusura < today){
+                return true;
+            }
+        }
+    })
+    return false;
 }
 
 function getTimeList(time){
@@ -81,7 +126,9 @@ function getTimeList(time){
             console.log("oggi è "+ sDay);
             console.log(item.time);
             orari = splitTime(item.time)
+            console.log(orari);
             list = list.concat(getSlots(orari[0], orari[1]));
+            console.log(list);
             list = list.concat(getSlots(orari[2], orari[3]));
             console.log(list);
         }
@@ -105,6 +152,7 @@ export default function CheckoutOrdine() {
     const [timeList, setTimeList] = useState([]);
     const [time, setTime] = useState("");
     const [timeDate, setTimeDate] = useState(new Date());
+    const [chiuso, setChiuso] = useState(false);
     const {state} = useLocation();
     const {list} = state; // Read values passed on state
     const {restaurantId} = state;
@@ -137,13 +185,18 @@ export default function CheckoutOrdine() {
         if (response.status === 200) {
             let values = await response.json();
             console.log(values);
-            let list = getTimeList(values.open_times)
-            setTimeList(list);
-            let timeOk = new Date();
-            let split = list[0].split(":");
-            timeOk.setHours(split[0]);
-            timeOk.setMinutes(split[1]);
-            setTimeDate(timeOk);
+            if(values.closed === true || checkClosed(values.open_times) === true){
+                setChiuso(true);
+            }
+            else {
+                let list = getTimeList(values.open_times)
+                setTimeList(list);
+                let timeOk = new Date();
+                let split = list[0].split(":");
+                timeOk.setHours(split[0]);
+                timeOk.setMinutes(split[1]);
+                setTimeDate(timeOk);
+            }
         }
     }
 
@@ -174,7 +227,7 @@ export default function CheckoutOrdine() {
         });
         console.log(tmpList);
         setCityList(tmpList);
-        setCurrCity(tmpList[0].id);
+        setCurrCity(tmpList[0].name);
     }
 
     const handleCurrNationChange = async e =>{
@@ -227,7 +280,7 @@ export default function CheckoutOrdine() {
         else{
             console.log("response")
             console.log(response)
-            navigate("/processingorder", { state: { param: response}});
+            navigate("/processingorder", { state: { param: response.id}});
         }
     }
 
@@ -285,19 +338,23 @@ export default function CheckoutOrdine() {
                         })}
                     </select>
                 </div>
-                <div className="form-group mt-4">
-                    <label>Seleziona una fascia oraria</label>
-                    <select className="form-select" aria-label="Default select example" value={time} onChange={e => setTime(e.target.value)}>
-                        {timeList.map(time => {
-                            return <option key={time} value={time}>{time}</option>;
-                        })}
-                    </select>
-                </div>
-                <div className="d-grid gap-2 mt-3">
-                    <button type="submit" className="btn btn-primary" onClick={handleSubmit}>
-                        Ordina ora!
-                    </button>
-                </div>
+                {(chiuso === false)? (
+                    <div>
+                        <div className="form-group mt-4">
+                            <label>Seleziona una fascia oraria</label>
+                            <select className="form-select" aria-label="Default select example" value={time} onChange={e => setTime(e.target.value)}>
+                                {timeList.map(time => {
+                                    return <option key={time} value={time}>{time}</option>;
+                                })}
+                            </select>
+                        </div>
+                        <div className="d-grid gap-2 mt-3">
+                            <button type="submit" className="btn btn-primary" onClick={handleSubmit}>
+                                Ordina ora!
+                            </button>
+                        </div>
+                    </div>
+                ): (<div><h5 className="red_text">Il ristorante è chiuso</h5></div>)}
             </div>
         </div>
     )

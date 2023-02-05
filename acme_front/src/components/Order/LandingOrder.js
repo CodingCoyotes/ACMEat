@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {useLocation, useNavigate} from "react-router-dom";
 import {useAppContext} from "../../Context";
 import {getOrder, getUserInfo, payment} from "../Database/DBacmeat";
-import './OrderProgress'
 import '../css/Dash.css'
 
 export default function LandingOrder(){

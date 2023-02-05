@@ -1,6 +1,8 @@
 
-const address = 'http://127.0.0.1:8004';
+//const address = 'http://127.0.0.1:8004';
 //const address = 'https://acmeat.isos.fermitech.info';
+const address = process.env.REACT_APP_ACMEAT_ADDRESS;
+
 // ---------------------------------------------------------------------------------------------
 //                                      FUNZIONI UTENTE
 // ---------------------------------------------------------------------------------------------

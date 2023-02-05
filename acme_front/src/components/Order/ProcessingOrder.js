@@ -2,13 +2,13 @@ import React, {useEffect, useState} from 'react';
 import {useLocation, useNavigate} from "react-router-dom";
 import {useAppContext} from "../../Context";
 import {getOrder, getUserInfo} from "../Database/DBacmeat";
-import './OrderProgress'
 import '../css/Dash.css'
 import ReactLoading from "react-loading";
 import {makeStyles} from "@material-ui/core/styles";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
+const address = process.env.REACT_APP_BANK_ADDRESS
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -50,7 +50,7 @@ function getSteps() {
         'Consegnato'];
 }
 
-const address = "http://127.0.0.1:3000/pay/5ba5f372-78af-4e1f-ad8d-9bfd82020d24/"
+
 export default function ProcessingOrder() {
     console.log("processing order")
     const navigate = useNavigate()

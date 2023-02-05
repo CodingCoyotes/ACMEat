@@ -5,7 +5,7 @@ import {getOrder, getRestaurant, getRestaurants, getUserInfo, modifyOrder} from 
 import '../css/Dash.css'
 import OrderCard from "./OrderCard";
 
-const address = "http://127.0.0.1:3000/pay/5ba5f372-78af-4e1f-ad8d-9bfd82020d24/"
+const address = process.env.REACT_APP_BANK_ADDRESS
 
 function getSteps() {
     return [

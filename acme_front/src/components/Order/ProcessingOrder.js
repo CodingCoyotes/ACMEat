@@ -50,7 +50,7 @@ function getSteps() {
         'Consegnato'];
 }
 
-const address = "http://127.0.0.1:3001/pay/5ba5f372-78af-4e1f-ad8d-9bfd82020d24/"
+const address = "http://127.0.0.1:3000/pay/5ba5f372-78af-4e1f-ad8d-9bfd82020d24/"
 export default function ProcessingOrder() {
     console.log("processing order")
     const navigate = useNavigate()
@@ -90,20 +90,22 @@ export default function ProcessingOrder() {
         let response = await getOrder({param}.param, token);
         if (response.status === 200) {
             let values = await response.json();
+            setOrder(values)
             console.log("value status")
             console.log(values.status);
             setActiveStep(values.status)
             setOrder(values);
-            return values.status;
+            return values;
         }
         else return "0";
     }
 
     async function pooling() {
         console.log("pooling")
-        const status = await getOrd();
-        if (status === "3") {
-            window.location.href = address + order.restaurant_total + order.deliverer_total + "/http:127.0.0.1:3000/landingorder/" + order.id;
+        const order = await getOrd();
+        console.debug(order)
+        if (order.status === 3) {
+            window.location.href = address + (Math.round((order.restaurant_total + order.deliverer_total)*100)/100) + "/127.0.0.1:3002_landingorder_" + order.id;
         }
         return;
     }

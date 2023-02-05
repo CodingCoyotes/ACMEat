@@ -37,10 +37,12 @@ def distance_address_evaluate(request: DistanceRequest):
     payload_s = {"q": request.source.__repr__(), "format": "json", "polygon": 1, "addressdetails": 0}
     r_s = requests.get(f"https://nominatim.openstreetmap.org/search", params=payload_s)
     if r_s.status_code != 200 or len(r_s.json()) == 0:
+        print("Could not find "+request.source.__repr__())
         raise ResourceNotFound
     payload_d = {"q": request.destination.__repr__(), "format": "json", "polygon": 1, "addressdetails": 1}
     r_d = requests.get(f"https://nominatim.openstreetmap.org/search", params=payload_d)
     if r_d.status_code != 200 or len(r_d.json()) == 0:
+        print("Could not find "+request.destination.__repr__())
         raise ResourceNotFound
     source_coords = {"lat": float(r_s.json()[0]["lat"]), "lon": float(r_s.json()[0]["lon"])}
     destination_coords = {"lat": float(r_d.json()[0]["lat"]), "lon": float(r_d.json()[0]["lon"])}

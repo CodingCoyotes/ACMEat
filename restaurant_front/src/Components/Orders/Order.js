@@ -98,6 +98,10 @@ export default function Order(props) {
         }
     }
 
+    if(props.order.status === 4){
+        return (<></>)
+    }
+
     return (
         <Box>
             <Chapter>

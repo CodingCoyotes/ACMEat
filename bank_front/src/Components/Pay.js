@@ -19,7 +19,7 @@ export default function Pay() {
     async function pay(){
         console.debug("Pay!")
         console.debug(data.redirect)
-
+        console.debug("SID",token)
         const response = await fetch(address, {
             method: "POST",
             headers: {
@@ -43,8 +43,9 @@ export default function Pay() {
         let status = xmlDoc.getElementsByTagName("successfull")[0].innerHTML
         console.debug(status)
         if(status==="true"){
-            let token = xmlDoc.getElementsByTagName("token")[0].innerHTML
-            window.location.href = "http://"+data.redirect.replaceAll("_","/")+"/"+token
+            let token_2 = xmlDoc.getElementsByTagName("token")[0].innerHTML
+            console.debug(token_2)
+            window.location.href = "http://"+data.redirect.replaceAll("_","/")+"/"+token_2
         }
         else{
             alert("Qualcosa è andato storto.")

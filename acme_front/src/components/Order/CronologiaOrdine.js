@@ -5,7 +5,7 @@ import {getOrder, getRestaurant, getRestaurants, getUserInfo, modifyOrder} from 
 import '../css/Dash.css'
 import OrderCard from "./OrderCard";
 
-const address = "http://127.0.0.1:3001/pay/5ba5f372-78af-4e1f-ad8d-9bfd82020d24/"
+const address = "http://127.0.0.1:3000/pay/5ba5f372-78af-4e1f-ad8d-9bfd82020d24/"
 
 function getSteps() {
     return [
@@ -121,7 +121,7 @@ export default function CronologiaOrdine(){
                                         </li>
                                         <li className="list-group-item">
                                             {(item.status === 3)?(
-                                                <button type="button" className="btn btn-primary short" onClick={window.location.href = address + item.restaurant_total + item.deliverer_total + "/http:127.0.0.1:3000/landingorder/" + item.id}>
+                                                <button type="button" className="btn btn-primary short" onClick={event => {console.debug((item.restaurant_total + item.deliverer_total)); window.location.href = address + (Math.round((item.restaurant_total + item.deliverer_total)*100)/100) + "/127.0.0.1:3002_landingorder_" + item.id}}>
                                                     Paga
                                                 </button>
                                             ): (<div></div>)}

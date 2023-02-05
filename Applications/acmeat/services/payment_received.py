@@ -86,7 +86,7 @@ def payment_received(order_id, success, paid, payment_success, TTW):
         logout(sid)
         if result["result"] == "true":
             paid.value = True
-            if float(result["data"]["amount"]) != order.restaurant_total + order.deliverer_total:
+            if float(result["data"]["amount"]) != float(str(round(order.restaurant_total + order.deliverer_total, 2))):
                 print(f"[{order_id.value}] Mismatching amounts in order payment. Aborting.")
                 payment_success.value = False
                 pass

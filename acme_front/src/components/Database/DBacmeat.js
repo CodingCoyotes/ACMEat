@@ -1,6 +1,6 @@
 
-//const address = 'http://127.0.0.1:8004';
-const address = 'https://acmeat.isos.fermitech.info';
+const address = 'http://127.0.0.1:8004';
+//const address = 'https://acmeat.isos.fermitech.info';
 // ---------------------------------------------------------------------------------------------
 //                                      FUNZIONI UTENTE
 // ---------------------------------------------------------------------------------------------
@@ -249,6 +249,7 @@ export async function modifyOrder(token, info, id) {
 // ---------------------------------------------------------------------------------------------
 //Registra un nuovo ordine
 export async function payment(order_id, info, token) {
+  console.debug(info)
   return fetch(address + "/api/orders/v1/" + order_id +"/payment", {
     method: 'POST',
 

@@ -34,6 +34,7 @@ export default function Login() {
       let values = await response.json()
       console.debug(values)
       setToken(values.access_token)
+      localStorage.setItem("access_token", values.access_token)
       navigate("/dashboard")
     }
     else{

@@ -127,8 +127,8 @@ async def update_order(order_id: UUID, order_data: acmeat.schemas.edit.OrderEdit
     if order.user_id == current_user.id:
         if order_data.status != OrderStatus.cancelled:
             raise errors.Forbidden
-        # Se l'ordine non può ancora venire cancellato oppure non può più
-        if order_data.status.value < OrderStatus.w_cancellation.value or order_data.status.value > OrderStatus.w_cancellation:
+        # Se l'ordine non può venire cancellato...
+        if order.status.value != OrderStatus.w_cancellation.value:
             raise errors.Forbidden
         try:
             # Manda il messaggio di interruzione ordine
@@ -186,4 +186,4 @@ def pay_order(order_id: UUID, payment_data: acmeat.schemas.edit.PaymentEdit,
         msg()
     except Exception:
         pass
-    return quick_create(db, models.Payment(bank_id=payment_data.bank_id, order_id=order.id, token=payment_data.token))
+    return quick_create(db, models.Payment(order_id=order.id, token=payment_data.token))

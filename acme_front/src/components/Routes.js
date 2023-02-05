@@ -33,7 +33,7 @@ export default function Routing(){
                 <Route path="/checkoutordine" element={<CheckoutOrdine/>}/>
                 <Route path="/cronologiaordine" element={<CronologiaOrdine/>}/>
                 <Route path="/processingorder" element={<ProcessingOrder/>}/>
-                <Route path="/landingorder" element={<LandingOrder/>}/>
+                <Route path="/landingorder/:order_id/:token" element={<LandingOrder/>}/>
             </Routes>
         </Router>
     )

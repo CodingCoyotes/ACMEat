@@ -39,9 +39,13 @@ export default function DashMenu(){
         }
     }
     async function getRest(restaurantId) {
+        console.log("getRest")
+        console.log(restaurantId)
         let response = await getRestaurant(restaurantId);
         if (response.status === 200) {
             let values = await response.json();
+            console.log("menu list")
+            console.log(values.menus)
             setMenuList(values.menus);
             setRestaurantName(values.name);
         }

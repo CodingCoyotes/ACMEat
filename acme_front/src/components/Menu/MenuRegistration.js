@@ -118,7 +118,7 @@ export default function MenuRegistration() {
             let values = await response.json()
         }
         else {
-            navigate("/dashmenu");
+            navigate("/dashmenu",{ state: { param: restaurantId }});
         }
     }
 

@@ -59,7 +59,7 @@ export default function CronologiaOrdine(){
             setUser(values);
             console.log("userorder")
             console.log(values.orders)
-            setOrdersList(values.orders);
+            setOrdersList((values.orders).reverse());
         }
     }
 
@@ -91,6 +91,21 @@ export default function CronologiaOrdine(){
         }
     }
 
+    async function handlePaga(item){
+        console.log("handlepaga");
+        console.log(item);
+        let response = await getOrder(item.id, token);
+        if (response.status === 200) {
+            let values = await response.json();
+            let response = await getRestaurant(((values.contents)[0].menu).restaurant_id, token);
+            if (response.status === 200) {
+                let values = await response.json();
+                let totPrice = (item.restaurant_total + item.deliverer_total);
+                window.location.href = address + (Math.round((item.restaurant_total + item.deliverer_total) * 100) / 100) + "/127.0.0.1:3002_landingorder_" + values.name;
+            }
+        }
+    }
+
     return(
         <div className='container'>
             <div >
@@ -105,7 +120,7 @@ export default function CronologiaOrdine(){
                     </div>
 
                     <div className="list-grid">
-                        {ordersList.map(item => (
+                        {(ordersList).slice(0, 5).map(item => (
                             <div className="card">
                                 <div className="card-header">
                                     <div>{DateToString(item.date_order)+ " | Stato dell'ordine: "+ steps[item.status]}</div>
@@ -119,17 +134,39 @@ export default function CronologiaOrdine(){
                                             Spesa ristorante: {item.restaurant_total}
                                             {(item.deliverer_total !== null)? (<div>+ {item.deliverer_total} di spedizione</div>):(<div></div>)}
                                         </li>
+                                        {(item.status === 3 || item.status === 6)?(
+                                            <li className="list-group-item">
+                                                {(item.status === 3)?(
+                                                    <button type="button" className="btn btn-primary short" onClick={event =>{handlePaga(item)}}>
+                                                        Paga
+                                                    </button>
+                                                ): (<div></div>)}
+                                                {(item.status === 6)?(
+                                                    <button type="button" className="btn btn-primary short" onClick={event => {handleCancel(item) }}>
+                                                        Annulla
+                                                    </button>
+                                                ): (<div></div>)}
+                                            </li>
+                                        ):(<div></div>)}
+                                    </ul>
+                                </div>
+                            </div>
+                        ))}
+                        {(ordersList).slice(5, ordersList.length).map(item => (
+                            <div className="card">
+                                <div className="card-header">
+                                    <div>{DateToString(item.date_order)+ " | Stato dell'ordine: "+ steps[item.status]}</div>
+                                </div>
+                                <div className="card-body">
+                                    <ul className="list-group list-group-flush">
                                         <li className="list-group-item">
-                                            {(item.status === 3)?(
-                                                <button type="button" className="btn btn-primary short" onClick={event => {console.debug((item.restaurant_total + item.deliverer_total)); window.location.href = address + (Math.round((item.restaurant_total + item.deliverer_total)*100)/100) + "/127.0.0.1:3002_landingorder_" + item.id}}>
-                                                    Paga
-                                                </button>
-                                            ): (<div></div>)}
-                                            {(item.status === 6)?(
-                                                <button type="button" className="btn btn-primary short" onClick={event => {handleCancel(item) }}>
-                                                    Annulla
-                                                </button>
-                                            ): (<div></div>)}
+                                            Spesa ristorante: {item.restaurant_total}
+                                            {(item.deliverer_total !== null)? (<div>+ {item.deliverer_total} di spedizione</div>):(<div></div>)}
+                                        </li>
+                                        <li className="list-group-item">
+                                            <button type="button" className="btn btn-primary short" onClick={event => {navigate("/orderdetails", { state:item})}}>
+                                                Dettagli
+                                            </button>
                                         </li>
                                     </ul>
                                 </div>

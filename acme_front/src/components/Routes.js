@@ -14,6 +14,7 @@ import CheckoutOrdine from "./Order/CheckoutOrdine";
 import CronologiaOrdine from "./Order/CronologiaOrdine";
 import ProcessingOrder from "./Order/ProcessingOrder";
 import LandingOrder from "./Order/LandingOrder";
+import OrderDetails from "./Order/OrderDetails";
 
 export default function Routing(){
     return (
@@ -33,6 +34,7 @@ export default function Routing(){
                 <Route path="/checkoutordine" element={<CheckoutOrdine/>}/>
                 <Route path="/cronologiaordine" element={<CronologiaOrdine/>}/>
                 <Route path="/processingorder" element={<ProcessingOrder/>}/>
+                <Route path="/orderdetails" element={<OrderDetails/>}/>
                 <Route path="/landingorder/:order_id/:token" element={<LandingOrder/>}/>
             </Routes>
         </Router>

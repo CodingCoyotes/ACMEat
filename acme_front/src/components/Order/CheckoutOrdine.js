@@ -227,7 +227,7 @@ export default function CheckoutOrdine() {
         else{
             console.log("response")
             console.log(response)
-            navigate("/processingorder", { state: { param: response.id}});
+            navigate("/processingorder", { state: { param: response}});
         }
     }
 

@@ -1,3 +1,6 @@
+"""
+Questo modulo contiene la definizione degli schemi base, orm e non.
+"""
 from __future__ import annotations
 
 import abc

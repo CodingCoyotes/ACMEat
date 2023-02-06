@@ -1,5 +1,5 @@
 """
-This module contains some useful shortcuts for common database interactions.
+Questo modulo contiene delle funzioni rapide per eseguire operazioni semplici con il db.
 """
 
 __all__ = (
@@ -22,25 +22,25 @@ PydanticObject = t.TypeVar("PydanticObject")
 
 def quick_create(session: Session, obj: DatabaseObject) -> DatabaseObject:
     """
-    Add an object to the session, then commit it, and finally refresh the object before returning it.
-    :param session: The session to use.
-    :param obj: The object to quick save.
-    :return: The committed and refreshed object.
+    Aggiungi un oggetto alla sessione, committalo e refreshalo per poi restituirlo
+    :param session: La sessione del db.
+    :param obj: L'oggetto da salvare.
+    :return: L'oggetto finale.
     """
 
     session.add(obj)
     session.commit()
-    session.refresh(obj)  # Useful for triggers and similar things!
+    session.refresh(obj)  # Utile per trigger e simili
     return obj
 
 
 def quick_retrieve(session: Session, table: t.Type[DatabaseObject], **filters) -> DatabaseObject:
     """
-    Query the database for the object satisfying the specified filters.
-    :param session: The session to use.
-    :param table: The table to query.
-    :param filters: The filters to use in the query.
-    :raise fastapi.HTTPException: Returns a ``404 Not Found`` status if no object is found, and a ``500 Internal Server Error`` status if multiple objects are found.
+    Interroga il database con diversi filtri
+    :param session: La sessione del db.
+    :param table: La tabella su cui cercare.
+    :param filters: I filtri da utilizzare.
+    :raise fastapi.HTTPException: Restituisce ``404 Not Found`` se non viene trovato nulla, e un ``500 Internal Server Error`` se vengono trovati più oggetti.
     :return: The retrieved object.
     """
     result = session.execute(
@@ -53,11 +53,11 @@ def quick_retrieve(session: Session, table: t.Type[DatabaseObject], **filters) -
 
 def quick_update(session: Session, obj: DatabaseObject, data: pydantic.BaseModel) -> DatabaseObject:
     """
-    Apply to the database object the changes from the passed :mod:`pydantic` model, then commit and refresh the object.
-    :param session: The session to use.
-    :param obj: The object to update.
-    :param data: The data to update the object with.
-    :return: The committed and refreshed object.
+    Applica le modifiche contenute dentro il modello :mod:`pydantic`, poi le committa e restituisce l'oggetto dopo un refresh.
+    :param session: La sessione del db.
+    :param obj: L'oggetto da aggiornare.
+    :param data: I dati con cui aggiornare l'oggetto.
+    :return: L'oggetto aggiornato.
     """
 
     for key, value in data.dict().items():

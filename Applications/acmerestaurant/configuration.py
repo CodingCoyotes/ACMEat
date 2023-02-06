@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)
 
 class MissingSettingError(Exception):
     """
-    Exception raised when a :func:`.setting` cannot be found.
+    Eccezione sollevata quando :func:`.setting` non può venir trovata.
     """
 
     def __init__(self, name: str) -> None:
@@ -20,14 +20,12 @@ class MissingSettingError(Exception):
 
 def setting_required(name) -> str:
     """
-    Try to read the setting with the given ``name`` from the following places:
+    Tenta di leggere l'envar di nome ``name`` da:
 
-    - The contents of the file specified at the ``{name}_FILENAME`` environment variable.
-    - The contents of the ``{name}`` environment variable.
+    - I contenuti del file nell'envar ``{name}_FILENAME``.
+    - I contenuti dell'envar ``{name}``.
 
-    Empty strings are considered falsy values, and are ignored.
-
-    :raises .MissingSettingError: if all places were tried and no meaningful value was found.
+    :raises .MissingSettingError: se non trova nulla, solleva questa eccezione.
     """
 
     log.debug(f"Reading setting with name {name}")
@@ -46,7 +44,7 @@ def setting_required(name) -> str:
 
 def setting_optional(name) -> typing.Optional[str]:
     """
-    Like :func:`.setting`, but returns :data:`None` instead of raising an exception.
+    Come :func:`.setting`, ma restituisce :data:`None` anzichè sollevare un'eccezione.
     """
 
     try:
@@ -55,7 +53,7 @@ def setting_optional(name) -> typing.Optional[str]:
         return None
 
 
-# Required settings
+# Variabili d'ambiente necessarie
 JWT_KEY = setting_required("JWT_KEY")
 DB_URI = setting_required("DB_URI")
 ACME_EMAIL = setting_required("ACME_EMAIL")
@@ -63,6 +61,7 @@ ACME_PASSWORD = setting_required("ACME_PASSWORD")
 ACME_RESTAURANT_ID = setting_required("ACME_RESTAURANT_ID")
 ACME_URL = setting_required("ACME_URL")
 
-# Also required, but not set here:
+# Variabili d'ambiente necessarie, ma non definite qui
 # BIND_IP
 # BIND_PORT
+

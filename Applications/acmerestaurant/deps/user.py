@@ -1,3 +1,6 @@
+"""
+Questo modulo contiene le dipendenze legate agli utenti.
+"""
 from datetime import datetime
 
 from fastapi import UploadFile

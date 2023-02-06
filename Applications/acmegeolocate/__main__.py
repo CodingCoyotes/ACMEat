@@ -27,6 +27,7 @@ app.add_exception_handler(AcmegeolocateException, handle_acme_error)
 
 
 if __name__ == "__main__":
+    # Setup dei parametri di connessione
     BIND_IP = setting_required("BIND_IP")
     BIND_PORT = setting_required("BIND_PORT")
     uvicorn.run(app, host=BIND_IP, port=int(BIND_PORT), debug=True)

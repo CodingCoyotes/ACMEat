@@ -1,8 +1,12 @@
+"""
+Questo modulo contiene i modelli per ottenere i dati parziali su un'entità.
+"""
 from datetime import datetime
 from uuid import UUID
 
 from acmerestaurant.schemas import edit, base
 from acmerestaurant.database.enums import UserType
+
 
 import typing as t
 

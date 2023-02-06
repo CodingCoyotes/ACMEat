@@ -1,3 +1,6 @@
+"""
+Questo modulo contiene le definizioni, sottoforma di classi, delle tabelle presenti nel database.
+"""
 import datetime
 
 from sqlalchemy import Integer, String, LargeBinary, Column, Boolean, ForeignKey, Float, DateTime, Enum, JSON

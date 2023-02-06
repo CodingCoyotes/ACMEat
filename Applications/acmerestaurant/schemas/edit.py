@@ -1,3 +1,6 @@
+"""
+Questo modulo contiene gli schemi JSON per la creazione e modifica di oggetti nel database.
+"""
 import typing as t
 from uuid import UUID
 from datetime import datetime
@@ -79,12 +82,8 @@ class UserNew(base.ACMEORMModel):
 
 
 class OrderEdit(base.ACMEModel):
-    date_order: t.Optional[datetime]
-    delivery_time: t.Optional[datetime]
-    restaurant_total: t.Optional[float]
-    deliverer_total: t.Optional[float]
     status: t.Optional[OrderStatus]
-    deliverer_id: t.Optional[UUID]
+
 
 
 class ContentEdit(base.ACMEORMModel):

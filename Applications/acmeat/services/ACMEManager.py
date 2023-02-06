@@ -1,6 +1,7 @@
 """
 Questo modulo contiene l'implementazione del server che rimane in ascolto tramite un worker per task provenienti dai processi camunda
 """
+from acmeat.services.activate_delivery import activate_delivery
 from acmeat.services.closings import closings
 from acmeat.services.deliverer_abort import deliverer_abort
 from acmeat.services.order_delete import order_delete
@@ -13,7 +14,7 @@ from deliverer_preview import deliverer_preview
 from deliverer_confirmation import deliverer_confirmation
 from payment_request import payment_request
 from payment_received import payment_received
-from confirm_order import order_confirm
+from order_confirm import order_confirm
 from restaurant_abort import restaurant_abort
 
 
@@ -71,6 +72,11 @@ if __name__ == '__main__':
     worker.subscribe(
         topic='order_delete',
         func=order_delete,
+        variables=['order_id', 'success', 'paid', 'payment_success', 'TTW']
+    )
+    worker.subscribe(
+        topic='activate_delivery',
+        func=activate_delivery,
         variables=['order_id', 'success', 'paid', 'payment_success', 'TTW']
     )
     worker.subscribe(

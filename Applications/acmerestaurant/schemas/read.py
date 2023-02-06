@@ -1,8 +1,14 @@
+"""
+Questo modulo contiene i modelli per ottenere i dati parziali su un'entità.
+"""
 from datetime import datetime
 from uuid import UUID
 
 from acmerestaurant.schemas import edit, base
 from acmerestaurant.database.enums import UserType
+
+
+import typing as t
 
 __all__ = ()
 
@@ -26,6 +32,11 @@ class ServerRead(base.ACMEModel):
 
 
 class OrderRead(edit.OrderEdit):
+    date_order: t.Optional[datetime]
+    delivery_time: t.Optional[datetime]
+    restaurant_total: t.Optional[float]
+    deliverer_total: t.Optional[float]
+    deliverer_id: t.Optional[UUID]
     id: UUID
     user_id: UUID
 

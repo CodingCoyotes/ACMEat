@@ -1,3 +1,6 @@
+"""
+Questo modulo contiene gli schemi JSON per la creazione e modifica di oggetti nel database.
+"""
 import typing as t
 from uuid import UUID
 from datetime import datetime
@@ -87,7 +90,7 @@ class ClientEdit(base.ACMEORMModel):
     remote_api_key: UUID
 
 
-class ClientRemoveRequest(base.ACMEORMModel):
+class ClientRequest(base.ACMEORMModel):
     api_key: str
 
 

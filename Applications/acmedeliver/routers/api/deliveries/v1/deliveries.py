@@ -97,7 +97,7 @@ async def create_delivery(delivery_request: acmedeliver.schemas.edit.ClientDeliv
         deliverer_id=user.id, client_id=target.id,
         source=delivery_request.request.source,
         source_id=delivery_request.request.source_id,
-        status=DeliveryStatus.working))
+        status=DeliveryStatus.waiting))
 
 
 @router.post("/preview", response_model=acmedeliver.schemas.edit.DeliveryPreviewCost)
@@ -129,8 +129,19 @@ async def edit_delivery_status(delivery_id: UUID,
     return delivery
 
 
+@router.put("/{source_id}/confirm", response_model=acmedeliver.schemas.read.DeliveryRead)
+async def delivery_confirm(source_id: UUID, api_key: acmedeliver.schemas.edit.ClientRequest,
+                           db: Session = Depends(dep_dbsession)):
+    delivery = quick_retrieve(db, models.Delivery, source_id=source_id)
+    if delivery.client.api_key != api_key.api_key:
+        raise acmedeliver.errors.Forbidden
+    delivery.status = DeliveryStatus.working
+    db.commit()
+    return delivery
+
+
 @router.delete("/{source_id}", status_code=204)
-async def delete_delivery(request: acmedeliver.schemas.edit.ClientRemoveRequest, source_id: UUID,
+async def delete_delivery(request: acmedeliver.schemas.edit.ClientRequest, source_id: UUID,
                           db: Session = Depends(dep_dbsession)):
     client_target = quick_retrieve(db, models.Client, api_key=request.api_key)
     target = quick_retrieve(db, models.Delivery, source_id=source_id, client_id=client_target.id)

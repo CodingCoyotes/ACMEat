@@ -14,9 +14,9 @@ export default function Order(props) {
     const {address, token} = useAppContext()
 
     useEffect((e) => {
-        let d = new Date(props.order.date_order)
+        let d = new Date(props.order.date_order*1000)
         setCreationDate(`${d.getDate()}/${d.getMonth() + 1}/${d.getUTCFullYear()} - ${d.getHours()}:${d.getMinutes()}`)
-        d = new Date(props.order.delivery_time)
+        d = new Date(props.order.delivery_time*1000)
         setDeliveryDate(`${d.getDate()}/${d.getMonth() + 1}/${d.getUTCFullYear()} - ${d.getHours()}:${d.getMinutes()}`)
         switch (props.order.status) {
             case 1:
@@ -84,11 +84,7 @@ export default function Order(props) {
                 'Authorization': "Bearer " + token,
             },
             body: JSON.stringify({
-                date_order: props.order.date_order,
-                delivery_time: props.order.delivery_time,
-                restaurant_total: props.order.restaurant_total,
-                deliverer_total: props.order.deliverer_total,
-                status: status,
+                status: status
             })
         });
         if (response.status === 200) {

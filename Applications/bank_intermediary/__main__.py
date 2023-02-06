@@ -1,7 +1,6 @@
 import uvicorn
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.responses import RedirectResponse
 
 from bank_intermediary.routers.api.intermediary.v1.intermediary import router as intermediaryrouter
 
@@ -27,7 +26,9 @@ app.add_exception_handler(BankIntermediaryException, handle_acme_error)
 
 
 if __name__ == "__main__":
+    # Configurazione dati collegamento
     BIND_IP = setting_required("BIND_IP")
     BIND_PORT = setting_required("BIND_PORT")
+    # Avvio server uvicorn
     uvicorn.run(app, host=BIND_IP, port=int(BIND_PORT), debug=True)
 

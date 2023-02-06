@@ -1,3 +1,6 @@
+"""
+Questo modulo contiene la definizione del DBMS utilizzato dall'applicazione e della sessione di collegamento.
+"""
 import typing as t
 from os import environ
 

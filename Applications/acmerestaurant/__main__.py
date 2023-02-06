@@ -3,7 +3,7 @@ import uvicorn
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
-from acmerestaurant.authentication import Token, authenticate_user, create_token, get_hash
+from acmerestaurant.authentication import Token, authenticate_user, create_token
 from acmerestaurant.database import models
 from acmerestaurant.database.db import Session, engine
 from acmerestaurant.database.enums import UserType
@@ -38,18 +38,14 @@ app.add_exception_handler(AcmerestaurantException, handle_acme_error)
 app.add_exception_handler(sqlalchemy.exc.NoResultFound, handle_sqlalchemy_not_found)
 app.add_exception_handler(sqlalchemy.exc.MultipleResultsFound, handle_sqlalchemy_multiple_results)
 
-camunda_config = {
-    "maxTasks": 100,
-    "lockDuration": 0,
-    "asyncResponseTimeout": 0,
-    "retries": 3,
-    "retryTimeout": 5000,
-    "sleepSeconds": 0
-}
-
 
 @app.post("/token", response_model=Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    """
+    Funzione di autenticazione. Se le credenziali sono corrette viene restituito un JWT
+    :param form_data: informazioni di autenticazione
+    :return: un dict contenente il token e il suo tipo
+    """
     user = authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password",
@@ -59,12 +55,15 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
 
 
 if __name__ == "__main__":
+    # Setup parametri di connessione
     BIND_IP = setting_required("BIND_IP")
     BIND_PORT = setting_required("BIND_PORT")
     with Session() as db:
+        # Se non esistono utenti ne viene creato uno con il ruolo di amministratore
         if not db.query(models.User).all():
             db.add(models.User(name="Admin", surname="Admin", email=setting_required("ACME_EMAIL"),
                                password=bcrypt.hashpw(bytes(setting_required("ACME_PASSWORD"), encoding="utf-8"),
                                                       bcrypt.gensalt()), kind=UserType.admin))
             db.commit()
+    # Viene avviato il server uvicorn
     uvicorn.run(app, host=BIND_IP, port=int(BIND_PORT), debug=True)

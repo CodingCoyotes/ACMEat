@@ -6,6 +6,7 @@ from uuid import UUID
 
 from acmeat.schemas import edit
 from acmeat.database.enums import UserType
+import typing as t
 
 __all__ = ()
 
@@ -27,6 +28,11 @@ class MenuRead(edit.MenuEdit):
 
 
 class OrderRead(edit.OrderEdit):
+    date_order: t.Optional[datetime]
+    delivery_time: t.Optional[datetime]
+    restaurant_total: t.Optional[float]
+    deliverer_total: t.Optional[float]
+    deliverer_id: t.Optional[UUID]
     id: UUID
     user_id: UUID
 

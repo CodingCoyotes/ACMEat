@@ -153,7 +153,7 @@ async def edit_delivery_status(delivery_id: UUID,
     return delivery
 
 
-@router.put("/{source_id}/confirm", response_model=acmedeliver.schemas.read.DeliveryRead)
+@router.post("/{source_id}/confirm", response_model=acmedeliver.schemas.read.DeliveryRead)
 async def delivery_confirm(source_id: UUID, api_key: acmedeliver.schemas.edit.ClientRequest,
                            db: Session = Depends(dep_dbsession)):
     """

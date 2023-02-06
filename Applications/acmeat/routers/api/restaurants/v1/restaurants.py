@@ -80,7 +80,7 @@ async def edit_restaurant(edits: acmeat.schemas.edit.RestaurantEdit, restaurant_
     :return: acmeat.schemas.read.RestaurantRead, il ristorante modificato
     """
     target = quick_retrieve(db, models.Restaurant, id=restaurant_id)
-    if datetime.datetime.now().hour > 10:
+    if datetime.datetime.now().hour >= 10:
         raise errors.Forbidden
     if target.owner_id != current_user.id:
         raise errors.Forbidden

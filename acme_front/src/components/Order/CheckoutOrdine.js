@@ -53,25 +53,25 @@ function checkClosed(time){
     let sDay ="";
     let list = [];
     switch(today.getDay()){
-        case 0:
+        case 1:
             sDay="lunedi"
             break;
-        case 1:
+        case 2:
             sDay="martedi"
             break;
-        case 2:
+        case 3:
             sDay="mercoledi"
             break;
-        case 3:
+        case 4:
             sDay="giovedi"
             break;
-        case 4:
+        case 5:
             sDay="venerdi"
             break;
-        case 5:
+        case 6:
             sDay="sabato"
             break;
-        case 6:
+        case 0:
             sDay="domenica"
             break;
     }
@@ -98,25 +98,25 @@ function getTimeList(time){
     let sDay ="";
     let list = [];
     switch(today.getDay()){
-        case 0:
+        case 1:
             sDay="lunedi"
             break;
-        case 1:
+        case 2:
             sDay="martedi"
             break;
-        case 2:
+        case 3:
             sDay="mercoledi"
             break;
-        case 3:
+        case 4:
             sDay="giovedi"
             break;
-        case 4:
+        case 5:
             sDay="venerdi"
             break;
-        case 5:
+        case 6:
             sDay="sabato"
             break;
-        case 6:
+        case 0:
             sDay="domenica"
             break;
     }

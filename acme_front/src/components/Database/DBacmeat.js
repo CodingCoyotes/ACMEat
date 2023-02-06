@@ -251,8 +251,7 @@ export async function modifyOrder(token, info, id) {
 // ---------------------------------------------------------------------------------------------
 //Registra un nuovo ordine
 export async function payment(order_id, info, token) {
-  console.debug(info)
-  return fetch(address + "/api/orders/v1/" + order_id +"/payment", {
+  let response = await fetch(address + "/api/orders/v1/" + order_id +"/payment", {
     method: 'POST',
 
     headers: {
@@ -262,5 +261,6 @@ export async function payment(order_id, info, token) {
     },
     body: JSON.stringify(info)
   })
-      .then(data => data.json())
+  let data = await response.json()
+  return data
 }

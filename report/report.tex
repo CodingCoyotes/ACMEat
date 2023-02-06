@@ -31,7 +31,7 @@
 \usepackage{array} % for better arrays (eg matrices) in maths
 \usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
 \usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
-\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+%\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
 % These packages are all incorporated in the memoir class to one degree or another...
 \usepackage{listings,multicol}
 \usepackage{caption}
@@ -41,6 +41,10 @@
 \graphicspath{ {./images/} }
 
 \usepackage{mathpartir}
+
+\usepackage{subcaption}
+
+\usepackage{float}
 
 %%% HEADERS & FOOTERS
 \usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
@@ -1132,7 +1136,60 @@ Questo diagramma è stato suddiviso in diverse parti per facilitarne la leggibil
 \section{Progettazione}
 \label{sez:progettazione}
 
-La terza fase di lavoro ha visto la progettazione di una SOA per la realizzazione del sistema, documentata utilizzando UML.
+La terza fase di lavoro ha visto la progettazione di una SOA per la realizzazione del sistema, documentata utilizzando UML e utilizzando come profiling TinySOA. Sono state anche progettate le basi di dati utilizzate dall'applicazione, di cui riportiamo i modelli ER.
+
+\subsection{Diagramma UML}
+
+Seguendo il profiling TinySOA, sono stati individuato i vari servizi e suddivisi fra \emph{tasks}, \emph{entities} e \emph{utilities}, elencandoli all'interno della dovuta capability e relativa interfaccia nell'eventuale disponibilità verso l'esterno; per ACMEat vengono individuate varie interfaccie sulla base di chi sta utilizzando il sistema, mentre l'entità della banca è stata separata da quelle del sistema ACMEat in quanto è da considerarsi come entità esterna. Il diagramma è stato realizzato utilizzando \textbf{Papyrus}.
+
+\begin{figure}[H]
+\begin{center}
+\fbox{\includegraphics[width=\textwidth]{uml1}}
+\caption{Diagramma UML del sistema (1)}
+\end{center}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\fbox{\includegraphics[width=\textwidth]{uml2}}
+\caption{Diagramma UML del sistema (2)}
+\end{center}
+\end{figure}
+
+\subsection{Diagrammi ER}
+
+Di seguito sono riportati i diagrammi ER delle basi di dati utilizzati dal sistema. I modelli collegati ai servizi sviluppati con API REST sono stati ricreati utilizzando quelli ottenuti direttamente dall'ORM sfruttando IntelliJ, mentre quello della banca è stato creato con \textbf{Figma Jam}.
+
+\begin{figure}[H]
+\begin{center}
+\fbox{\includegraphics[width=\textwidth]{er_acmeat}}
+\caption{Diagramma ER del database di ACMEat}
+\label{db:acmeat}
+\end{center}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\begin{subfigure}[b]{0.49\textwidth}
+\fbox{\includegraphics[scale=0.29]{er_acmerestaurant}}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.49\textwidth}
+\fbox{\includegraphics[scale=0.29]{er_acmedeliver}}
+\end{subfigure}
+\caption{Diagramma ER del database di ACMErestaurant (a destra) e ACMEdeliver (a sinistra)}
+\label{db:restaurant}
+\label{db:deliver}
+\end{center}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\fbox{\includegraphics[width=\textwidth]{er_bank}}
+\caption{Diagramma ER del database della banca}
+\label{db:bank}
+\end{center}
+\end{figure}
 
 \clearpage
 

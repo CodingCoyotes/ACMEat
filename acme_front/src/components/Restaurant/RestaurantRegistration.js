@@ -13,6 +13,7 @@ import FormLabel from '@mui/material/FormLabel';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import "../css/Dash.css"
+import {checkTodayAfterTen} from "../Utils/Utils";
 
 
 export default function RestaurantRegistration() {
@@ -426,254 +427,257 @@ export default function RestaurantRegistration() {
                     </RadioGroup>
                 </FormControl>
             </div>
-              <div className="form-group mt-3">
-                  <h5>Seleziona orari apertura (pranzo/cena)</h5>
-                  <div>
-                      <h6>Lunedì: </h6>
-                      <label className="label-margin">Pranzo </label>
-                      <input
-                          type="number"
-                          value={lunPra1}
-                          className="form-control short"
-                          placeholder="12"
-                          onChange={e => setLunPra1(e.target.value)}
-                      />
-                      <label className="label-margin"> - </label>
-                      <input
-                          type="number"
-                          value={lunPra2}
-                          className="form-control short"
-                          placeholder="15"
-                          onChange={e => setLunPra2(e.target.value)}
-                      />
-                      <label className="label-margin">Cena </label>
-                      <input
-                          type="number"
-                          value={lunCen1}
-                          className="form-control mt-1 short"
-                          placeholder="19"
-                          onChange={e => setLunCen1(e.target.value)}
-                      />
-                      <label className="label-margin"> - </label>
-                      <input
-                          type="number"
-                          value={lunCen2}
-                          className="form-control mt-1 short"
-                          placeholder="21"
-                          onChange={e => setLunCen2(e.target.value)}
-                      />
-                  </div>
-                  <div>
-                      <h6>Martedì: </h6>
-                      <label className="label-margin">Pranzo </label>
-                      <input
-                          type="number"
-                          value={marPra1}
-                          className="form-control short"
-                          placeholder="12"
-                          onChange={e => setMarPra1(e.target.value)}
-                      />
-                      <label className="label-margin"> - </label>
-                      <input
-                          type="number"
-                          value={marPra2}
-                          className="form-control short"
-                          placeholder="15"
-                          onChange={e => setMarPra2(e.target.value)}
-                      />
-                      <label className="label-margin">Cena </label>
-                      <input
-                          type="number"
-                          value={marCen1}
-                          className="form-control mt-1 short"
-                          placeholder="19"
-                          onChange={e => setMarCen1(e.target.value)}
-                      />
-                      <label className="label-margin"> - </label>
-                      <input
-                          type="number"
-                          value={marCen2}
-                          className="form-control mt-1 short"
-                          placeholder="21"
-                          onChange={e => setMarCen2(e.target.value)}
-                      />
-                  </div>
-                  <div>
-                      <h6>Mercoledì: </h6>
-                      <label className="label-margin">Pranzo </label>
-                      <input
-                          type="number"
-                          value={merPra1}
-                          className="form-control short"
-                          placeholder="12"
-                          onChange={e => setMerPra1(e.target.value)}
-                      />
-                      <label className="label-margin"> - </label>
-                      <input
-                          type="number"
-                          value={merPra2}
-                          className="form-control short"
-                          placeholder="15"
-                          onChange={e => setMerPra2(e.target.value)}
-                      />
-                      <label className="label-margin">Cena </label>
-                      <input
-                          type="number"
-                          value={merCen1}
-                          className="form-control mt-1 short"
-                          placeholder="19"
-                          onChange={e => setMerCen1(e.target.value)}
-                      />
-                      <label className="label-margin"> - </label>
-                      <input
-                          type="number"
-                          value={merCen2}
-                          className="form-control mt-1 short"
-                          placeholder="21"
-                          onChange={e => setMerCen2(e.target.value)}
-                      />
-                  </div>
-                  <div>
-                      <h6>Giovedì: </h6>
-                      <label className="label-margin">Pranzo </label>
-                      <input
-                          type="number"
-                          value={gioPra1}
-                          className="form-control short"
-                          placeholder="12"
-                          onChange={e => setGioPra1(e.target.value)}
-                      />
-                      <label className="label-margin"> - </label>
-                      <input
-                          type="number"
-                          value={gioPra2}
-                          className="form-control short"
-                          placeholder="15"
-                          onChange={e => setGioPra2(e.target.value)}
-                      />
-                      <label className="label-margin">Cena </label>
-                      <input
-                          type="number"
-                          value={gioCen1}
-                          className="form-control mt-1 short"
-                          placeholder="19"
-                          onChange={e => setGioCen1(e.target.value)}
-                      />
-                      <label className="label-margin"> - </label>
-                      <input
-                          type="number"
-                          value={gioCen2}
-                          className="form-control mt-1 short"
-                          placeholder="21"
-                          onChange={e => setGioCen2(e.target.value)}
-                      />
-                  </div>
-                  <div>
-                      <h6>Venerdì: </h6>
-                      <label className="label-margin">Pranzo </label>
-                      <input
-                          type="number"
-                          value={venPra1}
-                          className="form-control short"
-                          placeholder="12"
-                          onChange={e => setVenPra1(e.target.value)}
-                      />
-                      <label className="label-margin"> - </label>
-                      <input
-                          type="number"
-                          value={venPra2}
-                          className="form-control short"
-                          placeholder="15"
-                          onChange={e => setVenPra2(e.target.value)}
-                      />
-                      <label className="label-margin">Cena </label>
-                      <input
-                          type="number"
-                          value={venCen1}
-                          className="form-control mt-1 short"
-                          placeholder="19"
-                          onChange={e => setVenCen1(e.target.value)}
-                      />
-                      <label className="label-margin"> - </label>
-                      <input
-                          type="number"
-                          value={venCen2}
-                          className="form-control mt-1 short"
-                          placeholder="21"
-                          onChange={e => setVenCen2(e.target.value)}
-                      />
-                  </div>
-                  <div>
-                      <h6>Sabato: </h6>
-                      <label className="label-margin">Pranzo </label>
-                      <input
-                          type="number"
-                          value={sabPra1}
-                          className="form-control short"
-                          placeholder="12"
-                          onChange={e => setSabPra1(e.target.value)}
-                      />
-                      <label className="label-margin"> - </label>
-                      <input
-                          type="number"
-                          value={sabPra2}
-                          className="form-control short"
-                          placeholder="15"
-                          onChange={e => setSabPra2(e.target.value)}
-                      />
-                      <label className="label-margin">Cena </label>
-                      <input
-                          type="number"
-                          value={sabCen1}
-                          className="form-control mt-1 short"
-                          placeholder="19"
-                          onChange={e => setSabCen1(e.target.value)}
-                      />
-                      <label className="label-margin"> - </label>
-                      <input
-                          type="number"
-                          value={sabCen2}
-                          className="form-control mt-1 short"
-                          placeholder="21"
-                          onChange={e => setSabCen2(e.target.value)}
-                      />
-                  </div>
-                  <div>
-                      <h6>Domenica: </h6>
-                      <label className="label-margin">Pranzo </label>
-                      <input
-                          type="number"
-                          value={domPra1}
-                          className="form-control short"
-                          placeholder="12"
-                          onChange={e => setDomPra1(e.target.value)}
-                      />
-                      <label className="label-margin"> - </label>
-                      <input
-                          type="number"
-                          value={domPra2}
-                          className="form-control short"
-                          placeholder="15"
-                          onChange={e => setDomPra2(e.target.value)}
-                      />
-                      <label className="label-margin">Cena </label>
-                      <input
-                          type="number"
-                          value={domCen1}
-                          className="form-control mt-1 short"
-                          placeholder="19"
-                          onChange={e => setDomCen1(e.target.value)}
-                      />
-                      <label className="label-margin"> - </label>
-                      <input
-                          type="number"
-                          value={domCen2}
-                          className="form-control mt-1 short"
-                          placeholder="21"
-                          onChange={e => setDomCen2(e.target.value)}
-                      />
-                  </div>
-              </div>
+              {(checkTodayAfterTen())?
+                  (<div className="form-group mt-3"><h5 className="red_text">Non puoi modificare l'orario dopo le 10</h5></div>):(
+                      <div className="form-group mt-3">
+                          <h5>Seleziona orari apertura (pranzo/cena)</h5>
+                          <div>
+                              <h6>Lunedì: </h6>
+                              <label className="label-margin">Pranzo </label>
+                              <input
+                                  type="number"
+                                  value={lunPra1}
+                                  className="form-control short"
+                                  placeholder="12"
+                                  onChange={e => setLunPra1(e.target.value)}
+                              />
+                              <label className="label-margin"> - </label>
+                              <input
+                                  type="number"
+                                  value={lunPra2}
+                                  className="form-control short"
+                                  placeholder="15"
+                                  onChange={e => setLunPra2(e.target.value)}
+                              />
+                              <label className="label-margin">Cena </label>
+                              <input
+                                  type="number"
+                                  value={lunCen1}
+                                  className="form-control mt-1 short"
+                                  placeholder="19"
+                                  onChange={e => setLunCen1(e.target.value)}
+                              />
+                              <label className="label-margin"> - </label>
+                              <input
+                                  type="number"
+                                  value={lunCen2}
+                                  className="form-control mt-1 short"
+                                  placeholder="21"
+                                  onChange={e => setLunCen2(e.target.value)}
+                              />
+                          </div>
+                          <div>
+                              <h6>Martedì: </h6>
+                              <label className="label-margin">Pranzo </label>
+                              <input
+                                  type="number"
+                                  value={marPra1}
+                                  className="form-control short"
+                                  placeholder="12"
+                                  onChange={e => setMarPra1(e.target.value)}
+                              />
+                              <label className="label-margin"> - </label>
+                              <input
+                                  type="number"
+                                  value={marPra2}
+                                  className="form-control short"
+                                  placeholder="15"
+                                  onChange={e => setMarPra2(e.target.value)}
+                              />
+                              <label className="label-margin">Cena </label>
+                              <input
+                                  type="number"
+                                  value={marCen1}
+                                  className="form-control mt-1 short"
+                                  placeholder="19"
+                                  onChange={e => setMarCen1(e.target.value)}
+                              />
+                              <label className="label-margin"> - </label>
+                              <input
+                                  type="number"
+                                  value={marCen2}
+                                  className="form-control mt-1 short"
+                                  placeholder="21"
+                                  onChange={e => setMarCen2(e.target.value)}
+                              />
+                          </div>
+                          <div>
+                              <h6>Mercoledì: </h6>
+                              <label className="label-margin">Pranzo </label>
+                              <input
+                                  type="number"
+                                  value={merPra1}
+                                  className="form-control short"
+                                  placeholder="12"
+                                  onChange={e => setMerPra1(e.target.value)}
+                              />
+                              <label className="label-margin"> - </label>
+                              <input
+                                  type="number"
+                                  value={merPra2}
+                                  className="form-control short"
+                                  placeholder="15"
+                                  onChange={e => setMerPra2(e.target.value)}
+                              />
+                              <label className="label-margin">Cena </label>
+                              <input
+                                  type="number"
+                                  value={merCen1}
+                                  className="form-control mt-1 short"
+                                  placeholder="19"
+                                  onChange={e => setMerCen1(e.target.value)}
+                              />
+                              <label className="label-margin"> - </label>
+                              <input
+                                  type="number"
+                                  value={merCen2}
+                                  className="form-control mt-1 short"
+                                  placeholder="21"
+                                  onChange={e => setMerCen2(e.target.value)}
+                              />
+                          </div>
+                          <div>
+                              <h6>Giovedì: </h6>
+                              <label className="label-margin">Pranzo </label>
+                              <input
+                                  type="number"
+                                  value={gioPra1}
+                                  className="form-control short"
+                                  placeholder="12"
+                                  onChange={e => setGioPra1(e.target.value)}
+                              />
+                              <label className="label-margin"> - </label>
+                              <input
+                                  type="number"
+                                  value={gioPra2}
+                                  className="form-control short"
+                                  placeholder="15"
+                                  onChange={e => setGioPra2(e.target.value)}
+                              />
+                              <label className="label-margin">Cena </label>
+                              <input
+                                  type="number"
+                                  value={gioCen1}
+                                  className="form-control mt-1 short"
+                                  placeholder="19"
+                                  onChange={e => setGioCen1(e.target.value)}
+                              />
+                              <label className="label-margin"> - </label>
+                              <input
+                                  type="number"
+                                  value={gioCen2}
+                                  className="form-control mt-1 short"
+                                  placeholder="21"
+                                  onChange={e => setGioCen2(e.target.value)}
+                              />
+                          </div>
+                          <div>
+                              <h6>Venerdì: </h6>
+                              <label className="label-margin">Pranzo </label>
+                              <input
+                                  type="number"
+                                  value={venPra1}
+                                  className="form-control short"
+                                  placeholder="12"
+                                  onChange={e => setVenPra1(e.target.value)}
+                              />
+                              <label className="label-margin"> - </label>
+                              <input
+                                  type="number"
+                                  value={venPra2}
+                                  className="form-control short"
+                                  placeholder="15"
+                                  onChange={e => setVenPra2(e.target.value)}
+                              />
+                              <label className="label-margin">Cena </label>
+                              <input
+                                  type="number"
+                                  value={venCen1}
+                                  className="form-control mt-1 short"
+                                  placeholder="19"
+                                  onChange={e => setVenCen1(e.target.value)}
+                              />
+                              <label className="label-margin"> - </label>
+                              <input
+                                  type="number"
+                                  value={venCen2}
+                                  className="form-control mt-1 short"
+                                  placeholder="21"
+                                  onChange={e => setVenCen2(e.target.value)}
+                              />
+                          </div>
+                          <div>
+                              <h6>Sabato: </h6>
+                              <label className="label-margin">Pranzo </label>
+                              <input
+                                  type="number"
+                                  value={sabPra1}
+                                  className="form-control short"
+                                  placeholder="12"
+                                  onChange={e => setSabPra1(e.target.value)}
+                              />
+                              <label className="label-margin"> - </label>
+                              <input
+                                  type="number"
+                                  value={sabPra2}
+                                  className="form-control short"
+                                  placeholder="15"
+                                  onChange={e => setSabPra2(e.target.value)}
+                              />
+                              <label className="label-margin">Cena </label>
+                              <input
+                                  type="number"
+                                  value={sabCen1}
+                                  className="form-control mt-1 short"
+                                  placeholder="19"
+                                  onChange={e => setSabCen1(e.target.value)}
+                              />
+                              <label className="label-margin"> - </label>
+                              <input
+                                  type="number"
+                                  value={sabCen2}
+                                  className="form-control mt-1 short"
+                                  placeholder="21"
+                                  onChange={e => setSabCen2(e.target.value)}
+                              />
+                          </div>
+                          <div>
+                              <h6>Domenica: </h6>
+                              <label className="label-margin">Pranzo </label>
+                              <input
+                                  type="number"
+                                  value={domPra1}
+                                  className="form-control short"
+                                  placeholder="12"
+                                  onChange={e => setDomPra1(e.target.value)}
+                              />
+                              <label className="label-margin"> - </label>
+                              <input
+                                  type="number"
+                                  value={domPra2}
+                                  className="form-control short"
+                                  placeholder="15"
+                                  onChange={e => setDomPra2(e.target.value)}
+                              />
+                              <label className="label-margin">Cena </label>
+                              <input
+                                  type="number"
+                                  value={domCen1}
+                                  className="form-control mt-1 short"
+                                  placeholder="19"
+                                  onChange={e => setDomCen1(e.target.value)}
+                              />
+                              <label className="label-margin"> - </label>
+                              <input
+                                  type="number"
+                                  value={domCen2}
+                                  className="form-control mt-1 short"
+                                  placeholder="21"
+                                  onChange={e => setDomCen2(e.target.value)}
+                              />
+                          </div>
+                      </div>
+                  )}
               <div className="form-group mt-4">
                   <label>Seleziona una nazione</label>
                   <select className="form-select" aria-label="Default select example" value={currNation} onChange={handleCurrNationChange}>

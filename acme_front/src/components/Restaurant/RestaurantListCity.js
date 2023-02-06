@@ -3,6 +3,7 @@ import Form from "react-bootstrap/Form";
 import classNames from "classnames";
 import {getCity, getRestaurants} from "../Database/DBacmeat";
 import {useLocation, useNavigate} from "react-router-dom";
+import {getNumDay} from "../Utils/Utils";
 
 function splitTime(time){
     let pran1 = ""
@@ -26,31 +27,8 @@ function splitTime(time){
 
 function checkClosed(time){
     let today = new Date();
-    let sDay ="";
+    let sDay =getNumDay(today.getDay());
     let list = [];
-    switch(today.getDay()){
-        case 0:
-            sDay="lunedi"
-            break;
-        case 1:
-            sDay="martedi"
-            break;
-        case 2:
-            sDay="mercoledi"
-            break;
-        case 3:
-            sDay="giovedi"
-            break;
-        case 4:
-            sDay="venerdi"
-            break;
-        case 5:
-            sDay="sabato"
-            break;
-        case 6:
-            sDay="domenica"
-            break;
-    }
     let orari = [];
     let chiusura = new Date()
     time.map(item =>{

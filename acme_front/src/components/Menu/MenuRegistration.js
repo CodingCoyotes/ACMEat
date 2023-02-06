@@ -11,6 +11,7 @@ import {
 } from "../Database/DBacmeat";
 import classNames from "classnames";
 import '../css/Dash.css'
+import {checkTodayAfterTen} from "../Utils/Utils";
 
 
 export default function MenuRegistration() {
@@ -204,7 +205,7 @@ export default function MenuRegistration() {
                         ))}
                         </div>
                     ): (<div></div>)}
-                    {(addIngrediente === false)?(
+                    {(addIngrediente === false && checkTodayAfterTen()==false)?(
                         <div className="form-group mt-3">
                             <button onClick={handleAggiungiIngrediente} className="btn btn-secondary">
                                 Aggiungi ingrediente

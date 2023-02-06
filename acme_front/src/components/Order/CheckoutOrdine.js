@@ -7,134 +7,7 @@ import {
     registerNewOrder,
 } from "../Database/DBacmeat";
 import '../css/Dash.css'
-
-function splitTime(time){
-    let pran1 = ""
-    let pran2 = ""
-    let cen1 = ""
-    let cen2 = ""
-    let split = time.split("/")
-    if(split[0] !== ""){
-        let s = split[0].split("-")
-        pran1= s[0];
-        pran2= s[1];
-    }
-    if(split[1] !== ""){
-        let s = split[1].split("-")
-        cen1= s[0];
-        cen2= s[1];
-    }
-    return [pran1, pran2, cen1, cen2];
-
-}
-
-function getSlots(ora1, ora2){
-    let list = [];
-    let time = new Date();
-    let h = "";
-    let now = new Date();
-    if(ora1 !== ""){
-        time.setHours(ora1);
-        time.setMinutes(0);
-        h = time.getHours();
-        while (h < ora2){
-            console.log(time)
-            time.setMinutes(time.getMinutes() + 15);
-            h = time.getHours();
-
-            if(time > now)
-                list = list.concat(time.getHours() + ":" + time.getMinutes());
-        }
-    }
-    return list;
-}
-function checkClosed(time){
-    let today = new Date();
-    let sDay ="";
-    let list = [];
-    switch(today.getDay()){
-        case 1:
-            sDay="lunedi"
-            break;
-        case 2:
-            sDay="martedi"
-            break;
-        case 3:
-            sDay="mercoledi"
-            break;
-        case 4:
-            sDay="giovedi"
-            break;
-        case 5:
-            sDay="venerdi"
-            break;
-        case 6:
-            sDay="sabato"
-            break;
-        case 0:
-            sDay="domenica"
-            break;
-    }
-    let orari = [];
-    let chiusura = new Date()
-    time.map(item =>{
-        if(item.day === sDay){
-            console.log("oggi è "+ sDay);
-            console.log(item.time);
-            orari = splitTime(item.time)
-            chiusura.setHours(orari[3])
-            console.log(chiusura)
-            console.log(today)
-            if(chiusura < today){
-                return true;
-            }
-        }
-    })
-    return false;
-}
-
-function getTimeList(time){
-    let today = new Date();
-    let sDay ="";
-    let list = [];
-    switch(today.getDay()){
-        case 1:
-            sDay="lunedi"
-            break;
-        case 2:
-            sDay="martedi"
-            break;
-        case 3:
-            sDay="mercoledi"
-            break;
-        case 4:
-            sDay="giovedi"
-            break;
-        case 5:
-            sDay="venerdi"
-            break;
-        case 6:
-            sDay="sabato"
-            break;
-        case 0:
-            sDay="domenica"
-            break;
-    }
-    let orari = [];
-    time.map(item =>{
-        if(item.day === sDay){
-            console.log("oggi è "+ sDay);
-            console.log(item.time);
-            orari = splitTime(item.time)
-            console.log(orari);
-            list = list.concat(getSlots(orari[0], orari[1]));
-            console.log(list);
-            list = list.concat(getSlots(orari[2], orari[3]));
-            console.log(list);
-        }
-    })
-    return list;
-}
+import {checkClosed, checkInFasciaOraria, getTimeList, StringToDate} from "../Utils/Utils";
 
 export default function CheckoutOrdine() {
     console.log("Sono in CheckoutOrdine");
@@ -151,8 +24,8 @@ export default function CheckoutOrdine() {
     const [orderList, setOrderList] = useState([]);
     const [timeList, setTimeList] = useState([]);
     const [time, setTime] = useState("");
-    const [timeDate, setTimeDate] = useState(new Date());
     const [chiuso, setChiuso] = useState(false);
+    const [fasciaOraria, setFasciaOraria] = useState(true);
     const {state} = useLocation();
     const {list} = state; // Read values passed on state
     const {restaurantId} = state;
@@ -184,7 +57,10 @@ export default function CheckoutOrdine() {
         let response = await getRestaurant({restaurantId}.restaurantId);
         if (response.status === 200) {
             let values = await response.json();
-            console.log(values);
+            let fascia = checkInFasciaOraria(values.open_times)
+            console.log("fascia oraria");
+            console.log(fascia)
+            setFasciaOraria(fascia)
             if(values.closed === true || checkClosed(values.open_times) === true){
                 setChiuso(true);
             }
@@ -257,15 +133,10 @@ export default function CheckoutOrdine() {
            }
            contentList = contentList.concat(obj);
         });
-        let timeOk = new Date();
-        let split = time.split(":");
-        timeOk.setHours(split[0]);
-        timeOk.setMinutes(split[1]);
-        setTimeDate(timeOk)
          let info = {
 
              "contents": contentList,
-             "delivery_time": timeDate,
+             "delivery_time": StringToDate(time),
              "address": indirizzo,
              "number": numCivico,
              "city": currCity,
@@ -338,8 +209,9 @@ export default function CheckoutOrdine() {
                         })}
                     </select>
                 </div>
-                {(chiuso === false)? (
+                {(chiuso === false && fasciaOraria === true)? (
                     <div>
+
                         <div className="form-group mt-4">
                             <label>Seleziona una fascia oraria</label>
                             <select className="form-select" aria-label="Default select example" value={time} onChange={e => setTime(e.target.value)}>
@@ -354,7 +226,7 @@ export default function CheckoutOrdine() {
                             </button>
                         </div>
                     </div>
-                ): (<div><h5 className="red_text">Il ristorante è chiuso</h5></div>)}
+                ): ((chiuso === true)? (<div><h5 className="red_text">Il ristorante è chiuso</h5></div>): (<div><h5 className="red_text">Il ristorante è chiuso in questa fascia oraria</h5></div>))}
             </div>
         </div>
     )

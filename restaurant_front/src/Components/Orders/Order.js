@@ -84,11 +84,7 @@ export default function Order(props) {
                 'Authorization': "Bearer " + token,
             },
             body: JSON.stringify({
-                date_order: props.order.date_order,
-                delivery_time: props.order.delivery_time,
-                restaurant_total: props.order.restaurant_total,
-                deliverer_total: props.order.deliverer_total,
-                status: status,
+                status: status
             })
         });
         if (response.status === 200) {

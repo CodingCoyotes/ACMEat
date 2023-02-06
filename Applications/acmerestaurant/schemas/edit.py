@@ -79,12 +79,8 @@ class UserNew(base.ACMEORMModel):
 
 
 class OrderEdit(base.ACMEModel):
-    date_order: t.Optional[datetime]
-    delivery_time: t.Optional[datetime]
-    restaurant_total: t.Optional[float]
-    deliverer_total: t.Optional[float]
     status: t.Optional[OrderStatus]
-    deliverer_id: t.Optional[UUID]
+
 
 
 class ContentEdit(base.ACMEORMModel):

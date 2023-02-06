@@ -158,7 +158,6 @@ async def update_order(order_id: UUID, order_data: acmeat.schemas.edit.OrderEdit
     if order.status.value > order_data.status.value or order_data.status.value not in [2, 8, 9]:
         raise errors.Forbidden
     order.status = order_data.status
-
     db.commit()
     return order
 

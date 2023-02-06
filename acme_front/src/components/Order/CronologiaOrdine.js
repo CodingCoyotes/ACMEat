@@ -16,7 +16,7 @@ function getSteps() {
         'Conferma da terzi',
         'Ordine cancellato',
         'Pagamento confermato',
-        'Pagamento cancellato',
+        'Pagamento effettutato', //6
         'Preparazione ordine in atto',
         'Il tuo ordine è stato spedito',
         'In consegna',
@@ -150,6 +150,27 @@ export default function CronologiaOrdine() {
                                         {(item.deliverer_total !== null) ? (
                                             <div>+ {item.deliverer_total} di spedizione</div>) : (<div></div>)}
                                     </li>
+                                    {(item.status === 3 || item.status === 6) ? (
+                                        <li className="list-group-item">
+                                            {(item.status === 3) ? (
+                                                <button type="button" className="btn btn-primary short"
+                                                        onClick={event => {
+                                                            console.debug((item.restaurant_total + item.deliverer_total));
+                                                            window.location.href = address + (Math.round((item.restaurant_total + item.deliverer_total) * 100) / 100) + "/" + app_base_address + "_landingorder_" + item.id
+                                                        }}>
+                                                    Paga
+                                                </button>
+                                            ) : (<div></div>)}
+                                            {(item.status === 6) ? (
+                                                <button type="button" className="btn btn-primary short"
+                                                        onClick={event => {
+                                                            handleCancel(item)
+                                                        }}>
+                                                    Annulla
+                                                </button>
+                                            ) : (<div></div>)}
+                                        </li>
+                                    ) : (<div></div>)}
                                     <li className="list-group-item">
                                         <button type="button" className="btn btn-primary short" onClick={event => {
                                             navigate("/orderdetails", {state: item})

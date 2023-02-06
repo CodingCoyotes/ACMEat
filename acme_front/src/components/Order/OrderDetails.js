@@ -3,6 +3,8 @@ import {useLocation, useNavigate,} from "react-router-dom";
 import {useAppContext} from "../../Context";
 import {getOrder, getRestaurant, getUserInfo} from "../Database/DBacmeat";
 import '../css/Dash.css'
+import {DateToString} from "../Utils/Utils";
+import ProcessBar from "../Utils/ProcessBar";
 
 function getSteps() {
     return [
@@ -17,17 +19,6 @@ function getSteps() {
         'Il tuo ordine è stato spedito',
         'In consegna',
         'Consegnato'];
-}
-
-function DateToString(info){
-    const dateFormat = new Date(info * 1000)
-    let string =  "Il "+dateFormat.getDate()+
-        "/"+(dateFormat.getMonth()+1)+
-        "/"+dateFormat.getFullYear()+
-        " alle "+dateFormat.getHours()+
-        ":"+dateFormat.getMinutes()+
-        ":"+dateFormat.getSeconds();
-    return string;
 }
 
 export default function OrderDetails(){
@@ -104,6 +95,7 @@ export default function OrderDetails(){
                             <div className="card-body">
                                 <ul className="list-group list-group-flush">
                                     <li className="list-group-item">
+                                        <ProcessBar activeStep={state.status}></ProcessBar>
                                         <h5 className="card-title">{restaurantName}</h5>
                                         <ul>
                                             {menuList.map(menu =>(

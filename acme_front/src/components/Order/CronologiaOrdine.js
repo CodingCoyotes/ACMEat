@@ -4,6 +4,7 @@ import {useAppContext} from "../../Context";
 import {getOrder, getRestaurant, getRestaurants, getUserInfo, modifyOrder} from "../Database/DBacmeat";
 import '../css/Dash.css'
 import OrderCard from "./OrderCard";
+import {DateToString} from "../Utils/Utils";
 
 const address = process.env.REACT_APP_BANK_ADDRESS
 const app_base_address = process.env.REACT_APP_FRONTEND_ADDRESS
@@ -21,17 +22,6 @@ function getSteps() {
         'Il tuo ordine è stato spedito',
         'In consegna',
         'Consegnato'];
-}
-
-function DateToString(info) {
-    const dateFormat = new Date(info * 1000)
-    let string = "Il " + dateFormat.getDate() +
-        "/" + (dateFormat.getMonth() + 1) +
-        "/" + dateFormat.getFullYear() +
-        " alle " + dateFormat.getHours() +
-        ":" + dateFormat.getMinutes() +
-        ":" + dateFormat.getSeconds();
-    return string;
 }
 
 export default function CronologiaOrdine() {
@@ -67,12 +57,7 @@ export default function CronologiaOrdine() {
         console.log("sono in handle cancel")
         console.log(order);
         let info = {
-            "date_order": order.date_order,
-            "delivery_time": order.delivery_time,
-            "restaurant_total": order.restaurant_total,
-            "deliverer_total": order.deliverer_total,
-            "status": 4,
-            "deliverer_id": order.deliverer_id
+            "status": 4
         }
         let response = await modifyOrder(token, info, order.id);
         if (response.status === 200) {
@@ -86,7 +71,7 @@ export default function CronologiaOrdine() {
         <div className='container'>
             <div>
                 <button type="button" className="btn btn-primary " onClick={event => {
-                    navigate("/dashutente")
+                    navigate("/dashboard")
                 }}>
                     Indietro
                 </button>
@@ -112,6 +97,13 @@ export default function CronologiaOrdine() {
                                         Spesa ristorante: {item.restaurant_total}
                                         {(item.deliverer_total !== null) ? (
                                             <div>+ {item.deliverer_total} di spedizione</div>) : (<div></div>)}
+                                    </li>
+                                    <li className="list-group-item">
+                                        <button type="button" className="btn btn-primary short" onClick={event => {
+                                            navigate("/orderdetails", {state: item})
+                                        }}>
+                                            Dettagli
+                                        </button>
                                     </li>
                                     {(item.status === 3 || item.status === 6) ? (
                                         <li className="list-group-item">

@@ -12,7 +12,15 @@ from acmeat.schemas import base
 
 __all__ = (
     "UserEdit",
-    "UserNew"
+    "UserNew",
+    "RestaurantEdit",
+    "MenuEdit",
+    "OrderEdit",
+    "DelivererEdit",
+    "PaymentEdit",
+    "CityEdit",
+    "ContentEdit",
+    "DelivererDeliveryEdit"
 )
 
 

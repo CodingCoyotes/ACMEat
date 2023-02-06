@@ -18,6 +18,10 @@ from acmeat.configuration import JWT_KEY
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 120
 
+__all__ = (
+    "authenticate_user"
+)
+
 
 class Token(BaseModel):
     """

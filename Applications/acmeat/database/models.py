@@ -11,6 +11,16 @@ import uuid
 from acmeat.database.db import Base
 from acmeat.database.enums import UserType, OrderStatus
 
+__all__ = (
+    "User",
+    "Restaurant",
+    "Menu",
+    "Order",
+    "Content",
+    "Payment",
+    "City",
+    "Deliverer"
+)
 
 class User(Base):
     __tablename__ = "user"

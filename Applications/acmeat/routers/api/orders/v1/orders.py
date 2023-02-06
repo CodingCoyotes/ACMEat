@@ -3,16 +3,14 @@ Questo modulo contiene gli endpoint per la gestione degli ordini
 """
 import typing
 from uuid import UUID
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends
 from pycamunda.message import CorrelateSingle
 from sqlalchemy.orm import Session
-
 from acmeat.configuration import CAMUNDA_URL
 from acmeat.database.enums import OrderStatus
-import acmeat.schemas.read
 from acmeat.authentication import get_current_user
-from acmeat.database import models
-from acmeat.schemas import *
+from acmeat.database.models import *
+from acmeat import schemas
 from acmeat.crud import *
 from acmeat.dependencies import dep_dbsession
 import acmeat.errors as errors
@@ -27,9 +25,9 @@ router = APIRouter(
 )
 
 
-@router.get("/{restaurant_id}", response_model=typing.List[acmeat.schemas.read.OrderRead])
+@router.get("/{restaurant_id}", response_model=typing.List[schemas.read.OrderRead])
 async def read_orders(restaurant_id: UUID, db: Session = Depends(dep_dbsession),
-                      current_user: models.User = Depends(get_current_user)):
+                      current_user: User = Depends(get_current_user)):
     """
     Restituisce tutti gli ordini di un ristorante.
     :param restaurant_id: l'UUID del ristorante
@@ -37,17 +35,17 @@ async def read_orders(restaurant_id: UUID, db: Session = Depends(dep_dbsession),
     :param current_user: l'utente attuale
     :return: typing.List[acmeat.schemas.read.OrderRead], la lista degli ordini
     """
-    restaurant = quick_retrieve(db, models.Restaurant, id=restaurant_id)
-    user = quick_retrieve(db, models.User, id=current_user.id)
+    restaurant = quick_retrieve(db, Restaurant, id=restaurant_id)
+    user = quick_retrieve(db, User, id=current_user.id)
     if restaurant not in user.restaurants:
         raise errors.Forbidden
-    results = db.query(models.Order).join(models.Content).join(models.Menu).filter_by(restaurant_id=restaurant_id).all()
+    results = db.query(Order).join(Content).join(Menu).filter_by(restaurant_id=restaurant_id).all()
     return results
 
 
-@router.get("/details/{order_id}", response_model=acmeat.schemas.full.OrderFull)
+@router.get("/details/{order_id}", response_model=schemas.full.OrderFull)
 async def read_order(order_id: UUID, db: Session = Depends(dep_dbsession),
-                     current_user: models.User = Depends(get_current_user)):
+                     current_user: User = Depends(get_current_user)):
     """
     Restituisce i dettagli di un ordine
     :param order_id: l'UUID dell'ordine
@@ -55,18 +53,18 @@ async def read_order(order_id: UUID, db: Session = Depends(dep_dbsession),
     :param current_user: l'utente attuale
     :return: acmeat.schemas.full.OrderFull, i dettagli dell'ordine
     """
-    order = quick_retrieve(db, models.Order, id=order_id)
+    order = quick_retrieve(db, Order, id=order_id)
     restaurant_id = order.contents[0].menu.restaurant_id
-    restaurant = quick_retrieve(db, models.Restaurant, id=restaurant_id)
+    restaurant = quick_retrieve(db, Restaurant, id=restaurant_id)
     if not (order.user_id == current_user.id or restaurant.owner_id == current_user.id):
         raise errors.Forbidden
     return order
 
 
-@router.post("/{restaurant_id}", response_model=acmeat.schemas.read.OrderRead)
-async def create_order(restaurant_id: str, order_data: acmeat.schemas.edit.OrderCreation,
+@router.post("/{restaurant_id}", response_model=schemas.read.OrderRead)
+async def create_order(restaurant_id: str, order_data: schemas.edit.OrderCreation,
                        db: Session = Depends(dep_dbsession),
-                       current_user: models.User = Depends(get_current_user)):
+                       current_user: User = Depends(get_current_user)):
     """
     Crea un ordine e avvia il processo BPMN collegandosi a Camunda.
     :param restaurant_id: l'UUID del ristorante
@@ -75,14 +73,14 @@ async def create_order(restaurant_id: str, order_data: acmeat.schemas.edit.Order
     :param current_user: l'utente attuale
     :return: acmeat.schemas.read.OrderRead, l'ordine
     """
-    order = quick_create(db, models.Order(status=OrderStatus.w_restaurant_ok, delivery_time=order_data.delivery_time,
+    order = quick_create(db, Order(status=OrderStatus.w_restaurant_ok, delivery_time=order_data.delivery_time,
                                           user_id=current_user.id, nation=order_data.nation, number=order_data.number,
                                           address=order_data.address, city=order_data.city))
     total = 0
     for elem in order_data.contents:
         # Ensures no menu mix-up in order (all menus must be from same restaurant)
-        m = quick_retrieve(db, models.Menu, id=elem.menu_id, restaurant_id=restaurant_id)
-        quick_create(db, models.Content(order_id=order.id, menu_id=elem.menu_id, qty=elem.qty))
+        m = quick_retrieve(db, Menu, id=elem.menu_id, restaurant_id=restaurant_id)
+        quick_create(db, Content(order_id=order.id, menu_id=elem.menu_id, qty=elem.qty))
         total += m.cost * elem.qty
     order.restaurant_total = total
     db.commit()
@@ -105,10 +103,10 @@ async def create_order(restaurant_id: str, order_data: acmeat.schemas.edit.Order
     return order
 
 
-@router.put("/{order_id}", response_model=acmeat.schemas.read.OrderRead)
-async def update_order(order_id: UUID, order_data: acmeat.schemas.edit.OrderEdit,
+@router.put("/{order_id}", response_model=schemas.read.OrderRead)
+async def update_order(order_id: UUID, order_data: schemas.edit.OrderEdit,
                        db: Session = Depends(dep_dbsession),
-                       current_user: models.User = Depends(get_current_user)):
+                       current_user: User = Depends(get_current_user)):
     """
     Funzione di aggiornamento ordine.
     :param order_id: l'UUID dell'ordine
@@ -117,9 +115,9 @@ async def update_order(order_id: UUID, order_data: acmeat.schemas.edit.OrderEdit
     :param current_user: l'utente attuale
     :return: acmeat.schemas.read.OrderRead, l'ordine modificato
     """
-    order = quick_retrieve(db, models.Order, id=order_id)
+    order = quick_retrieve(db, Order, id=order_id)
     restaurant_id = order.contents[0].menu.restaurant_id
-    restaurant = quick_retrieve(db, models.Restaurant, id=restaurant_id)
+    restaurant = quick_retrieve(db, Restaurant, id=restaurant_id)
     # Se l'utente non è nè legato al locale nè è il cliente...
     if not (order.user_id == current_user.id or restaurant.owner_id == current_user.id):
         raise errors.Forbidden
@@ -162,10 +160,10 @@ async def update_order(order_id: UUID, order_data: acmeat.schemas.edit.OrderEdit
     return order
 
 
-@router.post("/{order_id}/payment/", response_model=acmeat.schemas.read.PaymentRead)
-def pay_order(order_id: UUID, payment_data: acmeat.schemas.edit.PaymentEdit,
+@router.post("/{order_id}/payment/", response_model=schemas.read.PaymentRead)
+def pay_order(order_id: UUID, payment_data: schemas.edit.PaymentEdit,
               db: Session = Depends(dep_dbsession),
-              current_user: models.User = Depends(get_current_user)):
+              current_user: User = Depends(get_current_user)):
     """
     Consente il pagamento dell'ordine.
     :param order_id: l'id dell'ordine da pagare
@@ -174,7 +172,7 @@ def pay_order(order_id: UUID, payment_data: acmeat.schemas.edit.PaymentEdit,
     :param current_user: l'utente attuale
     :return: acmeat.schemas.read.PaymentRead, il pagamento
     """
-    order = quick_retrieve(db, models.Order, id=order_id)
+    order = quick_retrieve(db, Order, id=order_id)
     if not (order.user_id == current_user.id):
         raise errors.Forbidden
     try:
@@ -184,4 +182,4 @@ def pay_order(order_id: UUID, payment_data: acmeat.schemas.edit.PaymentEdit,
         msg()
     except Exception:
         pass
-    return quick_create(db, models.Payment(order_id=order.id, token=payment_data.token))
+    return quick_create(db, Payment(order_id=order.id, token=payment_data.token))

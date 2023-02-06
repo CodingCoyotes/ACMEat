@@ -1,3 +1,6 @@
+"""
+Questo modulo contiene gli endpoint per la geolocazione
+"""
 from fastapi import APIRouter, Depends, Request, HTTPException
 from sqlalchemy.orm import Session
 import requests
@@ -16,6 +19,12 @@ router = APIRouter(
 
 
 def calculate_distance(source: dict, destination: dict):
+    """
+    Calcola la distanza tra due punti su una sfera
+    :param source: coordinate punto sorgente
+    :param destination: coordinate punto destinazione
+    :return: la distanza tra due punti
+    """
     earth_radius = 6371e3
     # Radians conversion
     phi_1 = source["lat"] * math.pi / 180
@@ -32,7 +41,9 @@ def calculate_distance(source: dict, destination: dict):
 @router.post("/distance", response_model=DistanceResponse)
 def distance_address_evaluate(request: DistanceRequest):
     """
-    Returns distance between two adrresses.
+    Restituisce la distanza tra due indirizzi
+    :param request: il modello contenente gli indirizzi
+    :return: DistanceResponse, la distanza in km
     """
     payload_s = {"q": request.source.__repr__(), "format": "json", "polygon": 1, "addressdetails": 0}
     r_s = requests.get(f"https://nominatim.openstreetmap.org/search", params=payload_s)
@@ -51,6 +62,11 @@ def distance_address_evaluate(request: DistanceRequest):
 
 @router.post("/coordinates", response_model=CoordsResponse)
 def coordinates_evaluate(request: Address):
+    """
+    Restituisce le coordinate di un indirizzo
+    :param request: il modello contenente l'indirizzo
+    :return: CoordsResponse, le coordinate
+    """
     payload = {"q": request.__repr__(), "format": "json", "polygon": 1, "addressdetails": 0}
     r = requests.get(f"https://nominatim.openstreetmap.org/search", params=payload)
     if r.status_code != 200 or len(r.json()) == 0:

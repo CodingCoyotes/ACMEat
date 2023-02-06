@@ -1,3 +1,6 @@
+"""
+Questo modulo contiene gli endpoint per la gestione degli utenti
+"""
 from uuid import UUID
 import bcrypt
 from fastapi import APIRouter, Depends

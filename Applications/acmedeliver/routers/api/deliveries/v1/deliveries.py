@@ -1,18 +1,16 @@
-import binascii
-import os
+"""
+Questo modulo contiene gli endpoint per le consegne
+"""
 from uuid import UUID
-from typing import Optional, List
+from typing import List
 
-import bcrypt
 import requests
-from fastapi import APIRouter, Depends, Request, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from camunda.client.engine_client import EngineClient
 
 import acmedeliver.schemas.read
 from acmedeliver.authentication import get_current_user
 from acmedeliver.database import models
-from acmedeliver.schemas import *
 from acmedeliver.crud import *
 from acmedeliver.dependencies import dep_dbsession
 import acmedeliver.errors as errors
@@ -34,6 +32,12 @@ GEOLOCATE_URL = setting_required("GEOLOCATE_URL")
 
 
 def calculate_cost(source, destination):
+    """
+    Funzione che calcola il costo di una spedizione.
+    :param source: l'indirizzo sorgente
+    :param destination: l'indirizzo destinazione
+    :return: il prezzo di spedizione
+    """
     source = source.split(";")
     destination = destination.split(";")
     r = requests.post(GEOLOCATE_URL + "/api/geo/v1/distance",
@@ -59,7 +63,10 @@ def calculate_cost(source, destination):
 async def read_deliveries(current_user: models.User = Depends(get_current_user),
                           db: Session = Depends(dep_dbsession)):
     """
-    Returns data about all deliveries.
+    Restituisce la lista delle consegne
+    :param current_user: l'utente attuale
+    :param db: la sessione di database
+    :return: List[acmedeliver.schemas.read.DeliveryRead], la lista delle consegne
     """
     if current_user.kind.value < UserType.admin.value:
         raise errors.Forbidden
@@ -70,7 +77,11 @@ async def read_deliveries(current_user: models.User = Depends(get_current_user),
 async def read_delivery(delivery_id: UUID, current_user: models.User = Depends(get_current_user),
                         db: Session = Depends(dep_dbsession)):
     """
-    Returns data about a selected client.
+    Restituisce i dettagli di una consegna
+    :param delivery_id: l'UUID della consegna
+    :param current_user: l'utente attuale
+    :param db: la sessione di database
+    :return: acmedeliver.schemas.full.DeliveryFull, la consegna
     """
     if current_user.kind.value < UserType.admin.value:
         raise errors.Forbidden
@@ -81,7 +92,10 @@ async def read_delivery(delivery_id: UUID, current_user: models.User = Depends(g
 async def create_delivery(delivery_request: acmedeliver.schemas.edit.ClientDeliveryRequest,
                           db: Session = Depends(dep_dbsession)):
     """
-    Creates an account for a new client.
+    Crea una nuova consegna
+    :param delivery_request: il modello contenente la richiesta di consegna
+    :param db: la sessione di database
+    :return: acmedeliver.schemas.full.DeliveryFull, la consegna
     """
     target = quick_retrieve(db, models.Client, api_key=delivery_request.api_key)
     if not target:
@@ -104,7 +118,10 @@ async def create_delivery(delivery_request: acmedeliver.schemas.edit.ClientDeliv
 async def preview_delivery(delivery_request: acmedeliver.schemas.edit.ClientDeliveryRequest,
                            db: Session = Depends(dep_dbsession)):
     """
-    Creates an account for a new client.
+    Funzione per il calcolo preventivi
+    :param delivery_request: il modello contenente la richiesta di consegna
+    :param db: la sessione di database
+    :return: acmedeliver.schemas.edit.DeliveryPreviewCost, il preventivo
     """
     target = quick_retrieve(db, models.Client, api_key=delivery_request.api_key)
     if not target:
@@ -117,6 +134,13 @@ async def preview_delivery(delivery_request: acmedeliver.schemas.edit.ClientDeli
 async def edit_delivery_status(delivery_id: UUID,
                                current_user: models.User = Depends(get_current_user),
                                db: Session = Depends(dep_dbsession)):
+    """
+    Modifica dello stato remoto della consegna
+    :param delivery_id: l'UUID della consegna
+    :param current_user: l'utente attuale
+    :param db: la sessione di database
+    :return: acmedeliver.schemas.read.DeliveryRead, la consegna aggiornata
+    """
     delivery = quick_retrieve(db, models.Delivery, id=delivery_id)
     response = requests.put(delivery.client.api_url + "/api/deliverers/v1/delivery/" + str(delivery.source_id),
                             headers={"Content-Type": "application/json",
@@ -132,6 +156,13 @@ async def edit_delivery_status(delivery_id: UUID,
 @router.put("/{source_id}/confirm", response_model=acmedeliver.schemas.read.DeliveryRead)
 async def delivery_confirm(source_id: UUID, api_key: acmedeliver.schemas.edit.ClientRequest,
                            db: Session = Depends(dep_dbsession)):
+    """
+    Conferma remota dell'ordine di spedizione
+    :param source_id: l'UUID sorgente dell'ordine
+    :param api_key: l'api_key usato per accedere
+    :param db: la sessione del db
+    :return: acmedeliver.schemas.read.DeliveryRead, la spedizione aggiornata
+    """
     delivery = quick_retrieve(db, models.Delivery, source_id=source_id)
     if delivery.client.api_key != api_key.api_key:
         raise acmedeliver.errors.Forbidden
@@ -143,6 +174,13 @@ async def delivery_confirm(source_id: UUID, api_key: acmedeliver.schemas.edit.Cl
 @router.delete("/{source_id}", status_code=204)
 async def delete_delivery(request: acmedeliver.schemas.edit.ClientRequest, source_id: UUID,
                           db: Session = Depends(dep_dbsession)):
+    """
+    Annullamento remoto della spedizione
+    :param request: il modello contenente l'api key
+    :param source_id: l'UUID sorgente della spedizione
+    :param db: la sessione del database
+    :return: una risposta 204
+    """
     client_target = quick_retrieve(db, models.Client, api_key=request.api_key)
     target = quick_retrieve(db, models.Delivery, source_id=source_id, client_id=client_target.id)
     if not target:

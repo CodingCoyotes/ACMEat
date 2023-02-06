@@ -1,3 +1,6 @@
+"""
+Questo modulo contiene l'endpoint per la comunicazione tra il frontend della banca e la banca stessa
+"""
 from fastapi import APIRouter
 import requests
 from bank_intermediary.configuration import BANK_URI
@@ -13,9 +16,11 @@ router = APIRouter(
 
 
 @router.post("/", response_model=Response)
-def login(request: Request):
+def intermediary(request: Request):
     """
-    Provides initial sid
+    Redirects to the bank the soap request and returns it back
+    :param request: the soap request
+    :return: Response, the soap response
     """
     response = requests.post(BANK_URI, data=request.xml, headers={'content-type': 'text/xml',
                                                                     'SOAPAction': request.action})

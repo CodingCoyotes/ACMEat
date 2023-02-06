@@ -63,3 +63,5 @@ DB_URI = setting_required("DB_URI")
 # Variabili d'ambiente necessarie, ma non definite qui
 # BIND_IP
 # BIND_PORT
+# PRICE_PER_KM
+# GEOLOCATE_URL

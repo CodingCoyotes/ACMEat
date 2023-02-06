@@ -1,3 +1,6 @@
+"""
+Questo modulo contiene gli endpoint per la gestione dei clienti
+"""
 import binascii
 import os
 from uuid import UUID
@@ -29,7 +32,10 @@ router = APIRouter(
 async def read_clients(current_user: models.User = Depends(get_current_user),
                        db: Session = Depends(dep_dbsession)):
     """
-    Returns data about all clients.
+    Restituisce la lista dei clienti
+    :param current_user: l'utente attuale
+    :param db: la sessione di database
+    :return: List[acmedeliver.schemas.read.ClientRead], la lista dei clienti
     """
     if current_user.kind.value < UserType.admin.value:
         raise errors.Forbidden
@@ -40,7 +46,11 @@ async def read_clients(current_user: models.User = Depends(get_current_user),
 async def read_client(client_id: UUID, current_user: models.User = Depends(get_current_user),
                       db: Session = Depends(dep_dbsession)):
     """
-    Returns data about a selected client.
+    Restituisce i dettagli di un cliente
+    :param client_id: l'UUID del cliente
+    :param current_user: l'utente attuale
+    :param db: la sessione di database
+    :return: acmedeliver.schemas.full.ClientFull, il cliente
     """
     if current_user.kind.value < UserType.admin.value:
         raise errors.Forbidden
@@ -52,7 +62,11 @@ async def create_client(client: acmedeliver.schemas.edit.ClientEdit,
                         current_user: models.User = Depends(get_current_user),
                         db: Session = Depends(dep_dbsession)):
     """
-    Creates an account for a new client.
+    Aggiunge un cliente
+    :param client: il modello contenente i dati per la creazione del cliente
+    :param current_user: l'utente attuale
+    :param db: la sessione di database
+    :return: acmedeliver.schemas.full.ClientFull, il cliente
     """
     if current_user.kind.value < UserType.admin.value:
         raise errors.Forbidden
@@ -66,12 +80,12 @@ async def edit_client(edits: acmedeliver.schemas.edit.ClientEdit, client_id: UUI
                       current_user: models.User = Depends(get_current_user),
                       db: Session = Depends(dep_dbsession)):
     """
-    Updates the account of the logged in user
-    :param client_id:
-    :param current_user: the current user
-    :param edits: the pydantic schema that contains the edits
-    :param db: the database session
-    :return: the representation of the updated profile
+    Aggiorna i dati di un cliente
+    :param client_id: l'UUID del cliente
+    :param current_user: l'utente attuale
+    :param edits: il modello contenente le modifiche
+    :param db: la sessione di database
+    :return: acmedeliver.schemas.read.ClientRead, il cliente
     """
     if current_user.kind.value < UserType.admin.value:
         raise errors.Forbidden

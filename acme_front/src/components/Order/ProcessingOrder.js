@@ -44,7 +44,7 @@ function getSteps() {
         'Conferma da terzi',
         'Ordine cancellato',
         'Pagamento confermato',
-        'Pagamento cancellato',
+        'Pagamento effettutato', //6
         'Preparazione ordine in atto',
         'Il tuo ordine è stato spedito',
         'In consegna',

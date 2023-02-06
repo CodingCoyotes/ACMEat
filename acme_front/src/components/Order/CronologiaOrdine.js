@@ -6,6 +6,7 @@ import '../css/Dash.css'
 import OrderCard from "./OrderCard";
 
 const address = process.env.REACT_APP_BANK_ADDRESS
+const app_base_address = process.env.REACT_APP_FRONTEND_ADDRESS
 
 function getSteps() {
     return [
@@ -22,22 +23,22 @@ function getSteps() {
         'Consegnato'];
 }
 
-function DateToString(info){
+function DateToString(info) {
     const dateFormat = new Date(info * 1000)
-    let string =  "Il "+dateFormat.getDate()+
-        "/"+(dateFormat.getMonth()+1)+
-        "/"+dateFormat.getFullYear()+
-        " alle "+dateFormat.getHours()+
-        ":"+dateFormat.getMinutes()+
-        ":"+dateFormat.getSeconds();
-  return string;
+    let string = "Il " + dateFormat.getDate() +
+        "/" + (dateFormat.getMonth() + 1) +
+        "/" + dateFormat.getFullYear() +
+        " alle " + dateFormat.getHours() +
+        ":" + dateFormat.getMinutes() +
+        ":" + dateFormat.getSeconds();
+    return string;
 }
 
-export default function CronologiaOrdine(){
+export default function CronologiaOrdine() {
     const navigate = useNavigate()
     const {token, setToken} = useAppContext();
     const [user, setUser] = useState(null);
-    const [ordersList, setOrdersList]  = useState([]);
+    const [ordersList, setOrdersList] = useState([]);
     const steps = getSteps();
     const {state} = useLocation();
 
@@ -45,8 +46,7 @@ export default function CronologiaOrdine(){
         console.log("dashOrder")
         if (token === null) {
             navigate("/")
-        }
-        else if (user===null){
+        } else if (user === null) {
             getInfo();
         }
     }, [])
@@ -62,11 +62,11 @@ export default function CronologiaOrdine(){
         }
     }
 
-    async function handleCancel (order) {
+    async function handleCancel(order) {
         //e.preventDefault();
         console.log("sono in handle cancel")
         console.log(order);
-        let info ={
+        let info = {
             "date_order": order.date_order,
             "delivery_time": order.delivery_time,
             "restaurant_total": order.restaurant_total,
@@ -77,80 +77,92 @@ export default function CronologiaOrdine(){
         let response = await modifyOrder(token, info, order.id);
         if (response.status === 200) {
             let values = await response.json();
-        }
-        else{
+        } else {
             getInfo();
         }
     }
 
-    return(
+    return (
         <div className='container'>
-            <div >
-                <button type="button" className="btn btn-primary " onClick={event => {navigate("/dashutente")}}>
+            <div>
+                <button type="button" className="btn btn-primary " onClick={event => {
+                    navigate("/dashutente")
+                }}>
                     Indietro
                 </button>
             </div>
-                <div>
+            <div>
 
-                    <div className="fixed-nav">
-                        <h3>Hai effettutato {ordersList.length} ordini</h3>
-                    </div>
-
-                    <div className="list-grid">
-                        {(ordersList).slice(0, 5).map(item => (
-                            <div className="card">
-                                <div className="card-header">
-                                    <div>{DateToString(item.date_order)+ " | Stato dell'ordine: "+ steps[item.status]}</div>
-                                </div>
-                                <div className="card-body">
-                                    <ul className="list-group list-group-flush">
-                                        <li className="list-group-item">
-                                            <OrderCard orderId={item.id} ></OrderCard>
-                                        </li>
-                                        <li className="list-group-item">
-                                            Spesa ristorante: {item.restaurant_total}
-                                            {(item.deliverer_total !== null)? (<div>+ {item.deliverer_total} di spedizione</div>):(<div></div>)}
-                                        </li>
-                                        {(item.status === 3 || item.status === 6)?(
-                                            <li className="list-group-item">
-                                                {(item.status === 3)?(
-                                                    <button type="button" className="btn btn-primary short" onClick={event => {console.debug((item.restaurant_total + item.deliverer_total)); window.location.href = address + (Math.round((item.restaurant_total + item.deliverer_total)*100)/100) + "/127.0.0.1:3002_landingorder_" + item.id}}>
-                                                        Paga
-                                                    </button>
-                                                ): (<div></div>)}
-                                                {(item.status === 6)?(
-                                                    <button type="button" className="btn btn-primary short" onClick={event => {handleCancel(item) }}>
-                                                        Annulla
-                                                    </button>
-                                                ): (<div></div>)}
-                                            </li>
-                                        ):(<div></div>)}
-                                    </ul>
-                                </div>
-                            </div>
-                        ))}
-                        {(ordersList).slice(5, ordersList.length).map(item => (
-                            <div className="card">
-                                <div className="card-header">
-                                    <div>{DateToString(item.date_order)+ " | Stato dell'ordine: "+ steps[item.status]}</div>
-                                </div>
-                                <div className="card-body">
-                                    <ul className="list-group list-group-flush">
-                                        <li className="list-group-item">
-                                            Spesa ristorante: {item.restaurant_total}
-                                            {(item.deliverer_total !== null)? (<div>+ {item.deliverer_total} di spedizione</div>):(<div></div>)}
-                                        </li>
-                                        <li className="list-group-item">
-                                            <button type="button" className="btn btn-primary short" onClick={event => {navigate("/orderdetails", { state:item})}}>
-                                                Dettagli
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                <div className="fixed-nav">
+                    <h3>Hai effettutato {ordersList.length} ordini</h3>
                 </div>
+
+                <div className="list-grid">
+                    {(ordersList).slice(0, 5).map(item => (
+                        <div className="card">
+                            <div className="card-header">
+                                <div>{DateToString(item.date_order) + " | Stato dell'ordine: " + steps[item.status]}</div>
+                            </div>
+                            <div className="card-body">
+                                <ul className="list-group list-group-flush">
+                                    <li className="list-group-item">
+                                        <OrderCard orderId={item.id}></OrderCard>
+                                    </li>
+                                    <li className="list-group-item">
+                                        Spesa ristorante: {item.restaurant_total}
+                                        {(item.deliverer_total !== null) ? (
+                                            <div>+ {item.deliverer_total} di spedizione</div>) : (<div></div>)}
+                                    </li>
+                                    {(item.status === 3 || item.status === 6) ? (
+                                        <li className="list-group-item">
+                                            {(item.status === 3) ? (
+                                                <button type="button" className="btn btn-primary short"
+                                                        onClick={event => {
+                                                            console.debug((item.restaurant_total + item.deliverer_total));
+                                                            window.location.href = address + (Math.round((item.restaurant_total + item.deliverer_total) * 100) / 100) + "/" + app_base_address + "_landingorder_" + item.id
+                                                        }}>
+                                                    Paga
+                                                </button>
+                                            ) : (<div></div>)}
+                                            {(item.status === 6) ? (
+                                                <button type="button" className="btn btn-primary short"
+                                                        onClick={event => {
+                                                            handleCancel(item)
+                                                        }}>
+                                                    Annulla
+                                                </button>
+                                            ) : (<div></div>)}
+                                        </li>
+                                    ) : (<div></div>)}
+                                </ul>
+                            </div>
+                        </div>
+                    ))}
+                    {(ordersList).slice(5, ordersList.length).map(item => (
+                        <div className="card">
+                            <div className="card-header">
+                                <div>{DateToString(item.date_order) + " | Stato dell'ordine: " + steps[item.status]}</div>
+                            </div>
+                            <div className="card-body">
+                                <ul className="list-group list-group-flush">
+                                    <li className="list-group-item">
+                                        Spesa ristorante: {item.restaurant_total}
+                                        {(item.deliverer_total !== null) ? (
+                                            <div>+ {item.deliverer_total} di spedizione</div>) : (<div></div>)}
+                                    </li>
+                                    <li className="list-group-item">
+                                        <button type="button" className="btn btn-primary short" onClick={event => {
+                                            navigate("/orderdetails", {state: item})
+                                        }}>
+                                            Dettagli
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     )
 }

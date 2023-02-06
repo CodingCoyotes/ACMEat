@@ -9,6 +9,7 @@ import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
 const address = process.env.REACT_APP_BANK_ADDRESS
+const app_base_address = process.env.REACT_APP_FRONTEND_ADDRESS
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -105,7 +106,7 @@ export default function ProcessingOrder() {
         const order = await getOrd();
         console.debug(order)
         if (order.status === 3) {
-            window.location.href = address + (Math.round((order.restaurant_total + order.deliverer_total)*100)/100) + "/127.0.0.1:3002_landingorder_" + order.id;
+            window.location.href = address + (Math.round((order.restaurant_total + order.deliverer_total)*100)/100) + "/"+app_base_address+"_landingorder_" + order.id;
         }
         return;
     }

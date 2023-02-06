@@ -41,7 +41,7 @@ export default function LandingOrder(){
             "token": split[3]
         }
         let response = await payment(split[2], info, token_ls);
-        navigate("/cronologiaordine", {state:{param: user.orders}});
+        //navigate("/cronologiaordine", {state:{param: user.orders}});
     }
 
     async function getInfo() {

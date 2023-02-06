@@ -77,7 +77,8 @@ async def edit_client(edits: acmedeliver.schemas.edit.ClientEdit, client_id: UUI
         raise errors.Forbidden
     target = quick_retrieve(db, models.Client, id=client_id)
     target.name = edits.name
-    target.token = binascii.hexlify(os.urandom(10)).decode()
+    target.remote_api_key = edits.remote_api_key
+    target.api_url = edits.api_url
     db.commit()
     db.refresh(target)
     return target

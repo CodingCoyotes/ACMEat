@@ -10,7 +10,7 @@ export default function Delivery(props) {
     const [status, setStatus] = useState("???")
 
     useEffect((e)=>{
-        let d = new Date(props.delivery.delivery_time)
+        let d = new Date(props.delivery.delivery_time*1000)
         setDate(`${d.getDate()}/${d.getMonth()+1}/${d.getUTCFullYear()} - ${d.getHours()}:${d.getMinutes()}`)
         switch (props.delivery.status){
             case 1:

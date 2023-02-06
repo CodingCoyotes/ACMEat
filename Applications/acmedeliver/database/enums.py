@@ -10,4 +10,3 @@ class DeliveryStatus(enum.Enum):
     waiting = 1
     working = 2
     delivered = 3
-    paid = 4

@@ -87,7 +87,7 @@ class ClientEdit(base.ACMEORMModel):
     remote_api_key: UUID
 
 
-class ClientRemoveRequest(base.ACMEORMModel):
+class ClientRequest(base.ACMEORMModel):
     api_key: str
 
 

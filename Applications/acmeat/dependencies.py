@@ -24,7 +24,7 @@ def check_address(address):
     :param address: l'indirizzo
     :return: True/False
     """
-    r = requests.post(GEOLOCATE_URL + "/api/geo/v1/distance",
+    r = requests.post(GEOLOCATE_URL + "/api/geo/v1/coordinates",
                       headers={"Content-Type": "application/json",
                                "Accept": "application/json"}, data=json.dumps({
             "nation": address["nation"],

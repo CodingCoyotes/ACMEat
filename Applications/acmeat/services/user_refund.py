@@ -40,7 +40,6 @@ def do_refund(sid, token):
     response = requests.post(BANK_URI, data=generate_soap(payload), headers={'content-type': 'text/xml',
                                                                              'SOAPAction': '"/cancelOperation"'})
     xml = BeautifulSoup(response.content, 'xml')
-    print(xml.contents)
     result = xml.find("successfull").text
     return result
 

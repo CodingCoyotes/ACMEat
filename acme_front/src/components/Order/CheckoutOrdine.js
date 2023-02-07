@@ -141,13 +141,15 @@ export default function CheckoutOrdine() {
          };
          console.log(info);
         const response = await registerNewOrder(restaurantId,info, token);
+        console.log(response.status)
         if (response.status === 200) {
             let values = await response.json()
-        }
-        else{
             console.log("response")
             console.log(response)
-            navigate("/processingorder", { state: { param: response.id}});
+            navigate("/processingorder", { state: { param: values.id}});
+        }
+        else{
+            alert("Qualcosa è andato storto. Verificare la validità dei dati.")
         }
     }
 

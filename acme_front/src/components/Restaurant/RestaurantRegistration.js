@@ -302,10 +302,12 @@ export default function RestaurantRegistration() {
         const response = await registerNewRestaurant(token,obj);
         if (response.status === 200) {
             let values = await response.json()
-        }
-        else{
             navigate("/dashboard");
         }
+        else{
+            alert("Errore durante la creazione del ristorante. Verificare la validità dei dati.")
+        }
+
     }
 
     async function modRest(restaurantId){

@@ -15,7 +15,7 @@ from acmedeliver.crud import *
 from acmedeliver.dependencies import dep_dbsession
 import acmedeliver.errors as errors
 from acmedeliver.database.enums import UserType, DeliveryStatus
-from acmedeliver.configuration import setting_required
+from acmedeliver.configuration import setting_required, MAX_DISTANCE
 import json
 from acmedeliver.responses import NO_CONTENT
 import random
@@ -112,9 +112,12 @@ async def create_delivery(delivery_request: acmedeliver.schemas.edit.ClientDeliv
     users = db.query(models.User).filter_by(kind=UserType.worker).all()
     if len(users) == 0:
         raise errors.ResourceNotFound
+    distance = calculate_distance(delivery_request.request.source, delivery_request.request.receiver)
+    if distance > MAX_DISTANCE:
+        raise errors.ResourceNotFound
     user = random.choice(users)
     return quick_create(db, models.Delivery(
-        cost=round(calculate_cost(delivery_request.request.source, delivery_request.request.receiver), 2),
+        cost=round(calculate_cost(distance), 2),
         receiver=delivery_request.request.receiver,
         delivery_time=delivery_request.request.delivery_time,
         deliverer_id=user.id, client_id=target.id,
@@ -135,7 +138,7 @@ async def preview_delivery(delivery_request: acmedeliver.schemas.edit.ClientDeli
     target = quick_retrieve(db, models.Client, api_key=delivery_request.api_key)
     users = db.query(models.User).filter_by(kind=UserType.worker).all()
     distance = calculate_distance(delivery_request.request.source, delivery_request.request.receiver)
-    if not target or len(users) == 0 or distance > 15:
+    if not target or len(users) == 0 or distance > MAX_DISTANCE:
         raise errors.Forbidden
     return acmedeliver.schemas.edit.DeliveryPreviewCost(
         cost=round(distance, 2))

@@ -36,6 +36,7 @@ export default function Order(props) {
                 break;
             case 6:
                 setStatus("Pagato, in attesa dell'attivazione")
+                break;
             case 7:
                 setStatus("In preparazione")
                 break;
@@ -94,7 +95,7 @@ export default function Order(props) {
         }
     }
 
-    if(props.order.status === 4){
+    if(props.order.status === 4 || props.order.status === 10){
         return (<></>)
     }
 
@@ -103,7 +104,7 @@ export default function Order(props) {
             <Chapter>
                 ID: {props.order.id}
                 <div>
-                    {creationDate}
+                    {deliveryDate}
                 </div>
                 <div>
                     {status}
@@ -151,10 +152,14 @@ export default function Order(props) {
                     <p>
                         Valore ordinazione: {props.order.restaurant_total} €
                     </p>
+
                     {details ? (
                         <div>
                             <p>
                                 Società di consegna: {details.deliverer ? (<>{details.deliverer.name}</>):(<>Non ancora selezionata</>)}
+                            </p>
+                            <p>
+                                Cliente: {details.user.name} {details.user.surname}
                             </p>
                             {details.contents ? (
                             <Panel>

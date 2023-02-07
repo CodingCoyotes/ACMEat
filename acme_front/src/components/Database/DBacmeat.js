@@ -224,7 +224,6 @@ export async function registerNewOrder(order_id, info, token) {
     },
     body: JSON.stringify(info)
   })
-      .then(data => data.json())
 }
 
 //Ottiene un ordine dal suo id

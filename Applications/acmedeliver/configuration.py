@@ -59,6 +59,7 @@ def setting_optional(name) -> typing.Optional[str]:
 # Variabili d'ambiente necessarie
 JWT_KEY = setting_required("JWT_KEY")
 DB_URI = setting_required("DB_URI")
+MAX_DISTANCE = setting_required("MAX_DISTANCE")
 
 # Variabili d'ambiente necessarie, ma non definite qui
 # BIND_IP

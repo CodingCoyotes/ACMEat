@@ -98,7 +98,6 @@ def payment_received(order_id, success, paid, payment_success, TTW):
                     TTW.value = f"PT10S"
                 else:
                     TTW.value = f"PT{difference.total_seconds()-3600}S"
-                print(TTW.value)
                 order.status = OrderStatus.w_cancellation
                 payment.verified = True
                 db.commit()

@@ -180,8 +180,8 @@ allcolors={BrickRed}
 
 Scopo di questa relazione è quello di descrivere il lavoro fatto nelle varie fasi di modellazione e sviluppo del progetto di Ingegneria del Software Orientata ai Servizi, la cui descrizione del dominio e del problema è riportata nella Sez.~\ref{sez:ddp}.\\
 Le fasi di modellazione vengono descritte a partire dalla Sez.~\ref{sez:modellazione}, in cui viene esposta la modellazione delle comunicazioni avvenuta mediante un diagramma di coreografia dell'intero scenario, raffinata iterativamente allo scopo di migliorare quanto possibile le sue proprietà di correctedness, altresì riportate, e la successiva proiezione in un sistema di ruoli; viene inoltre riportato il corrispondente diagramma di coreografia BPMN.\\
-Tale lavoro di modellazione prosegue nella Sez.~\ref{sez:documentazione} con la realizzazione di un diagramma di collaborazione BPMN rappresentante l'intera realtà descritta, compresi i dettagli di ciascun partecipante. Questo diagramma è pensato a scopo documentativo e per tale motivo è stato scelto di riportarlo suddiviso in varie parti, ciascuna con un focus differente relativamente alle varie attività descritte e dettagliatamente commentata.\\
-La Sez.~\ref{sez:progettazione} descrive poi la fase di progettazione della SOA per la realizzazione del sistema, documentata per mezzo di diagrammi UML.\\
+Tale lavoro di modellazione prosegue nella Sez.~\ref{sez:documentazione} con la realizzazione di un diagramma di collaborazione BPMN rappresentante l'intera realtà descritta, compresi i dettagli di ciascun partecipante. Questo diagramma è pensato a scopo documentativo e per tale motivo è stato scelto di riportarlo suddiviso in varie parti, ciascuna con un focus differente relativamente alle varie attività descritte e brevemente commentata.\\
+La Sez.~\ref{sez:progettazione} descrive poi la fase di progettazione della SOA per la realizzazione del sistema, documentata per mezzo di diagrammi UML e usando TinySOA come profiling. Vengono inoltre riportati i vari diagrammi ER delle basi di dati che verranno poi utilizzate dalle applicazioni.\\
 Infine, la Sez.~\ref{sez:sviluppo} descrive il sistema sviluppato, analizzando brevemente il funzionamento di ciascun componente, come configurarlo, e come utlizzare l'applicazione in ambiente di testing, nonché alcune istruzioni illustrative su come effettuare un eventuale deployment in produzione.
 
 \clearpage
@@ -426,115 +426,6 @@ CoreografiaAnnullamentoOrdine :== ((
 
 \clearpage
 
-\subsubsection{Banca}
-
-\begin{lstlisting}[caption=Proiezione della coerografia relativamente alla banca, escapeinside={(*@}{@*)}]
-Coreografia :== (
-	ModificaInformazioniLocali |
-	CoreografiaOrdine
-)
-
-ModificaInformazioniLocali :==  (
-	1 ;
-	// Sono passate le 10 ? (Si/No)
-	1 +
-	1
-)
-
-CoreografiaOrdine :==   (
-	1 ;
-	1 ;
-	1 ;
-	1 ;
-	1 ;
-	(
-		1	// Ristorante non disponibile
-	) + (
-		(
-			1 ;
-			1 + 1	// 1: timeout
-		)* ;	// Per ogni SDC entro 10 km
-		(	// Nessun SDC disponibile
-			1 ;
-			1 ;
-			1
-		) + (
-			1 ;	// SDC costo minore
-			1 ;
-			1 ;
-			(
-				Login@Cliente ;
-				(*@$\overline{ConfermaLogin}$@*)@Cliente ;
-				Pagamento@Cliente ;
-				(*@$\overline{InvioTokenCliente}$@*)@Cliente ;
-				Logout@Cliente ;
-			) + 1 ;	// 1: timeout
-			(	// Timeout
-				CoreografiaAnnullamentoOrdine ;
-				1
-			) + (
-				1 ;
-				Login@ACMEat ;
-				(*@$\overline{ConfermaLogin}$@*)@ACMEat ;
-				RichiestaValidita@ACMEat ;
-				ValiditaToken : Banca -> ACMEat ;
-				Logout@ACMEat ;
-				(	// Token non valido
-					CoreografiaAnnullamentoOrdine ;
-					1
-				) + (
-					(
-						1 ;
-						1
-					) | (
-						1 ;
-						1
-					) ;
-					1 ;
-					(	// Manca piu' di un'ora, annullare ?
-						(	// Si
-							1 ;
-							CoreografiaAnnullamentoOrdine |
-							(
-								Login@ACMEat ;
-								(*@$\overline{ConfermaLogin}$@*)@ACMEat ;
-								AnnullamentoPagamento@ACMEat ;
-								(*@$\overline{NotificaAnnullamentoPagamento}$@*)@ACMEat ;
-								Logout@ACMEat
-							)
-						) + 1	// 1: no
-					) + ( 	// Manca meno di un'ora
-						(
-							Login@ACMEat ;
-							(*@$\overline{ConfermaLogin}$@*)@ACMEat ;
-							PagamentoRistorante@ACMEat ;
-							(*@$\overline{ConfermaPagamentoRistorante}$@*)@ACMEat ;
-							Logout@ACMEat
-						) | (
-							Login@ACMEat ;
-							(*@$\overline{ConfermaLogin}$@*)@ACMEat ;
-							PagamentoSDC@ACMEat ;
-							(*@$\overline{ConfermaPagamentoSDC}$@*)@ACMEat ;
-							Logout@ACMEat
-						);
-						1 ;
-						1 ;
-						1
-					)
-	...
-)
-
-CoreografiaAnnullamentoOrdine :== ((
-		1 ;
-		1
-	) | ( 
-		1 ;
-		1
-))
-\end{lstlisting}
-
-\clearpage
-
 \subsubsection{Cliente}
 
 \begin{lstlisting}[caption=Proiezione della coreografia relativamente al cliente, escapeinside={(*@}{@*)}]
@@ -644,9 +535,9 @@ CoreografiaAnnullamentoOrdine :== ((
 
 \clearpage
 
-\subsubsection{Fattorino}
+\subsubsection{Banca}
 
-\begin{lstlisting}[caption=Proiezione della coreografia relativamente al fattorino, escapeinside={(*@}{@*)}]
+\begin{lstlisting}[caption=Proiezione della coerografia relativamente alla banca, escapeinside={(*@}{@*)}]
 Coreografia :== (
 	ModificaInformazioniLocali |
 	CoreografiaOrdine
@@ -681,22 +572,22 @@ CoreografiaOrdine :==   (
 			1 ;
 			1 ;
 			(
-				1 ;
-				1 ;
-				1 ;
-				1 ;
-				1
+				Login@Cliente ;
+				(*@$\overline{ConfermaLogin}$@*)@Cliente ;
+				Pagamento@Cliente ;
+				(*@$\overline{InvioTokenCliente}$@*)@Cliente ;
+				Logout@Cliente ;
 			) + 1 ;	// 1: timeout
 			(	// Timeout
 				CoreografiaAnnullamentoOrdine ;
 				1
 			) + (
 				1 ;
-				1 ;
-				1 ;
-				1 ;
-				1 ;
-				1 |
+				Login@ACMEat ;
+				(*@$\overline{ConfermaLogin}$@*)@ACMEat ;
+				RichiestaValidita@ACMEat ;
+				ValiditaToken : Banca -> ACMEat ;
+				Logout@ACMEat ;
 				(	// Token non valido
 					CoreografiaAnnullamentoOrdine ;
 					1
@@ -714,30 +605,30 @@ CoreografiaOrdine :==   (
 							1 ;
 							CoreografiaAnnullamentoOrdine |
 							(
-								1 ;
-								1 ;
-								1 ;
-								1 ;
-								1
+								Login@ACMEat ;
+								(*@$\overline{ConfermaLogin}$@*)@ACMEat ;
+								AnnullamentoPagamento@ACMEat ;
+								(*@$\overline{NotificaAnnullamentoPagamento}$@*)@ACMEat ;
+								Logout@ACMEat
 							)
 						) + 1	// 1: no
 					) + ( 	// Manca meno di un'ora
 						(
-							1 ;
-							1 ;
-							1 ;
-							1 ;
-							1
+							Login@ACMEat ;
+							(*@$\overline{ConfermaLogin}$@*)@ACMEat ;
+							PagamentoRistorante@ACMEat ;
+							(*@$\overline{ConfermaPagamentoRistorante}$@*)@ACMEat ;
+							Logout@ACMEat
 						) | (
-							1 ;
-							1 ;
-							1 ;
-							1 ;
-							1
+							Login@ACMEat ;
+							(*@$\overline{ConfermaLogin}$@*)@ACMEat ;
+							PagamentoSDC@ACMEat ;
+							(*@$\overline{ConfermaPagamentoSDC}$@*)@ACMEat ;
+							Logout@ACMEat
 						);
-						ConsegnaMerceFattorino@Fattorino ;
-						(*@$\overline{ConsegnaMerceCliente}$@*)Cliente ;
-						(*@$\overline{ConfermaRicevutaSpedizione}$@*)@ACMEat
+						1 ;
+						1 ;
+						1
 					)
 	...
 )
@@ -971,6 +862,115 @@ CoreografiaAnnullamentoOrdine :== ((
 
 \clearpage
 
+\subsubsection{Fattorino}
+
+\begin{lstlisting}[caption=Proiezione della coreografia relativamente al fattorino, escapeinside={(*@}{@*)}]
+Coreografia :== (
+	ModificaInformazioniLocali |
+	CoreografiaOrdine
+)
+
+ModificaInformazioniLocali :==  (
+	1 ;
+	// Sono passate le 10 ? (Si/No)
+	1 +
+	1
+)
+
+CoreografiaOrdine :==   (
+	1 ;
+	1 ;
+	1 ;
+	1 ;
+	1 ;
+	(
+		1	// Ristorante non disponibile
+	) + (
+		(
+			1 ;
+			1 + 1	// 1: timeout
+		)* ;	// Per ogni SDC entro 10 km
+		(	// Nessun SDC disponibile
+			1 ;
+			1 ;
+			1
+		) + (
+			1 ;	// SDC costo minore
+			1 ;
+			1 ;
+			(
+				1 ;
+				1 ;
+				1 ;
+				1 ;
+				1
+			) + 1 ;	// 1: timeout
+			(	// Timeout
+				CoreografiaAnnullamentoOrdine ;
+				1
+			) + (
+				1 ;
+				1 ;
+				1 ;
+				1 ;
+				1 ;
+				1 |
+				(	// Token non valido
+					CoreografiaAnnullamentoOrdine ;
+					1
+				) + (
+					(
+						1 ;
+						1
+					) | (
+						1 ;
+						1
+					) ;
+					1 ;
+					(	// Manca piu' di un'ora, annullare ?
+						(	// Si
+							1 ;
+							CoreografiaAnnullamentoOrdine |
+							(
+								1 ;
+								1 ;
+								1 ;
+								1 ;
+								1
+							)
+						) + 1	// 1: no
+					) + ( 	// Manca meno di un'ora
+						(
+							1 ;
+							1 ;
+							1 ;
+							1 ;
+							1
+						) | (
+							1 ;
+							1 ;
+							1 ;
+							1 ;
+							1
+						);
+						ConsegnaMerceFattorino@Fattorino ;
+						(*@$\overline{ConsegnaMerceCliente}$@*)Cliente ;
+						(*@$\overline{ConfermaRicevutaSpedizione}$@*)@ACMEat
+					)
+	...
+)
+
+CoreografiaAnnullamentoOrdine :== ((
+		1 ;
+		1
+	) | ( 
+		1 ;
+		1
+))
+\end{lstlisting}
+
+\clearpage
+
 \subsection{Diagramma di coreografia BPMN}
 
 Al termine di questa prima fase è stato realizzato un diagramma di coreografia BPMN rappresentante la medesima coreografia in Lst.~\ref{coreo}. Questo diagramma si è rilevato utile nelle fasi successive in quanto più visivo e semplice da leggere.
@@ -995,94 +995,105 @@ Al termine di questa prima fase è stato realizzato un diagramma di coreografia 
 \section{Documentazione}
 \label{sez:documentazione}
 
-Durante la seconda fase di lavoro è stato realizzanto un diagramma di collaborazione BPMN (Fig.~\ref{bpmn}) con l'obiettivo di modellare l'intera realtà descritta a scopo documentativo, compresi i dettagli di ogni partecipante. Tale diagramma e la relativa export \verb|.png| sono forniti in allegato a questa relazione.
+Durante la seconda fase di lavoro è stato realizzanto un diagramma di collaborazione BPMN (Fig.~\ref{bpmn}) con l'obiettivo di modellare l'intera realtà descritta a scopo documentativo, compresi i dettagli di ogni partecipante. Questo diagramma è stato suddiviso in diverse parti per facilitarne la leggibilità e la consultazione - riportate nelle Sez.~\ref{bpmn:acmeat}, \ref{bpmn:bank}, \ref{bpmn:restaurant} e \ref{bpmn:deliver}. Per ogni figura, le pool coinvolte sono specificate nella caption (tranne nel caso del cliente, il cui comportamento è mostrato sempre in relazione ad ACMEat), così come una breve descrizione di quale parte del processo è modellata. Tale diagramma è stato reso il più possibile compliant con la coreografia in Lst.~\ref{coreo} precedentemente realizzata. E' stato scelto di documentarla il più possibile ma non rendere eseguibili le pool, lasciando la raffinazione a un diverso diagramma BPMN che offrisse capabilities attraverso il BPMS Camunda da sviluppare in una fase successiva.
 
-\begin{figure}[!ht]
+\subsection{Diagramma di collaborazione BPMN}
+
+\begin{figure}[H]
 \includegraphics[width=\textwidth]{bpmn}
-\caption{Diagramma di collaborazione BPMN}
+\caption{Diagramma di collaborazione BPMN dello scenario}
 \label{bpmn}
 \end{figure}
 
-Questo diagramma è stato suddiviso in diverse parti per facilitarne la leggibilità e la consultazione - riportate di seguito. Per ogni figura, le pool coinvolte sono specificate nella caption (tranne nel caso del cliente, il cui comportamento è mostrato in relazione ad ACMEat), così come una breve descrizione di quale parte del processo è modellata. Tale diagramma è stato reso il più possibile compliant con la coreografia in Lst.~\ref{coreo} precedentemente realizzata. E' stato scelto di documentarla il più possibile ma non rendere eseguibili le pool, lasciando la raffinazione a un diverso diagramma BPMN che offrisse capabilities attraverso il BPMS Camunda da sviluppare in una fase successiva.
+\clearpage
 
-\begin{figure}[!ht]
-\begin{center}
-\fbox{\includegraphics[width=\textwidth]{bpmn1}}
+\subsection{ACMEat e cliente}
+\label{bpmn:acmeat}
+
+\begin{figure}[H]
+\centering
+\fbox{\includegraphics[scale=0.24]{bpmn1}}
 \caption{Scambio di messaggi iniziale fra un cliente e ACMEat}
-\end{center}
 \end{figure}
 
-\begin{figure}[!ht]
-\begin{center}
-\fbox{\includegraphics[width=\textwidth]{bpmn2}}
+\begin{figure}[H]
+\centering
+\fbox{\includegraphics[scale=0.19]{bpmn2}}
 \caption{Richiesta disponibilità locale e servizi di consegna - lato ACMEat}
-\end{center}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[p]
 \begin{center}
 \fbox{\includegraphics[width=\textwidth]{bpmn3}}
 \caption{Scelta servizio di consegna e redirezione pagamento - lato ACMEat}
 \end{center}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[p]
 \begin{center}
 \fbox{\includegraphics[width=\textwidth]{bpmn4}}
 \caption{Rimbalzo del token per convalida - lato ACMEat}
 \end{center}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[p]
 \begin{center}
 \fbox{\includegraphics[width=\textwidth]{bpmn5}}
 \caption{Gestione annullamento ordine - lato ACMEat}
 \end{center}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[p]
 \begin{center}
 \fbox{\includegraphics[width=\textwidth]{bpmn6}}
 \caption{Gestione attivazione ordine - lato ACMEat}
 \end{center}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[p]
 \begin{center}
 \fbox{\includegraphics[width=\textwidth]{bpmn7}}
 \caption{Gestione annullamento ordine da parte del cliente/gestione pagamenti - lato ACMEat}
 \end{center}
 \end{figure}
 
-\begin{figure}[!ht]
+\clearpage
+
+\begin{figure}[H]
 \begin{center}
-\fbox{\includegraphics[width=\textwidth]{bpmn8}}
+\fbox{\includegraphics[scale=0.25]{bpmn8}}
 \caption{Gestione richiesta modifica informazioni locali - lato ACMEat}
 \end{center}
 \end{figure}
 
-\begin{figure}[!ht]
+\subsection{Banca}
+\label{bpmn:bank}
+
+\begin{figure}[H]
 \begin{center}
 \fbox{\includegraphics[width=\textwidth]{bpmn9}}
 \caption{Gestione pagamento cliente - lato banca}
 \end{center}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[H]
 \begin{center}
 \fbox{\includegraphics[width=\textwidth]{bpmn10}}
 \caption{Gestione verifica token - lato banca}
 \end{center}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[H]
 \begin{center}
 \fbox{\includegraphics[width=\textwidth]{bpmn11}}
 \caption{Gestione rimborso/pagamento ristorante e servizio di consegna - lato banca}
 \end{center}
 \end{figure}
 
-\begin{figure}[!ht]
+\subsection{Ristorante}
+\label{bpmn:restaurant}
+
+\begin{figure}[H]
 \begin{center}
 \fbox{\includegraphics[width=\textwidth]{bpmn12}}
 \caption{Gestione richiesta modifica informazioni locali/notifica (non) disonibilità - lato ristorante}
@@ -1096,35 +1107,40 @@ Questo diagramma è stato suddiviso in diverse parti per facilitarne la leggibil
 %\end{center}
 %\end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[H]
 \begin{center}
 \fbox{\includegraphics[width=\textwidth]{bpmn14}}
 \caption{Gestione ordine - lato ristorante}
 \end{center}
 \end{figure}
 
-\begin{figure}[!ht]
+\subsection{Società di consegna e fattorino}
+\label{bpmn:deliver}
+
+\begin{figure}[H]
 \begin{center}
 \fbox{\includegraphics[width=\textwidth]{bpmn15}}
 \caption{Gestione notifica disponibilità società di consegna - lato società di consegna}
 \end{center}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[H]
 \begin{center}
 \fbox{\includegraphics[width=\textwidth]{bpmn16}}
 \caption{Gestione creazione ordine - lato società di consegna}
 \end{center}
 \end{figure}
 
-\begin{figure}[!ht]
+\clearpage
+
+\begin{figure}[p]
 \begin{center}
 \fbox{\includegraphics[width=\textwidth]{bpmn17}}
 \caption{Gestione annullamento/attivazione ordine - società di consegna}
 \end{center}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[p]
 \begin{center}
 \fbox{\includegraphics[width=\textwidth]{bpmn18}}
 \caption{Gestione consegna da parte di società di consegna e fattorino}

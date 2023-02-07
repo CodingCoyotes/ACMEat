@@ -9,12 +9,12 @@ from acmeat.database import models
 from acmeat.database.db import Session, engine
 from acmeat.database.enums import UserType
 
-from acmeat.routers.api.users.v1 import users
-from acmeat.routers.api.restaurants.v1 import restaurants
-from acmeat.routers.api.menus.v1 import menus
-from acmeat.routers.api.cities.v1 import cities
-from acmeat.routers.api.deliverers.v1 import deliverers
-from acmeat.routers.api.orders.v1 import orders
+from acmeat.routers.api.user.v1 import user
+from acmeat.routers.api.restaurant.v1 import restaurant
+from acmeat.routers.api.menu.v1 import menu
+from acmeat.routers.api.city.v1 import city
+from acmeat.routers.api.deliverer.v1 import deliverer
+from acmeat.routers.api.order.v1 import order
 
 from acmeat.configuration import setting_required
 from acmeat.errors import *
@@ -24,12 +24,12 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-app.include_router(users.router)
-app.include_router(restaurants.router)
-app.include_router(menus.router)
-app.include_router(cities.router)
-app.include_router(deliverers.router)
-app.include_router(orders.router)
+app.include_router(user.router)
+app.include_router(restaurant.router)
+app.include_router(menu.router)
+app.include_router(city.router)
+app.include_router(deliverer.router)
+app.include_router(order.router)
 
 origins = ["*"]
 

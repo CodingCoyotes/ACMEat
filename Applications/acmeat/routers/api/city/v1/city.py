@@ -20,9 +20,9 @@ from acmeat.dependencies import dep_dbsession
 import acmeat.errors as errors
 
 router = APIRouter(
-    prefix="/api/cities/v1",
+    prefix="/api/city/v1",
     tags=[
-        "Cities v1",
+        "City v1",
     ],
 )
 

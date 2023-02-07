@@ -12,7 +12,7 @@ def activate_delivery(order_id, success, paid, payment_success, TTW):
     with Session(future=True) as db:
         order = db.query(Order).filter_by(id=order_id.value).first()
         deliverer: Deliverer = order.deliverer
-        r = requests.post(deliverer.api_url + "/api/delivery/v1/" + order_id.value + "/confirm",
+        r = requests.put(deliverer.api_url + "/api/delivery/v1/confirm" + order_id.value,
                           headers={"Content-Type": "application/json",
                                    "Accept": "application/json"},
                           data=json.dumps(

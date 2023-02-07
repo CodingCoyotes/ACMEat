@@ -33,24 +33,6 @@ export default function AdminPanel() {
         }
     }
 
-    async function search() {
-        let response = await fetch(schema + address + "/api/delivery/v1/" + id, {
-            method: "GET",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': "Bearer " + token,
-                'Access-Control-Allow-Origin': process.env.DOMAIN
-            },
-        });
-        if (response.status === 200) {
-            let values = await response.json()
-            setResult(values)
-        }
-        else{
-            alert("Impossibile trovare la richiesta.")
-        }
-    }
 
     useEffect(() => {
         getUsers()
@@ -60,16 +42,6 @@ export default function AdminPanel() {
     return (
         <div style={{minWidth: "unset"}}>
             <Heading level={3}>Pannello amministrativo</Heading>
-            <Form>
-                <Form.Row>
-                    <Form.Field onSimpleChange={e => setId(e)} value={id} required={true}
-                                placeholder={"UUID"}>
-                    </Form.Field>
-                    <Button onClick={event => {
-                        search()
-                    }}>Cerca</Button>
-                </Form.Row>
-            </Form>
             {result ? (
                 <div>
                     <Order delivery={result}/>

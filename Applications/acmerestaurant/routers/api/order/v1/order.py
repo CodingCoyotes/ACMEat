@@ -16,9 +16,9 @@ from acmerestaurant.configuration import ACME_EMAIL, ACME_PASSWORD, ACME_RESTAUR
 import requests
 
 router = APIRouter(
-    prefix="/api/orders/v1",
+    prefix="/api/order/v1",
     tags=[
-        "Orders v1",
+        "Order v1",
     ],
 )
 
@@ -44,7 +44,7 @@ def read_orders(db: Session = Depends(dep_dbsession),
     :return: typing.List[acmerestaurant.schemas.read.OrderRead], la lista degli ordini
     """
     token = get_access_token()
-    orders = requests.get(ACME_URL + "/api/orders/v1/" + ACME_RESTAURANT_ID,
+    orders = requests.get(ACME_URL + "/api/order/v1/" + ACME_RESTAURANT_ID,
                           headers={"Authorization": "Bearer " + token['access_token']})
     if orders.status_code != 200:
         raise errors.Forbidden
@@ -62,7 +62,7 @@ def read_order(order_id: UUID, db: Session = Depends(dep_dbsession),
     :return: acmerestaurant.schemas.full.OrderFull, l'ordine
     """
     token = get_access_token()
-    order = requests.get(ACME_URL + "/api/orders/v1/details/" + str(order_id),
+    order = requests.get(ACME_URL + "/api/order/v1/details/" + str(order_id),
                          headers={"Authorization": "Bearer " + token['access_token']})
     if order.status_code != 200:
         raise errors.Forbidden
@@ -82,7 +82,7 @@ def edit_order(order_id: UUID, edits: acmerestaurant.schemas.edit.OrderEdit,
     :return: acmerestaurant.schemas.read.OrderRead, l'ordine aggiornato
     """
     token = get_access_token()
-    order = requests.put(ACME_URL + "/api/orders/v1/" + str(order_id),
+    order = requests.put(ACME_URL + "/api/order/v1/" + str(order_id),
                          headers={"Authorization": "Bearer " + token['access_token'],
                                   "Content-Type": "application/json",
                                   "Accept": "application/json"}, data=edits.json())

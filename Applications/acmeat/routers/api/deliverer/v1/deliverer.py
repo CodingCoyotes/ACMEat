@@ -21,9 +21,9 @@ from acmeat.dependencies import dep_dbsession
 import acmeat.errors as errors
 
 router = APIRouter(
-    prefix="/api/deliverers/v1",
+    prefix="/api/deliverer/v1",
     tags=[
-        "Deliverers v1",
+        "Deliverer v1",
     ],
 )
 

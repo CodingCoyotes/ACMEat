@@ -8,9 +8,9 @@ from acmerestaurant.database import models
 from acmerestaurant.database.db import Session, engine
 from acmerestaurant.database.enums import UserType
 
-from acmerestaurant.routers.api.users.v1 import users
+from acmerestaurant.routers.api.user.v1 import user
 from acmerestaurant.routers.api.server.v1 import server
-from acmerestaurant.routers.api.orders.v1 import orders
+from acmerestaurant.routers.api.order.v1 import order
 
 from acmerestaurant.configuration import setting_required
 from acmerestaurant.errors import *
@@ -20,9 +20,9 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-app.include_router(users.router)
+app.include_router(user.router)
 app.include_router(server.router)
-app.include_router(orders.router)
+app.include_router(order.router)
 
 origins = ["*"]
 

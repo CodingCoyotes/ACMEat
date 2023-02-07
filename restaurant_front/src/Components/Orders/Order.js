@@ -54,7 +54,7 @@ export default function Order(props) {
     }, [props.order, details])
 
     async function getDetails(){
-        const response = await fetch(schema + address + "/api/orders/v1/"+props.order.id, {
+        const response = await fetch(schema + address + "/api/order/v1/"+props.order.id, {
             method: "GET",
             headers: {
                 'Accept': 'application/json',
@@ -75,7 +75,7 @@ export default function Order(props) {
 
     async function updateStatus(status){
 
-        const response = await fetch(schema + address + "/api/orders/v1/"+props.order.id, {
+        const response = await fetch(schema + address + "/api/order/v1/"+props.order.id, {
             method: "PUT",
             headers: {
                 'Accept': 'application/json',

@@ -142,7 +142,7 @@ async def edit_delivery_status(delivery_id: UUID,
     :return: acmedeliver.schemas.read.DeliveryRead, la consegna aggiornata
     """
     delivery = quick_retrieve(db, models.Delivery, id=delivery_id)
-    response = requests.put(delivery.client.api_url + "/api/deliverers/v1/delivery/" + str(delivery.source_id),
+    response = requests.put(delivery.client.api_url + "/api/deliverer/v1/delivery/" + str(delivery.source_id),
                             headers={"Content-Type": "application/json",
                                      "Accept": "application/json"},
                             data=acmedeliver.schemas.edit.ApiKey(api_key=delivery.client.remote_api_key).json())
@@ -153,7 +153,7 @@ async def edit_delivery_status(delivery_id: UUID,
     return delivery
 
 
-@router.post("/{source_id}/confirm", response_model=acmedeliver.schemas.read.DeliveryRead)
+@router.put("/confirm/{source_id}", response_model=acmedeliver.schemas.read.DeliveryRead)
 async def delivery_confirm(source_id: UUID, api_key: acmedeliver.schemas.edit.ClientRequest,
                            db: Session = Depends(dep_dbsession)):
     """

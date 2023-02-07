@@ -52,7 +52,6 @@ main
 			} else {
 				lResponse.message = "You are logged in.";
 				lResponse.successfull = true
-				//println@Console("User " + username + " logged in.")() // DEBUG
 			}
 		}
 	};
@@ -82,7 +81,6 @@ main
 						}
 					)(dbresponse.status)
 			}
-			//println@Console( "User " + username + " withdrawn: " + wRequest.amount )() // DEBUG
 		}
 		[ deposit( dRequest )] {
 			synchronized( db_access ) {
@@ -109,7 +107,6 @@ main
 						}
 					)(dbresponse.status)
 			}
-			//println@Console( "User " + username + " deposited: " + dRequest.amount )() // DEBUG
 		}
 		[ report( rRequest )( rResponse ) {
 			rResponse.sid = rRequest.sid;
@@ -202,20 +199,7 @@ main
 				}
 			}
 		}]
-		[ logout( request )] { 
-			//println@Console("User " + username + " logged out.")(); // DEBUG
-			keepRunning = false
-		}
-
-		// ACMEAT
-		// ACMEAT dice al Client di pagare e si mette in attesa di ricevere il token
-		// Il Client viene rediretto al pagamento, inserisce i suoi dati e quando ha pagato la banca invia il token
-		// Il Client poi reinvierà il token ad ACMEAT che si occuperà di verificare con la banca che l'operazione sia andata a buon fine
 		[ paymentTo( pRequest )( pResponse ) {
-			// payment from client (which may vary) to ACMEat
-			// from: based on login
-			// to: ACMEat (which must be specified, bank is generalized)
-			// print inserted content
 			pResponse.sid = pRequest.sid;
 			synchronized(db_access) {
 				// check if toUser exists
@@ -254,10 +238,8 @@ main
 							.balance = queryResponse.row[0].balance + pRequest.amount,
 							.toUser = toUser
 						}
-					)(dbresponse.status)
-					//println@Console( "Moved " + pRequest.amount + " from " + username +" to " + toUser )() // DEBUG
-					
-					// TODO generate token and store in transaction database
+					)(dbresponse.status)					
+					// Generate generate token and store in transaction database
 					// https://docs.jolie-lang.org/v1.10.x/language-tools-and-standard-library/standard-library-api/string_utils.html#getRandomUUID
 					getRandomUUID@StringUtils()( id )
 					getRandomUUID@StringUtils()( token )
@@ -275,5 +257,8 @@ main
 				}
 			}
 		} ]
+		[ logout( request )] { 
+			keepRunning = false
+		}
 	}
 }

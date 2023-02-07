@@ -20,9 +20,9 @@ import pycamunda
 import pycamunda.processdef
 
 router = APIRouter(
-    prefix="/api/orders/v1",
+    prefix="/api/order/v1",
     tags=[
-        "Orders v1",
+        "Order v1",
     ],
 )
 

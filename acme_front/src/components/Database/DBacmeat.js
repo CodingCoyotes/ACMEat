@@ -5,11 +5,11 @@ const address = process.env.REACT_APP_ACMEAT_ADDRESS;
 const token_path = "/token";
 const user_path = "/api/user/v1/";
 const user_me_path = "/api/user/v1/me";
-const restaurant_path = "/api/restaurants/v1/";
-const city_path = "/api/cities/v1/";
-const menu_path = "/api/menus/v1/";
-const order_path = "/api/orders/v1/";
-const order_detail_path = "/api/orders/v1/details/";
+const restaurant_path = "/api/restaurant/v1/";
+const city_path = "/api/city/v1/";
+const menu_path = "/api/menu/v1/";
+const order_path = "/api/order/v1/";
+const order_detail_path = "/api/order/v1/details/";
 const payment_path = "/payment";
 
 // ---------------------------------------------------------------------------------------------

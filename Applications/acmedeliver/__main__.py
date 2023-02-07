@@ -10,9 +10,9 @@ from acmedeliver.authentication import Token, authenticate_user, create_token
 from acmedeliver.database import models
 from acmedeliver.database.db import Session, engine
 
-from acmedeliver.routers.api.users.v1 import users
-from acmedeliver.routers.api.clients.v1 import clients
-from acmedeliver.routers.api.deliveries.v1 import deliveries
+from acmedeliver.routers.api.user.v1 import user
+from acmedeliver.routers.api.client.v1 import client
+from acmedeliver.routers.api.delivery.v1 import delivery
 
 from acmedeliver.configuration import setting_required
 from acmedeliver.errors import *
@@ -23,9 +23,9 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-app.include_router(users.router)
-app.include_router(clients.router)
-app.include_router(deliveries.router)
+app.include_router(user.router)
+app.include_router(client.router)
+app.include_router(delivery.router)
 
 origins = ["*"]
 

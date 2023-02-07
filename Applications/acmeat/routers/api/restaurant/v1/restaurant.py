@@ -15,9 +15,9 @@ import acmeat.errors as errors
 import datetime
 
 router = APIRouter(
-    prefix="/api/restaurants/v1",
+    prefix="/api/restaurant/v1",
     tags=[
-        "Restaurants v1",
+        "Restaurant v1",
     ],
 )
 

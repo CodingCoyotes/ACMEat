@@ -56,7 +56,7 @@ export default function Dashboard() {
 
     async function getOrders(){
         console.debug("Getting latest orders...")
-        let response = await fetch(schema + address + "/api/orders/v1/", {
+        let response = await fetch(schema + address + "/api/order/v1/", {
             method: "GET",
             headers: {
                 'Accept': 'application/json',

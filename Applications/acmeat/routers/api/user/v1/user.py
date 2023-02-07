@@ -22,7 +22,7 @@ router = APIRouter(
 
 
 @router.get("/me", response_model=acmeat.schemas.full.UserFull)
-async def read_users_me(current_user: models.User = Depends(get_current_user), db: Session = Depends(dep_dbsession)):
+async def read_user_me(current_user: models.User = Depends(get_current_user), db: Session = Depends(dep_dbsession)):
     """
     Restituisce i dati sull'utente attuale
     :param current_user: l'utente attuale

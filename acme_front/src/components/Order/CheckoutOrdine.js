@@ -67,11 +67,7 @@ export default function CheckoutOrdine() {
             else {
                 let list = getTimeList(values.open_times)
                 setTimeList(list);
-                let timeOk = new Date();
-                let split = list[0].split(":");
-                timeOk.setHours(split[0]);
-                timeOk.setMinutes(split[1]);
-                setTimeDate(timeOk);
+                setTime(list[
             }
         }
     }

@@ -67,7 +67,7 @@ export default function CheckoutOrdine() {
             else {
                 let list = getTimeList(values.open_times)
                 setTimeList(list);
-                setTime(list[
+                setTime(list);
             }
         }
     }

@@ -1152,17 +1152,16 @@ Durante la seconda fase di lavoro è stato realizzanto un diagramma di collabora
 \section{Progettazione}
 \label{sez:progettazione}
 
-La terza fase di lavoro ha visto la progettazione di una SOA per la realizzazione del sistema, documentata utilizzando UML e utilizzando come profiling TinySOA. Sono state anche progettate le basi di dati utilizzate dall'applicazione, di cui riportiamo i modelli ER.
+La terza fase di lavoro ha visto la progettazione di una SOA per la realizzazione del sistema, documentata utilizzando UML e utilizzando per il profiling TinySOA. Sono state anche progettate le basi di dati utilizzate dall'applicazione, di cui riportiamo i modelli ER.
 
 \subsection{Diagramma UML}
 
-Seguendo il profiling TinySOA, sono stati individuato i vari servizi e suddivisi fra \emph{tasks}, \emph{entities} e \emph{utilities}, elencandoli all'interno della dovuta capability e relativa interfaccia nell'eventuale disponibilità verso l'esterno; per ACMEat vengono individuate varie interfaccie sulla base di chi sta utilizzando il sistema, mentre l'entità della banca è stata separata da quelle del sistema ACMEat in quanto è da considerarsi come entità esterna. Il diagramma è stato realizzato utilizzando \textbf{Papyrus}.
+Seguendo il profiling TinySOA, sono stati individuati i vari servizi necessari e suddivisi fra \emph{tasks}, \emph{entities} e \emph{utilities}, elencandoli all'interno della dovuta capability e relative interfaccie nell'eventuale disponibilità verso l'esterno in base all'attore interessato nel suo utilizzo. Il diagramma è stato realizzato utilizzando \href{https://www.eclipse.org/papyrus/}{Eclipse Papyrus}.
 
 \begin{figure}[H]
-\begin{center}
+\centering
 \fbox{\includegraphics[width=\textwidth]{uml1}}
 \caption{Diagramma UML del sistema (1)}
-\end{center}
 \end{figure}
 
 \begin{figure}[H]
@@ -1174,11 +1173,12 @@ Seguendo il profiling TinySOA, sono stati individuato i vari servizi e suddivisi
 
 \subsection{Diagrammi ER}
 
-Di seguito sono riportati i diagrammi ER delle basi di dati utilizzati dal sistema. I modelli collegati ai servizi sviluppati con API REST sono stati ricreati utilizzando quelli ottenuti direttamente dall'ORM sfruttando IntelliJ, mentre quello della banca è stato creato con \textbf{Figma Jam}.
+Di seguito sono riportati i diagrammi ER delle basi di dati utilizzati dal sistema.\\
+Edit: i modelli collegati ai servizi sviluppati nella fase successiva con API REST sono stati sostituiti con quelli ottenibili direttamente dall'ORM sfruttando l'editor \href{https://www.jetbrains.com/idea/}{IntelliJ}, mentre quello della banca è stato creato utilizzando lo strumento online \href{https://www.figma.com/figjam/}{FigJam}. Tutte le basi di dati sono state poi realizzate con \href{https://www.postgresql.org/}{PostgreSQL}.
 
 \begin{figure}[H]
 \begin{center}
-\fbox{\includegraphics[width=\textwidth]{er_acmeat}}
+\fbox{\includegraphics[width=0.9\textwidth]{er_acmeat}}
 \caption{Diagramma ER del database di ACMEat}
 \label{db:acmeat}
 \end{center}

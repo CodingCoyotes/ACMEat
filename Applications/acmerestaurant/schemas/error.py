@@ -1,4 +1,4 @@
-from acmedeliver.schemas import base
+from acmerestaurant.schemas import base
 
 __all__ = (
     "AcmerestaurantErrorModel",

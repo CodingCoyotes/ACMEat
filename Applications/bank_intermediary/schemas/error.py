@@ -1,4 +1,4 @@
-from acmegeolocate.schemas import base
+from bank_intermediary.schemas import base
 
 __all__ = (
     "BankIntermediaryErrorModel",

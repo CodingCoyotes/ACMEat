@@ -104,9 +104,9 @@ export default function CronologiaOrdine() {
                                         }}>
                                             Dettagli
                                         </button>
-                                    </li>
+
                                     {(item.status === 3 || item.status === 6) ? (
-                                        <li className="list-group-item">
+                                       <div>
                                             {(item.status === 3) ? (
                                                 <button type="button" className="btn btn-primary short"
                                                         onClick={event => {
@@ -124,8 +124,9 @@ export default function CronologiaOrdine() {
                                                     Annulla
                                                 </button>
                                             ) : (<div></div>)}
-                                        </li>
+                                       </div>
                                     ) : (<div></div>)}
+                                    </li>
                                 </ul>
                             </div>
                         </div>

@@ -1000,7 +1000,7 @@ Durante la seconda fase di lavoro è stato realizzanto un diagramma di collabora
 \subsection{Diagramma di collaborazione BPMN}
 
 \begin{figure}[H]
-\includegraphics[width=\textwidth]{bpmn}
+\fbox{\includegraphics[width=\textwidth]{bpmn}}
 \caption{Diagramma di collaborazione BPMN dello scenario}
 \label{bpmn}
 \end{figure}
@@ -1214,17 +1214,17 @@ Edit: i modelli collegati ai servizi sviluppati nella fase successiva con API RE
 
 La quarta fase di lavoro ha visto la realizzazione del sistema. Come da specifica, sono stati realizzati i seguenti servizi:
 \begin{itemize}
-\item Il servizio centrale ACMEat, il quale rende accessibili capabilities realizzate attraverso il BPMS Camunda;
-\item Il servizio bancario, realizzato in Jolie;
-\item Il servizio delle società di consegna, denominato ACMEDeliver;
-\item Il servizio delle società di ristorazione, denominato ACMERestaurant;
-\item Il servizio di geo-localizzazione, denominato ACMEGeolocate.
+\item Il servizio centrale ACMEat, il quale rende accessibili capabilities realizzate attraverso il BPMS \href{https://camunda.com/}{Camunda};
+\item Il servizio bancario, realizzato in \href{https://www.jolie-lang.org/}{Jolie};
+\item Il servizio delle società di consegna, denominato ACMEdeliver;
+\item Il servizio delle società di ristorazione, denominato ACMErestaurant;
+\item Il servizio di geo-localizzazione, denominato ACMEgeolocate.
 \end{itemize}
 Sono stati quindi realizzati i seguenti backends:
 \begin{itemize}
 \item \textbf{acmeat}, backend REST per interagire con il database di ACMEat e con il BPMS;
 \item \textbf{acmedeliver}, backend REST che rappresenta una società di consegna e ne consente la gestione e l'utilizzo;
-\item \textbf{acmegeolocate}, backend REST per la geo-localizzazione (implementata appoggiandosi ad OpenStreetMap);
+\item \textbf{acmegeolocate}, backend REST per la geo-localizzazione (implementata appoggiandosi ad \href{https://www.openstreetmap.org/#map=6/42.088/12.564}{OpenStreetMap});
 \item \textbf{acmerestaurant}, backend REST per la gestione degli operatori di un ristorante e che consente l'autenticazione presso ACMEat per la gestione degli ordini;
 \item \textbf{bank}, backend Jolie per la gestione dei servizi bancari, usati per la gestione dei fondi dei clienti, fattorini, ristoranti e di acmeat;
 \item \textbf{bank\_intermediary}, backend REST per superare le restrizioni CORS di Jolie, usato solo ed esclusivamente dal frontend della banca.
@@ -1245,7 +1245,50 @@ Tutti i backend (fatta eccezione per bank) sono stati realizzati con le seguenti
 \item Poetry (Package Manager Python);
 \item Postgres.
 \end{itemize}
-Tutti i dialoghi fra i backends, incluso quello fra Jolie ed il BPMS, avvengono tramite l'uso del protocollo SOAP .
+Tutti i dialoghi fra i backends, incluso quello fra Jolie ed il BPMS, avvengono tramite l'uso del protocollo SOAP.
+
+\subsection{Diagramma di processo BPMN di ACMEat}
+
+ Parte delle capabilities del servizio centrale ACMEat sono state rese accessibili attraverso il BPMS Camunda. Come già riportato nella Sez.\~ref{sez:documentazione}, si è scelto di non rendere eseguibili le pool del modello BPMN in Fig.~\ref{bpmn} ma di riferirsi a questo solo a scopo documentativo e sviluppare invece un nuovo modello BPMN eseguibile attraverso BPMS, il cui export è riportato in Fig.~\ref{bpms}. Questo modello è tuttavia del tutto consistente con la modellazione a scopo documentativo precedentemente realizzata.
+
+\begin{figure}[H]
+\fbox{\includegraphics[width=\textwidth]{bpms}}
+\caption{Diagramma di processo BPMN di ACMEat}
+\label{bpms}
+\end{figure}
+
+Come per il modello documentativo, di seguito riportiamo il modello in fig.~\ref{bpms} mettendone in risalto le singole parti.
+
+\begin{figure}[H]
+\fbox{\includegraphics[width=\textwidth]{bpms1}}
+\caption{Gestione richieste disponibilità a ristorante e società di consegna}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[p]
+\fbox{\includegraphics[width=\textwidth]{bpms2}}
+\caption{Gestione e verifica pagamento dell'ordine da parte dell'utente}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[H]
+\centering
+\fbox{\includegraphics[width=0.85\textwidth]{bpms3}}
+\caption{Gestione rimborso e annullamento ordine a ristorante e società di consegna}
+\end{figure}
+
+\begin{figure}[H]
+\fbox{\includegraphics[width=\textwidth]{bpms4}}
+\caption{Gestione pagamenti a ristorante e società di consegna dopo conferma ordine}
+\end{figure}
+
+\subsection{Banca}
+
+I servizi bancari sono stati sviluppati col linguaggio di programmazione Jolie.
+
+\clearpage
 
 \subsection{Backends Python}
 

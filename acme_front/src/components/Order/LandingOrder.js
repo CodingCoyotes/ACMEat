@@ -42,7 +42,7 @@ export default function LandingOrder(){
         }
         let response = await payment(split[2], info, token_ls);
         console.debug(response)
-        navigate("/cronologiaordine", {state:{param: user.orders}});
+        navigate("/dashboard");
     }
 
     async function getInfo() {

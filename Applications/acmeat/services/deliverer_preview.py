@@ -29,23 +29,26 @@ def deliverer_preview(order_id, success, paid, payment_success, TTW, found_deliv
 
         for deliverer in deliverers:
             # Ottieni la distanza dal ristorante al fattorino
-            r = requests.post(GEOLOCATE_URL + "/api/geo/v1/distance",
-                              headers={"Content-Type": "application/json",
-                                       "Accept": "application/json"}, data=json.dumps({
-                    "source": {
-                        "nation": restaurant.city.nation,
-                        "city": restaurant.city.name,
-                        "roadname": restaurant.address,
-                        "number": restaurant.number
-                    },
-                    "destination": {
-                        "nation": deliverer.nation,
-                        "city": deliverer.city,
-                        "roadname": deliverer.address,
-                        "number": restaurant.number
-                    }
-                }))
-            data = r.json()
+            try:
+                r = requests.post(GEOLOCATE_URL + "/api/geo/v1/distance",
+                                  headers={"Content-Type": "application/json",
+                                           "Accept": "application/json"}, data=json.dumps({
+                        "source": {
+                            "nation": restaurant.city.nation,
+                            "city": restaurant.city.name,
+                            "roadname": restaurant.address,
+                            "number": restaurant.number
+                        },
+                        "destination": {
+                            "nation": deliverer.nation,
+                            "city": deliverer.city,
+                            "roadname": deliverer.address,
+                            "number": restaurant.number
+                        }
+                    }))
+                data = r.json()
+            except Exception:
+                continue
             try:
                 if data["distance_km"] < search_radius:
                     candidates.append(deliverer)
@@ -56,10 +59,6 @@ def deliverer_preview(order_id, success, paid, payment_success, TTW, found_deliv
         if len(candidates) == 0:
             found_deliverer.value = False
         # Se c'è solo un candidato
-        elif len(candidates) == 1:
-            order.deliverer_id = candidates[0].id
-            found_deliverer.value = True
-        # Se ci sono più candidati
         else:
             preview = []
 
@@ -80,8 +79,8 @@ def deliverer_preview(order_id, success, paid, payment_success, TTW, found_deliv
                                 "delivery_time": order.delivery_time.timestamp()
                             }
                         }), timeout=3)
-                except (requests.exceptions.Timeout, Exception):
-                    print(f"[{order_id.value}-{id}]     Host timed out.")
+                except Exception:
+                    print(f"[{order_id.value}-{id}]     Could not handle the request.")
                     return
                 print(f"[{order_id.value}-{id}]     Parallel preview completed.")
                 # L'append in python è thread-safe.
@@ -96,7 +95,7 @@ def deliverer_preview(order_id, success, paid, payment_success, TTW, found_deliv
                 t.start()
 
             start_time = datetime.datetime.now()
-            while (datetime.datetime.now()-start_time).total_seconds() <= 15 and len(preview)!=len(candidates):
+            while (datetime.datetime.now() - start_time).total_seconds() <= 15 and len(preview) != len(candidates):
                 # Si attende che siano passati 15 secondi o che tutti abbiano risposto
                 time.sleep(1)
             for t in threadlist:

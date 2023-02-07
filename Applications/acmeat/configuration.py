@@ -63,6 +63,7 @@ BANK_URI = setting_required("BANK_URI")
 BANK_USERNAME = setting_required("BANK_USERNAME")
 BANK_PASSWORD = setting_required("BANK_PASSWORD")
 CAMUNDA_URL = 'http://localhost:8080/engine-rest'
+GEOLOCATE_URL = setting_required("GEOLOCATE_URL")
 # Variabili d'ambiente necessarie, ma non definite qui
 # BIND_IP
 # BIND_PORT

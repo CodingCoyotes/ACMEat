@@ -10,7 +10,7 @@ import acmeat.schemas.read
 from acmeat.authentication import get_current_user
 from acmeat.database import models
 from acmeat.crud import *
-from acmeat.dependencies import dep_dbsession
+from acmeat.dependencies import dep_dbsession, check_address
 import acmeat.errors as errors
 import datetime
 
@@ -54,6 +54,11 @@ async def create_restaurant(restaurant: acmeat.schemas.edit.RestaurantEdit, db: 
     :param current_user: l'utente attuale
     :return: acmeat.schemas.read.RestaurantRead, il nuovo ristorante
     """
+    city = quick_retrieve(db, models.City, id=restaurant.city_id)
+    # Verifica la validità dell'indirizzo
+    if not check_address({"nation": city.nation, "city": city.name, "roadname": restaurant.address,
+                          "number": restaurant.number}):
+        raise errors.ResourceNotFound
     if current_user.kind == acmeat.database.enums.UserType.customer:
         usr = quick_retrieve(db, models.User, id=current_user.id)
         usr.kind = acmeat.database.enums.UserType.owner
@@ -63,7 +68,7 @@ async def create_restaurant(restaurant: acmeat.schemas.edit.RestaurantEdit, db: 
                                               open_times=restaurant.jsonify_time(),
                                               number=restaurant.number, closed=restaurant.closed,
                                               owner=quick_retrieve(db, models.User, id=current_user.id),
-                                              city=quick_retrieve(db, models.City, id=restaurant.city_id),
+                                              city=city,
                                               bank_address=restaurant.bank_address))
 
 

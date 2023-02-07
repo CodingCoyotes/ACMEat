@@ -3,21 +3,22 @@ Questo modulo contiene gli endpoint per la gestione degli ordini
 """
 import typing
 from uuid import UUID
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends
 from pycamunda.message import CorrelateSingle
 from sqlalchemy.orm import Session
 
-from acmeat.configuration import CAMUNDA_URL
+from acmeat.configuration import CAMUNDA_URL, GEOLOCATE_URL
 from acmeat.database.enums import OrderStatus
 import acmeat.schemas.read
 from acmeat.authentication import get_current_user
 from acmeat.database import models
-from acmeat.schemas import *
 from acmeat.crud import *
-from acmeat.dependencies import dep_dbsession
+from acmeat.dependencies import dep_dbsession, check_address
 import acmeat.errors as errors
 import pycamunda
 import pycamunda.processdef
+import requests
+import json
 
 router = APIRouter(
     prefix="/api/order/v1",
@@ -75,9 +76,14 @@ async def create_order(restaurant_id: str, order_data: acmeat.schemas.edit.Order
     :param current_user: l'utente attuale
     :return: acmeat.schemas.read.OrderRead, l'ordine
     """
-    order = quick_create(db, models.Order(status=OrderStatus.w_restaurant_ok, delivery_time=order_data.delivery_time,
-                                          user_id=current_user.id, nation=order_data.nation, number=order_data.number,
-                                          address=order_data.address, city=order_data.city))
+    # Verifica validità indirizzo
+    if not check_address({"nation": order_data.nation, "city": order_data.city, "roadname": order_data.address,
+                      "number": order_data.number}):
+        raise errors.ResourceNotFound
+    order = quick_create(db,
+                         models.Order(status=OrderStatus.w_restaurant_ok, delivery_time=order_data.delivery_time,
+                                      user_id=current_user.id, nation=order_data.nation, number=order_data.number,
+                                      address=order_data.address, city=order_data.city))
     total = 0
     for elem in order_data.contents:
         # Ensures no menu mix-up in order (all menus must be from same restaurant)
@@ -145,14 +151,14 @@ async def update_order(order_id: UUID, order_data: acmeat.schemas.edit.OrderEdit
         order.status = order_data.status
         db.commit()
         if order_data.status == OrderStatus.w_deliverer_ok or order_data.status == OrderStatus.cancelled:
-                try:
-                    # Manda il messaggio per far proseguire il processo
-                    msg = CorrelateSingle(CAMUNDA_URL, message_name="Message_Restaurant",
-                                          process_instance_id=order.camunda_id
-                                          )
-                    msg()
-                except Exception:
-                    pass
+            try:
+                # Manda il messaggio per far proseguire il processo
+                msg = CorrelateSingle(CAMUNDA_URL, message_name="Message_Restaurant",
+                                      process_instance_id=order.camunda_id
+                                      )
+                msg()
+            except Exception:
+                pass
         return order
     # Se lo stato richiesto non è tra quelli autorizzati per il ristorante...
     if order.status.value > order_data.status.value or order_data.status.value not in [2, 8, 9]:

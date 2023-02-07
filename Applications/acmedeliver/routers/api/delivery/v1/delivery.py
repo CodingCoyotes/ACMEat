@@ -31,7 +31,7 @@ PRICE_PER_KM = setting_required("PRICE_PER_KM")
 GEOLOCATE_URL = setting_required("GEOLOCATE_URL")
 
 
-def calculate_cost(source, destination):
+def calculate_distance(source, destination):
     """
     Funzione che calcola il costo di una spedizione.
     :param source: l'indirizzo sorgente
@@ -56,7 +56,16 @@ def calculate_cost(source, destination):
                 "number": destination[3]
             }
         }))
-    return r.json()['distance_km'] * float(PRICE_PER_KM)
+    return r.json()['distance_km']
+
+
+def calculate_cost(distance):
+    """
+    Calcola il costo della spedizione
+    :param distance:
+    :return:
+    """
+    return distance * float(PRICE_PER_KM)
 
 
 @router.get("/", response_model=List[acmedeliver.schemas.read.DeliveryRead])
@@ -124,10 +133,12 @@ async def preview_delivery(delivery_request: acmedeliver.schemas.edit.ClientDeli
     :return: acmedeliver.schemas.edit.DeliveryPreviewCost, il preventivo
     """
     target = quick_retrieve(db, models.Client, api_key=delivery_request.api_key)
-    if not target:
+    users = db.query(models.User).filter_by(kind=UserType.worker).all()
+    distance = calculate_distance(delivery_request.request.source, delivery_request.request.receiver)
+    if not target or len(users) == 0 or distance > 15:
         raise errors.Forbidden
     return acmedeliver.schemas.edit.DeliveryPreviewCost(
-        cost=round(calculate_cost(delivery_request.request.source, delivery_request.request.receiver), 2))
+        cost=round(distance, 2))
 
 
 @router.put("/{delivery_id}", response_model=acmedeliver.schemas.read.DeliveryRead)

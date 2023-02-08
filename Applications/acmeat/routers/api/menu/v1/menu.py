@@ -40,7 +40,7 @@ async def read_menus(restaurant_id: UUID, db: Session = Depends(dep_dbsession)):
     return db.query(acmeat.database.models.Menu).filter_by(restaurant_id=restaurant_id).all()
 
 
-@router.get("/{menu_id}", response_model=acmeat.schemas.read.MenuRead)
+@router.get("/details/{menu_id}", response_model=acmeat.schemas.read.MenuRead)
 async def read_menu(menu_id: UUID, db: Session = Depends(dep_dbsession)):
     """
     Restituisce i dettagli di un menu.

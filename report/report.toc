@@ -30,19 +30,24 @@
 \contentsline {subsubsection}{\numberline {6.2.1}Parametri di configurazione}{41}{subsubsection.6.2.1}%
 \contentsline {subsection}{\numberline {6.3}Backends Python}{42}{subsection.6.3}%
 \contentsline {subsubsection}{\numberline {6.3.1}Dettagli sui backends}{42}{subsubsection.6.3.1}%
-\contentsline {paragraph}{acmeat}{43}{section*.32}%
-\contentsline {paragraph}{ACMEmanager}{44}{section*.33}%
-\contentsline {paragraph}{acmedeliver}{45}{section*.34}%
-\contentsline {paragraph}{acmegeolocate}{45}{section*.35}%
-\contentsline {paragraph}{acmerestaurant}{45}{section*.36}%
-\contentsline {paragraph}{bank\_intermediary}{45}{section*.37}%
+\contentsline {paragraph}{acmeat}{43}{section*.33}%
+\contentsline {paragraph}{ACMEmanager}{44}{section*.34}%
+\contentsline {paragraph}{acmedeliver}{45}{section*.35}%
+\contentsline {paragraph}{acmegeolocate}{45}{section*.36}%
+\contentsline {paragraph}{acmerestaurant}{45}{section*.37}%
+\contentsline {paragraph}{bank\_intermediary}{45}{section*.38}%
 \contentsline {subsubsection}{\numberline {6.3.2}Parametri di configurazione}{45}{subsubsection.6.3.2}%
-\contentsline {section}{\numberline {7}Esecuzione}{47}{section.7}%
-\contentsline {subsection}{\numberline {7.1}Istruzioni per l'avvio in ambiente di testing}{47}{subsection.7.1}%
-\contentsline {subsection}{\numberline {7.2}Istruzioni per il deployment in produzione}{47}{subsection.7.2}%
-\contentsline {paragraph}{Setup iniziale}{47}{section*.38}%
-\contentsline {paragraph}{Installazione dipendenze software}{47}{section*.39}%
-\contentsline {paragraph}{Setup del singolo backend}{48}{section*.40}%
-\contentsline {paragraph}{Configurazione del server come servizio systemd}{48}{section*.41}%
-\contentsline {subsection}{\numberline {7.3}Post-Installazione}{49}{subsection.7.3}%
-\contentsline {section}{\numberline {8}Conclusioni}{50}{section.8}%
+\contentsline {paragraph}{acmeat}{45}{section*.39}%
+\contentsline {paragraph}{acmedeliver}{46}{section*.40}%
+\contentsline {paragraph}{acmegeolocate}{46}{section*.41}%
+\contentsline {paragraph}{acmerestaurant}{46}{section*.42}%
+\contentsline {paragraph}{bank\_intermediary}{47}{section*.43}%
+\contentsline {section}{\numberline {7}Esecuzione}{48}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Istruzioni per l'avvio in ambiente di testing}{48}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Istruzioni per il deployment in produzione}{48}{subsection.7.2}%
+\contentsline {paragraph}{Setup iniziale}{48}{section*.44}%
+\contentsline {paragraph}{Installazione dipendenze software}{48}{section*.45}%
+\contentsline {paragraph}{Setup del singolo backend}{49}{section*.46}%
+\contentsline {paragraph}{Configurazione del server come servizio systemd}{49}{section*.47}%
+\contentsline {subsection}{\numberline {7.3}Post-Installazione}{50}{subsection.7.3}%
+\contentsline {section}{\numberline {8}Conclusioni}{51}{section.8}%

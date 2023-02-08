@@ -178,11 +178,12 @@ allcolors={BrickRed}
 
 \section{Introduzione}
 
-Scopo di questa relazione è quello di descrivere il lavoro fatto nelle varie fasi di modellazione e sviluppo del progetto di Ingegneria del Software Orientata ai Servizi, la cui descrizione del dominio e del problema è riportata nella Sez.~\ref{sez:ddp}.\\
+Scopo di questa relazione è quello di descrivere il lavoro fatto nelle varie fasi di modellazione e sviluppo del progetto di Ingegneria del Software Orientata ai Servizi, la cui descrizione del dominio e del problema è riportata nella Sez.~\ref{sez:ddp}. Il codice realizzato è consultabile al seguente \href{https://github.com/CodingCoyotes/ACMEat}{repository GitHub}. E' stata inoltre resa disponibile una \href{https://codingcoyotes.github.io/ACMEat_Index/}{demo} del sistema.\\
 Le fasi di modellazione vengono descritte a partire dalla Sez.~\ref{sez:modellazione}, in cui viene esposta la modellazione delle comunicazioni avvenuta mediante un diagramma di coreografia dell'intero scenario, raffinata iterativamente allo scopo di migliorare quanto possibile le sue proprietà di correctedness, altresì riportate, e la successiva proiezione in un sistema di ruoli; viene inoltre riportato il corrispondente diagramma di coreografia BPMN.\\
 Tale lavoro di modellazione prosegue nella Sez.~\ref{sez:documentazione} con la realizzazione di un diagramma di collaborazione BPMN rappresentante l'intera realtà descritta, compresi i dettagli di ciascun partecipante. Questo diagramma è pensato a scopo documentativo e per tale motivo è stato scelto di riportarlo suddiviso in varie parti, ciascuna con un focus differente relativamente alle varie attività descritte e brevemente commentata.\\
 La Sez.~\ref{sez:progettazione} descrive poi la fase di progettazione della SOA per la realizzazione del sistema, documentata per mezzo di diagrammi UML e usando TinySOA come profiling. Vengono inoltre riportati i vari diagrammi ER delle basi di dati che verranno poi utilizzate dalle applicazioni.\\
-Infine, la Sez.~\ref{sez:sviluppo} descrive il sistema sviluppato, analizzando brevemente il funzionamento di ciascun componente, come configurarlo, e come utlizzare l'applicazione in ambiente di testing, nonché alcune istruzioni illustrative su come effettuare un eventuale deployment in produzione.
+La Sez.~\ref{sez:sviluppo} descrive invece il sistema sviluppato, analizzando brevemente il funzionamento di ciascun componente e come configurare i parametri richiesti.\\
+Infine, la Sez.~\ref{sez:esecuzione} descrive come utlizzare l'applicazione in ambiente di testing, nonché alcune istruzioni illustrative su come effettuare un eventuale deployment in produzione.
 
 \clearpage
 
@@ -537,7 +538,7 @@ CoreografiaAnnullamentoOrdine :== ((
 
 \subsubsection{Banca}
 
-\begin{lstlisting}[caption=Proiezione della coerografia relativamente alla banca, escapeinside={(*@}{@*)}]
+\begin{lstlisting}[caption=Proiezione della coerografia relativamente alla banca, escapeinside={(*@}{@*)},label=proj_bank]
 Coreografia :== (
 	ModificaInformazioniLocali |
 	CoreografiaOrdine
@@ -1000,7 +1001,7 @@ Durante la seconda fase di lavoro è stato realizzanto un diagramma di collabora
 \subsection{Diagramma di collaborazione BPMN}
 
 \begin{figure}[H]
-\includegraphics[width=\textwidth]{bpmn}
+\fbox{\includegraphics[width=\textwidth]{bpmn}}
 \caption{Diagramma di collaborazione BPMN dello scenario}
 \label{bpmn}
 \end{figure}
@@ -1152,33 +1153,34 @@ Durante la seconda fase di lavoro è stato realizzanto un diagramma di collabora
 \section{Progettazione}
 \label{sez:progettazione}
 
-La terza fase di lavoro ha visto la progettazione di una SOA per la realizzazione del sistema, documentata utilizzando UML e utilizzando come profiling TinySOA. Sono state anche progettate le basi di dati utilizzate dall'applicazione, di cui riportiamo i modelli ER.
+La terza fase di lavoro ha visto la progettazione di una SOA per la realizzazione del sistema, documentata utilizzando UML e utilizzando per il profiling TinySOA. Sono state anche progettate le basi di dati utilizzate dall'applicazione, di cui riportiamo i modelli ER.
 
 \subsection{Diagramma UML}
 
-Seguendo il profiling TinySOA, sono stati individuato i vari servizi e suddivisi fra \emph{tasks}, \emph{entities} e \emph{utilities}, elencandoli all'interno della dovuta capability e relativa interfaccia nell'eventuale disponibilità verso l'esterno; per ACMEat vengono individuate varie interfaccie sulla base di chi sta utilizzando il sistema, mentre l'entità della banca è stata separata da quelle del sistema ACMEat in quanto è da considerarsi come entità esterna. Il diagramma è stato realizzato utilizzando \textbf{Papyrus}.
+Seguendo il profiling TinySOA, sono stati individuati i vari servizi necessari e suddivisi fra \emph{tasks}, \emph{entities} e \emph{utilities}, elencandoli all'interno della dovuta capability e relative interfaccie nell'eventuale disponibilità verso l'esterno in base all'attore interessato nel suo utilizzo. Il diagramma è stato realizzato utilizzando \href{https://www.eclipse.org/papyrus/}{Eclipse Papyrus}.
 
 \begin{figure}[H]
-\begin{center}
+\centering
 \fbox{\includegraphics[width=\textwidth]{uml1}}
 \caption{Diagramma UML del sistema (1)}
-\end{center}
 \end{figure}
 
 \begin{figure}[H]
 \begin{center}
 \fbox{\includegraphics[width=\textwidth]{uml2}}
 \caption{Diagramma UML del sistema (2)}
+\label{uml2}
 \end{center}
 \end{figure}
 
 \subsection{Diagrammi ER}
 
-Di seguito sono riportati i diagrammi ER delle basi di dati utilizzati dal sistema. I modelli collegati ai servizi sviluppati con API REST sono stati ricreati utilizzando quelli ottenuti direttamente dall'ORM sfruttando IntelliJ, mentre quello della banca è stato creato con \textbf{Figma Jam}.
+Di seguito sono riportati i diagrammi ER delle basi di dati utilizzati dal sistema.\\
+Edit: i modelli collegati ai servizi sviluppati nella fase successiva con API REST sono stati sostituiti con quelli ottenibili direttamente dall'ORM sfruttando l'editor \href{https://www.jetbrains.com/idea/}{IntelliJ}, mentre quello della banca è stato creato utilizzando lo strumento online \href{https://www.figma.com/figjam/}{FigJam}. Tutte le basi di dati sono state poi realizzate con \href{https://www.postgresql.org/}{PostgreSQL}.
 
 \begin{figure}[H]
 \begin{center}
-\fbox{\includegraphics[width=\textwidth]{er_acmeat}}
+\fbox{\includegraphics[width=0.9\textwidth]{er_acmeat}}
 \caption{Diagramma ER del database di ACMEat}
 \label{db:acmeat}
 \end{center}
@@ -1214,17 +1216,17 @@ Di seguito sono riportati i diagrammi ER delle basi di dati utilizzati dal siste
 
 La quarta fase di lavoro ha visto la realizzazione del sistema. Come da specifica, sono stati realizzati i seguenti servizi:
 \begin{itemize}
-\item Il servizio centrale ACMEat, il quale rende accessibili capabilities realizzate attraverso il BPMS Camunda;
-\item Il servizio bancario, realizzato in Jolie;
-\item Il servizio delle società di consegna, denominato ACMEDeliver;
-\item Il servizio delle società di ristorazione, denominato ACMERestaurant;
-\item Il servizio di geo-localizzazione, denominato ACMEGeolocate.
+\item Il servizio centrale ACMEat, il quale rende accessibili capabilities realizzate attraverso il BPMS \href{https://camunda.com/}{Camunda};
+\item Il servizio bancario, realizzato in \href{https://www.jolie-lang.org/}{Jolie};
+\item Il servizio delle società di consegna, denominato ACMEdeliver;
+\item Il servizio delle società di ristorazione, denominato ACMErestaurant;
+\item Il servizio di geo-localizzazione, denominato ACMEgeolocate.
 \end{itemize}
 Sono stati quindi realizzati i seguenti backends:
 \begin{itemize}
 \item \textbf{acmeat}, backend REST per interagire con il database di ACMEat e con il BPMS;
 \item \textbf{acmedeliver}, backend REST che rappresenta una società di consegna e ne consente la gestione e l'utilizzo;
-\item \textbf{acmegeolocate}, backend REST per la geo-localizzazione (implementata appoggiandosi ad OpenStreetMap);
+\item \textbf{acmegeolocate}, backend REST per la geo-localizzazione (implementata appoggiandosi ad \href{https://www.openstreetmap.org/#map=6/42.088/12.564}{OpenStreetMap});
 \item \textbf{acmerestaurant}, backend REST per la gestione degli operatori di un ristorante e che consente l'autenticazione presso ACMEat per la gestione degli ordini;
 \item \textbf{bank}, backend Jolie per la gestione dei servizi bancari, usati per la gestione dei fondi dei clienti, fattorini, ristoranti e di acmeat;
 \item \textbf{bank\_intermediary}, backend REST per superare le restrizioni CORS di Jolie, usato solo ed esclusivamente dal frontend della banca.
@@ -1245,7 +1247,347 @@ Tutti i backend (fatta eccezione per bank) sono stati realizzati con le seguenti
 \item Poetry (Package Manager Python);
 \item Postgres.
 \end{itemize}
-Tutti i dialoghi fra i backends, incluso quello fra Jolie ed il BPMS, avvengono tramite l'uso del protocollo SOAP .
+Tutti i dialoghi fra i backends, incluso quello fra Jolie ed il BPMS, avvengono tramite l'uso del protocollo SOAP.
+
+\subsection{Diagramma di processo BPMN di ACMEat}
+
+ Parte delle capabilities del servizio centrale ACMEat sono state rese accessibili attraverso il BPMS Camunda. Come già riportato nella Sez.\~ref{sez:documentazione}, si è scelto di non rendere eseguibili le pool del modello BPMN in Fig.~\ref{bpmn} ma di riferirsi a questo solo a scopo documentativo e sviluppare invece un nuovo modello BPMN eseguibile attraverso BPMS, il cui export è riportato in Fig.~\ref{bpms}. Questo modello è tuttavia del tutto consistente con la modellazione a scopo documentativo precedentemente realizzata.
+
+\begin{figure}[H]
+\fbox{\includegraphics[width=\textwidth]{bpms}}
+\caption{Diagramma di processo BPMN di ACMEat}
+\label{bpms}
+\end{figure}
+
+Come per il modello documentativo, di seguito riportiamo il modello in fig.~\ref{bpms} mettendone in risalto le singole parti.
+
+\begin{figure}[H]
+\fbox{\includegraphics[width=\textwidth]{bpms1}}
+\caption{Gestione richieste disponibilità a ristorante e società di consegna}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[p]
+\fbox{\includegraphics[width=\textwidth]{bpms2}}
+\caption{Gestione e verifica pagamento dell'ordine da parte dell'utente}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[H]
+\centering
+\fbox{\includegraphics[width=0.85\textwidth]{bpms3}}
+\caption{Gestione rimborso e annullamento ordine a ristorante e società di consegna}
+\end{figure}
+
+\begin{figure}[H]
+\fbox{\includegraphics[width=\textwidth]{bpms4}}
+\caption{Gestione pagamenti a ristorante e società di consegna dopo conferma ordine}
+\end{figure}
+
+\subsection{Banca}
+
+I servizi bancari sono stati sviluppati col linguaggio di programmazione Jolie, raffinando la proiezione in Lst.~\ref{proj_bank} ed implementando alcune funzionalità aggiuntive allo scopo di generalizzarla il più possibile. Come riportato nel diagramma UML in Fig.~\ref{uml2}, essa offre infatti verso l'esterno gli stessi servizi in maniera anacronistica. Questi servizi sono:
+\begin{itemize}
+\item Effettuare il login nel sistema, permettendo di avviare una sessione;
+\item Effettuare il versamento di una somma di denaro;
+\item Effettuare il ritiro di una somma di denaro;
+\item Richiedere il report delle operazioni passate;
+\item Cancellare un'operazione precedente frondendone il relativo token;
+\item Effettuare un pagamento specificando l'iban (id) del destinatario e la somma da scambiare;
+\item Effettuare il logout dal sistema, terminandone la sessione.
+\end{itemize}
+Tutte queste operazioni possono essere effettuate solo una volta effettuato il login; una volta avviatta una sessione, essa rimarrà attiva sino a che non verrà effettuato il logout. Questo nonostante nel sistema sviluppato ogni operazione venga svolta singolarmente, effettuando di volta in volta il login e relativo logout non appena questa è terminata, soprattutto a scopo di sicurezza, come modellato nella coreografia in Lst.~\ref{coreo} e successivamente documentato nel BPMN in Fig.~\ref{bpmn}. Inoltre, l'applicativo è stato svolto in maniera da accettare invocazioni concorrenti, gestendo le varie sessioni con opportuni sid.
+% Il sorgente è riportato in Lst.~\ref{source_bank}; si è scelto di riportarlo solo nelle sue parti usate dal sistema, omettendo quelle aggiunte rispetto alle specifiche. Lst.~\ref{inter} riporta invece l'interfaccia fornita ed i relativi tipi.
+
+\subsubsection{Parametri di configurazione}
+
+Per mettere in esecuzione il processo è necessario specificare i seguenti parametri:
+\begin{itemize}
+\item \verb|Location: "socket://localhost:[porta]"| - indirizzo e porta per la comunicazione tramite soap;
+\item \verb|.username = "[username]"| - username dell'utente postgres per accedere al database della banca;
+\item \verb|.password = "[password]"| - password dell'utente postgres per accedere al database della banca;
+\item \verb|.database = "[nome database]"| - nome del database postgres della banca.
+\end{itemize}
+Si ricorda inoltre di aggiungere il file del driver \href{https://jdbc.postgresql.org/}{jdbc-postgresql.jar} nell'opportuna cartella \verb|/usr/lib/jolie/lib/|, come da documentazione del linguaggio.
+
+\begin{comment}
+\clearpage
+
+\begin{lstlisting}[language=python, caption=Sorgente della banca sviluppata in Jolie, label=source_bank]
+include "console.iol"
+include "interface.iol"
+include "database.iol"
+include "string_utils.iol"
+
+inputPort Bank {
+	Location: "socket://localhost:2000"
+	Protocol: soap
+	Interfaces: BankInterface
+}
+
+cset {
+	sid: OpMessage.sid WithdrawRequest.sid DepositRequest.sid ReportRequest.sid ReportResponse.sid PaymentRequest.sid PaymentResponse.sid OperationReportRequest.sid OperationReportResponse.sid CancelOperationRequest.sid CancelOperationResponse.sid
+}
+
+execution {
+	concurrent
+}
+
+init {
+	keepRunning = true
+}
+
+main
+{
+	login( lRequest )( lResponse ) {
+		// Connect to DB
+		with ( connectionInfo ) {
+			.username = "postgres";
+			.password = "password";
+			.host = "";
+			.database = "bank_database";
+			.driver = "postgresql"
+		};
+		connect@Database( connectionInfo )( void );
+		synchronized( db_access ) {
+			queryRequest =
+				"SELECT username, password FROM users " +
+				"WHERE username=:username;";
+			username = lRequest.username;
+			queryRequest.username = username;
+			query@Database( queryRequest )( queryResponse )
+		};
+		lResponse.sid = csets.sid = new;
+		if ( #queryResponse.row < 1 ) {
+			lResponse.message = "An error has occured.\tUser " + username + " not found.";
+			lResponse.successfull = false
+		} else {
+			if ( lRequest.password != queryResponse.row[0].password ) {
+				lResponse.message = "An error has occured.\t Wrong password for user " + username + ".";
+				lResponse.successfull = false
+			} else {
+				lResponse.message = "You are logged in.";
+				lResponse.successfull = true
+			}
+		}
+	};
+	while( keepRunning ){
+		[ withdraw( wRequest )] {
+			...
+		}
+		[ deposit( dRequest )] {
+			...
+		}
+		[ report( rRequest )( rResponse ) {
+			...
+		}]
+		[ operationReport( oRequest )( oResponse ) {
+			oResponse.sid = oRequest.sid;
+			synchronized( db_access ) {
+				queryRequest =
+					"SELECT source_user, dest_user, amount, type, token FROM operations " +
+					"WHERE (source_user=:username OR dest_user=:username) AND token::text=:token;";
+				queryRequest.username = username;
+				queryRequest.token = oRequest.token;
+				query@Database( queryRequest )( queryResponse );
+				if ( #queryResponse.row < 1 ) {
+					oResponse.successfull = false
+				} else {
+					oResponse.report.source_user = queryResponse.row[0].source_user;
+					oResponse.report.dest_user = queryResponse.row[0].dest_user;
+					oResponse.report.amount = queryResponse.row[0].amount;
+					oResponse.report.type = queryResponse.row[0].type;
+					oResponse.report.token = queryResponse.row[0].token;
+					oResponse.successfull = true
+				}
+			}
+		}]
+		[ cancelOperation( cRequest )( cResponse ) {
+			cResponse.sid = cRequest.sid;
+			token = cRequest.token;
+			synchronized( db_access ) {
+				queryRequest =
+					"SELECT source_user, dest_user, amount, type, token FROM operations " +
+					"WHERE (source_user=:username OR dest_user=:username) AND token::text=:token;";
+				queryRequest.username = username;
+				queryRequest.token = token;
+				query@Database( queryRequest )( queryResponse );
+				if ( #queryResponse.row < 1 ) {
+					cResponse.message = "Error: operation not found.";
+					cResponse.successfull = false
+				} else {
+					source_user = queryResponse.row[0].source_user;
+					dest_user = queryResponse.row[0].dest_user;
+					amount = queryResponse.row[0].amount;
+					// Revert payment (invert source and dest user)
+					// withdraw from dest_user
+					queryRequest =
+						"SELECT balance FROM users " +
+						"WHERE username=:username;";
+					queryRequest.username = dest_user;
+					query@Database( queryRequest )( queryResponse );
+					update@Database(
+						"update users set balance=:balance where username=:username" {
+							.balance = queryResponse.row[0].balance - amount,
+							.username = dest_user
+						}
+					)(dbresponse.status);
+					// deposit to source_user
+					queryRequest =
+						"SELECT balance FROM users " +
+						"WHERE username=:toUser;";
+					queryRequest.toUser = source_user;
+					query@Database( queryRequest )( queryResponse );
+					update@Database(
+						"update users set balance=:balance where username=:toUser" {
+							.balance = queryResponse.row[0].balance + amount,
+							.toUser = source_user
+						}
+					)(dbresponse.status);
+					// Delete operation
+					update@Database(
+						"delete from operations where token::text=:token" {
+							.token = token
+						}
+					)(dbresponse.status);
+					cResponse.message = "OK";
+					cResponse.successfull = true
+				}
+			}
+		}]
+		[ paymentTo( pRequest )( pResponse ) {
+			pResponse.sid = pRequest.sid;
+			synchronized(db_access) {
+				// check if toUser exists
+				queryRequest =
+					"SELECT id, username, balance FROM users " +
+					"WHERE id::text=:toUser;";
+				toUser = pRequest.toUser;
+				queryRequest.toUser = toUser;
+				query@Database( queryRequest )( queryResponse );
+				if (#queryResponse.row < 1) {
+					pResponse.successfull = false
+					pResponse.message = "An error has occured.\tUser " + toUser + " not found."
+				} else {
+					toUserName = queryResponse.row[0].username;
+					pResponse.successfull = true
+					// withdraw from fromUser
+					queryRequest =
+						"SELECT balance FROM users " +
+						"WHERE username=:username;";
+					queryRequest.username = username;
+					query@Database( queryRequest )( queryResponse );
+					update@Database(
+						"update users set balance=:balance where username=:username" {
+							.balance = queryResponse.row[0].balance - pRequest.amount,
+							.username = username
+						}
+					)(dbresponse.status)
+					// deposit to toUser
+					queryRequest =
+						"SELECT balance FROM users " +
+						"WHERE id::text=:toUser;";
+					queryRequest.toUser = toUser;
+					query@Database( queryRequest )( queryResponse );
+					update@Database(
+						"update users set balance=:balance where id::text=:toUser" {
+							.balance = queryResponse.row[0].balance + pRequest.amount,
+							.toUser = toUser
+						}
+					)(dbresponse.status)					
+					// Generate generate token and store in transaction database
+					// https://docs.jolie-lang.org/v1.10.x/language-tools-and-standard-library/standard-library-api/string_utils.html#getRandomUUID
+					getRandomUUID@StringUtils()( id )
+					getRandomUUID@StringUtils()( token )
+					update@Database(
+						"insert into operations(id, source_user, dest_user, amount, type, token) values (:id::uuid, :fromUser, :toUser, :amount, :type, :token::uuid)" {
+							.id = id,
+							.fromUser = username,
+							.toUser = toUserName,
+							.amount = pRequest.amount,
+							.type = 2, // 0: deposit, 1: withdraw, 2: move
+							.token = token
+						}
+					)(dbresponse.status);
+					pResponse.token = token
+				}
+			}
+		} ]
+		[ logout( request )] { 
+			keepRunning = false
+		}
+	}
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=python,caption=Interfaccia dei servizi forniti dalla banca e relativi tipi,label=inter]
+type LoginRequest: void {
+	.username: string
+	.password: string
+}
+
+type LoginResponse: void {
+	.sid: string
+	.message?: string
+	.successfull?: bool
+}
+
+type OpMessage: void{
+	.sid: string
+	.message?: string
+}
+
+...
+
+type PaymentRequest: void {
+	.sid: string
+	.toUser: string
+	.amount: double
+}
+
+type PaymentResponse: void {
+	.sid: string
+	.message?: string
+	.token?: string
+	.successfull?: bool
+}
+
+type OperationReportRequest: void {
+	.sid: string
+	.token: string
+}
+
+type OperationReportResponse: void {
+	.sid: string
+	.successfull: bool
+	.report?: void {
+		source_user?: string
+		dest_user?: string
+		amount: double
+		type: int
+		token?: string
+	}
+}
+
+type CancelOperationRequest: void {
+	.sid: string
+	.token: string
+}
+
+type CancelOperationResponse: void {
+	.sid: string
+	.successfull: bool
+	.message?: string
+}
+
+interface BankInterface {
+	RequestResponse: login(LoginRequest)(LoginResponse), report(ReportRequest)(ReportResponse), operationReport(OperationReportRequest)(OperationReportResponse), paymentTo(PaymentRequest)(PaymentResponse), cancelOperation(CancelOperationRequest)(CancelOperationResponse)
+	OneWay: withdraw(WithdrawRequest), deposit(DepositRequest), logout(OpMessage)
+}
+\end{lstlisting}
+\end{comment}
 
 \subsection{Backends Python}
 
@@ -1269,53 +1611,6 @@ In questa sezione verranno approfonditi i backends sviluppati in Python, ovvero 
 \end{itemize}
 \end{itemize}
 
-\subsubsection{Parametri di configurazione}
-
-Al fine di poter operare, è necessario che ai backend vengano fornite le corrette variabili d'ambiente. Queste sono riportate di seguito.
-\begin{itemize}
-\item \textbf{acmeat}
-\begin{itemize}
-\item \verb|JWT_KEY=pippo| - la password con cui i JWT vengono cifrati;
-\item \verb|DB_URI=postgresql://postgres:password@localhost/acmeat| - l'uri del database di acmeat;
-\item \verb|BIND_IP=127.0.0.1| - l'indirizzo ip su cui eseguire il binding del socket;
-\item \verb|BIND_PORT=8004| - la porta su cui eseguire il binding del socket;
-\item \verb|BANK_URI=http://127.0.0.1:2000| - l'indirizzo a cui contattare la banca;
-\item \verb|BANK_USERNAME=acmeat| - l'username per l'accesso alla banca;
-\item \verb|BANK_PASSWORD=password| - la password per l'accesso alla banca.
-\end{itemize}
-\item \textbf{acmedeliver}
-\begin{itemize}
-\item \verb|JWT_KEY=pippo| - la password con cui i JWT vengono cifrati;
-\item \verb|DB_URI=postgresql://postgres:password@localhost/acmedeliver| - l'uri del database di acmedeliver;
-\item \verb|BIND_IP=127.0.0.1| - l'indirizzo ip su cui eseguire il binding del socket;
-\item \verb|BIND_PORT=8003| - la porta su cui eseguire il binding del socket;
-\item \verb|PRICE_PER_KM=2| - il costo per chilometro della società di spedizioni;
-\item \verb|GEOLOCATE_URL=http://127.0.0.1:8001| - l'indirizzo a cui contattare il servizio di geo-localizzazione.
-\end{itemize}
-\item \textbf{acmegeolocatee}
-\begin{itemize}
-\item \verb|BIND_IP=127.0.0.1| - l'indirizzo ip su cui eseguire il binding del socket;
-\item \verb|BIND_PORT=8001| - la porta su cui eseguire il binding del socket.
-\end{itemize}
-\item \textbf{acmerestaurant}
-\begin{itemize}
-\item \verb|JWT_KEY=pippo| - la password con cui i JWT vengono cifrati;
-\item \verb|DB_URI=postgresql://postgres:password@localhost/acmerestaurant| - l'uri del database di acmerestaurant;
-\item \verb|BIND_IP=127.0.0.1| - l'indirizzo ip su cui eseguire il binding del socket;
-\item \verb|BIND_PORT=8007| - la porta su cui eseguire il binding del socket;
-\item \verb|ACME_EMAIL=owner1@gmail.com| - l'email del proprietario dell'attività tramite la quale accede ad ACMEat;
-\item \verb|ACME_PASSWORD=password| - la password del proprietario dell'attività tramite la quale accede ad ACMEat;
-\item \verb|ACME_RESTAURANT_ID=59294bd6-f61b-48a2-9f53-f76d378b95d9| - l'id del ristorante su ACMEat;
-\item \verb|ACME_URL=http://127.0.0.1:8004| - l'indirizzo a cui contattare ACMEat.
-\end{itemize}
-\item \textbf{bank\_intermediary}
-\begin{itemize}
-\item \verb|BIND_IP=127.0.0.1| - l'indirizzo ip su cui eseguire il binding del socket;
-\item \verb|BIND_PORT=8006| - la porta su cui eseguire il binding del socket;
-\item \verb|BANK_URI=http://127.0.0.1:2000| - l'indirizzo a cui contattare la banca.
-\end{itemize}
-\end{itemize}
-
 \subsubsection{Dettagli sui backends}
 
 In questa sezione, verranno specificate le caratteristiche dei vari backends. Per informazioni sulle route disponibili per ogni backend, visitare la pagina \verb|/docs| dei backend una volta avviati. Per la documentazione del codice, visionare il sorgente e relativi commenti.
@@ -1328,7 +1623,7 @@ In questa sezione, verranno specificate le caratteristiche dei vari backends. Pe
 \item Permettere agli utenti di eseguire ordinazioni presso un locale, e tramite il diagramma di processo BPMN di Camunda gestirne il ciclo di vita;
 \item Permettere agli amministratori di registrare città in cui il servizio è attivo e gestire la lista dei servizi di spedizione affiliati ad ACMEat.
 \end{itemize}
-Tutte le informazioni necessarie vengono immagazzinate all'interno di una base di dati, la cui struttura è riportata in Fig.~\ref{bd:acmeat}. Il ciclo di vita di un ordine segue le seguenti fasi:
+Tutte le informazioni necessarie vengono immagazzinate all'interno di una base di dati, la cui struttura è riportata in Fig.~\ref{db:acmeat}. Il ciclo di vita di un ordine segue le seguenti fasi:
 \begin{itemize}
 \item \textbf{Created}: l'ordine è stato appena creato;
 \item \textbf{w\_restaurant\_ok}: l'ordine è in attesa di conferma da parte del ristorante;
@@ -1386,7 +1681,7 @@ Il worker è basato su Pycamunda, è multithreaded ed è in grado di interagire 
 \item Gestire la lista dei propri clienti, a cui viene dato accesso;
 \item Aggiornare il cliente sullo stato della consegna.
 \end{itemize}
-Tutte le informazioni necessarie vengono immagazzinate all'interno di una base di dati strutturata come riportato in Fig.~\ref{bd:deliver}. Gli utenti di acmedeliver possono essere fattorini oppure amministratori, dove gli amministratori sono in grado di aggiungere fattorini all'azienda.
+Tutte le informazioni necessarie vengono immagazzinate all'interno di una base di dati strutturata come riportato in Fig.~\ref{db:deliver}. Gli utenti di acmedeliver possono essere fattorini oppure amministratori, dove gli amministratori sono in grado di aggiungere fattorini all'azienda.
 
 \paragraph{acmegeolocate}\mbox{}\\
 \textbf{acmegeolocate} è il backend che fornisce il servizio di geo-localizzazione. Dato lo stato, la città, la via e il numero civico utilizza OpenStreetMap per ricavarne le coordinate, e in base alla richiesta fornire la distanza tra i due punti in km.
@@ -1397,19 +1692,74 @@ Tutte le informazioni necessarie vengono immagazzinate all'interno di una base d
 \paragraph{bank\_intermediary}\mbox{}\\
 Intermediario per superare il blocco CORS di Jolie, si limita a inoltrare le richieste che gli arrivano in \emph{simil-soap} (soap all'interno di un oggetto json) al backend della banca. Viene usato solo ed esclusivamente dal frontend di \textbf{bank}.
 
-\subsubsection{Istruzioni per l'avvio in ambiente di testing}
+\subsubsection{Parametri di configurazione}
+
+Al fine di poter operare, è necessario che ai backend vengano fornite le corrette variabili d'ambiente. Queste sono riportate di seguito.
+\begin{itemize}
+\item \textbf{acmeat}
+\begin{itemize}
+\item \verb|JWT_KEY=pippo| - la password con cui i JWT vengono cifrati;
+\item \verb|DB_URI=postgresql://postgres:password@localhost/acmeat| - l'uri del database di acmeat;
+\item \verb|BIND_IP=127.0.0.1| - l'indirizzo ip su cui eseguire il binding del socket;
+\item \verb|BIND_PORT=8004| - la porta su cui eseguire il binding del socket;
+\item \verb|BANK_URI=http://127.0.0.1:2000| - l'indirizzo a cui contattare la banca;
+\item \verb|BANK_USERNAME=acmeat| - l'username per l'accesso alla banca;
+\item \verb|BANK_PASSWORD=password| - la password per l'accesso alla banca.
+\end{itemize}
+\item \textbf{acmedeliver}
+\begin{itemize}
+\item \verb|JWT_KEY=pippo| - la password con cui i JWT vengono cifrati;
+\item \verb|DB_URI=postgresql://postgres:password@localhost/acmedeliver| - l'uri del database di acmedeliver;
+\item \verb|BIND_IP=127.0.0.1| - l'indirizzo ip su cui eseguire il binding del socket;
+\item \verb|BIND_PORT=8003| - la porta su cui eseguire il binding del socket;
+\item \verb|PRICE_PER_KM=2| - il costo per chilometro della società di spedizioni;
+\item \verb|GEOLOCATE_URL=http://127.0.0.1:8001| - l'indirizzo a cui contattare il servizio di geo-localizzazione.
+\end{itemize}
+\item \textbf{acmegeolocatee}
+\begin{itemize}
+\item \verb|BIND_IP=127.0.0.1| - l'indirizzo ip su cui eseguire il binding del socket;
+\item \verb|BIND_PORT=8001| - la porta su cui eseguire il binding del socket.
+\end{itemize}
+\item \textbf{acmerestaurant}
+\begin{itemize}
+\item \verb|JWT_KEY=pippo| - la password con cui i JWT vengono cifrati;
+\item \verb|DB_URI=postgresql://postgres:password@localhost/acmerestaurant| - l'uri del database di acmerestaurant;
+\item \verb|BIND_IP=127.0.0.1| - l'indirizzo ip su cui eseguire il binding del socket;
+\item \verb|BIND_PORT=8007| - la porta su cui eseguire il binding del socket;
+\item \verb|ACME_EMAIL=owner1@gmail.com| - l'email del proprietario dell'attività tramite la quale accede ad ACMEat;
+\item \verb|ACME_PASSWORD=password| - la password del proprietario dell'attività tramite la quale accede ad ACMEat;
+\item \verb|ACME_RESTAURANT_ID=59294bd6-f61b-48a2-9f53-f76d378b95d9| - l'id del ristorante su ACMEat;
+\item \verb|ACME_URL=http://127.0.0.1:8004| - l'indirizzo a cui contattare ACMEat.
+\end{itemize}
+\item \textbf{bank\_intermediary}
+\begin{itemize}
+\item \verb|BIND_IP=127.0.0.1| - l'indirizzo ip su cui eseguire il binding del socket;
+\item \verb|BIND_PORT=8006| - la porta su cui eseguire il binding del socket;
+\item \verb|BANK_URI=http://127.0.0.1:2000| - l'indirizzo a cui contattare la banca.
+\end{itemize}
+\end{itemize}
+
+\clearpage
+
+\section{Esecuzione}
+\label{sez:esecuzione}
+
+Scopo di questa sezione è illustrare brevemente come utlizzare l'applicazione in ambiente di testing  e su come effettuare un eventuale deployment in produzione.
+
+\subsection{Istruzioni per l'avvio in ambiente di testing}
 
 \begin{enumerate}
 \item Installare postgresql, python3 e poetry;
 \item Creare un database per l'applicazione che si vuole avviare;
 \item Clonare il repository github;
-\item Entrare nella cartella "Applications" del repository, eseguire il comando \verb|poetry install|;
+\item Entrare nella cartella \textbf{Applications} del repository, eseguire il comando\\
+\verb|poetry install|;
 \item Eseguire il comando \verb|poetry shell|;
 \item Impostare le variabili d'ambiente richieste dal servizio desiderato;
 \item Eseguire il comando \verb|python -m ${service_name}|.
 \end{enumerate}
 
-\subsubsection{Istruzioni per il deployment in produzione}
+\subsection{Istruzioni per il deployment in produzione}
 
 In questa sezione, vengono indicati i passaggi necessari per il deployment dell'applicazione in produzione a scopo illustrativo. Si suppone l'utilizzo del sistema operativo Ubuntu, e vengono omessi i passaggi per la realizzazione del reverse poxy e dei certificati per l'https.
 
@@ -1426,19 +1776,22 @@ In questa sezione, vengono indicati i passaggi necessari per il deployment dell'
 \begin{enumerate}
 \item Inserire il comando \verb|sudo apt-get update|;
 \item Inserire il comando \verb|sudo apt-get install postgresql python3|;
-\item Eseguire il comando \verb|curl -sSL https://install.python-poetry.org | python3| - per installare poetry.
+\item Eseguire il comando \verb=curl -sSL https://install.python-poetry.org | python3= per installare poetry.
 \end{enumerate}
 
 \paragraph{Setup del singolo backend}\mbox{}\\
 \begin{enumerate}
-\item Spostarsi nella cartella "/srv" e scaricare il repository git;
-\item Spostarsi nella sottocartella del repository "Applications";
+\item Spostarsi nella cartella \textbf{/srv} e scaricare il repository git;
+\item Spostarsi nella sottocartella del repository \textbf{Applications};
 \item Eseguire l'accesso come l'utente \verb|${nome_servizio}|
-\item Installare le dipendenze tramite poetry install. Sarà necessario capire quale sia il percorso dell'ambiente creato, il quale dovrebbe essere sotto la cartella \verb|/home/${nome_servizio}/.cache/pypoetry/virtualenvs/| e a cui ci si riferirà come \verb|${poetry_path}|;
+\item Installare le dipendenze tramite poetry install. Sarà necessario capire quale sia il percorso dell'ambiente creato, il quale dovrebbe essere sotto la cartella\\
+\verb|/home/${nome_servizio}/.cache/pypoetry/virtualenvs/| e a cui ci si riferirà come \verb|${poetry_path}|;
 \item Eseguire l'accesso con l'utente postgres, eseguire il comando \verb|psql|;
 \item Creare il database \verb|${nome_database}|;
-\item Creare l'utente \verb|{nome_servizio}| con \verb|CREATEUSER‘{nome_servizio}’ WITH ENCRYPTED PASSWORD ‘${password}’;|;
-\item Fornire all'utente appena creato i privilegi sul database con da \verb|GRANT ALL PRIVILEGES ON DATABASE ${nome_database} TO "${nome_servizio}";|;
+\item Creare l'utente \verb|{nome_servizio}| con\\
+\verb|CREATEUSER‘{nome_servizio}’ WITH ENCRYPTED PASSWORD ‘${password}’;|;
+\item Fornire all'utente appena creato i privilegi sul database con\\
+\verb|GRANT ALL PRIVILEGES ON DATABASE ${nome_database} TO "${nome_servizio}";|;
 \item Inserire il comando exit 2 volte;
 \item Trasferire il possesso della cartella del servizio interessato all'utente \verb|${nome_servizio}| con il comando \verb|sudo chown ${nome_servizio} ${cartella_servizio}|.
 \end{enumerate}
@@ -1475,9 +1828,9 @@ Environment=KEY=value
 \item Ricaricare i file di configurazione dei servizi con \verb|sudo systemctl daemon-reload|, per poi avviarlo con il comando \verb|sudo systemd start ${nome_servizio}|.
 \end{enumerate}
 
-\subsubsection{Post-Installazione}
+\subsection{Post-Installazione}
 
-Per poter testare l'applicazione senza dover riempire a mano il database, eseguire lo script \verb|post_install.py| nella cartella "Applications".
+Per poter testare l'applicazione senza dover riempire a mano il database, eseguire lo script \verb|post_install.py| nella cartella \textbf{Applications}.
 
 \clearpage
 

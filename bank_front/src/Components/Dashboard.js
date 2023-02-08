@@ -53,6 +53,7 @@ export default function Dashboard() {
             let token = elem.getElementsByTagName("token").item(0).innerHTML
             list.push({amount: amount, src_usr:src_usr, dest_usr:dest_usr, type:type, token:token})
         }
+        list = list.reverse()
 
         setTransactions(list)
     }

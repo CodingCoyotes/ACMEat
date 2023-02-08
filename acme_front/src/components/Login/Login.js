@@ -77,9 +77,6 @@ export default function Login() {
                 Invia
               </button>
             </div>
-            <p className="forgot-password text-right mt-2">
-              Hai dimenticato la <a href="#">password?</a>
-            </p>
           </div>
         </form>
       </div>

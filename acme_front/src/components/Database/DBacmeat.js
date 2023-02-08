@@ -182,8 +182,8 @@ export async function registerNewMenu(restaurant_id, info, token) {
 }
 
 //Ottiene un menu dal suo id
-export async function getMenu(id, domain) {
-  return fetch(address + menu_path + id, {
+export async function getMenu(id) {
+  return fetch(address + menu_path + "details/"+ id, {
     method: "GET",
     //credentials: "include",
     headers: {

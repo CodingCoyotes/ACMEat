@@ -414,23 +414,24 @@ export default function RestaurantRegistration() {
                       onChange={e => setBank_address(e.target.value)}
                   />
               </div>
-            <div className="form-group mt-3">
-                <FormControl>
-                    <FormLabel id="demo-radio-buttons-group-label">Stato</FormLabel>
-                    <RadioGroup
-                        aria-labelledby="demo-radio-buttons-group-label"
-                        defaultValue={"aperto"}
-                        value={aperturaBool}
-                        name="radio-buttons-group"
-                        onChange={e => setAperturaBool(e.target.value)}
-                        renderInput={(params) => <TextField {...params} />}>
-                        <FormControlLabel value="false" control={<Radio />} label="Aperto" />
-                        <FormControlLabel value="true" control={<Radio />} label="Chiuso" />
-                    </RadioGroup>
-                </FormControl>
-            </div>
               {(checkTodayAfterTen())?
-                  (<div className="form-group mt-3"><h5 className="red_text">Non puoi modificare l'orario dopo le 10</h5></div>):(
+                  (<div className="form-group mt-3"><h5 className="red_text">Non puoi modificare l'orario e l'apertura dopo le 10 di mattina</h5></div>):(
+                  <div>
+                    <div className="form-group mt-3">
+                        <FormControl>
+                            <FormLabel id="demo-radio-buttons-group-label">Stato</FormLabel>
+                            <RadioGroup
+                                aria-labelledby="demo-radio-buttons-group-label"
+                                defaultValue={"aperto"}
+                                value={aperturaBool}
+                                name="radio-buttons-group"
+                                onChange={e => setAperturaBool(e.target.value)}
+                                renderInput={(params) => <TextField {...params} />}>
+                                <FormControlLabel value="false" control={<Radio />} label="Aperto" />
+                                <FormControlLabel value="true" control={<Radio />} label="Chiuso" />
+                            </RadioGroup>
+                        </FormControl>
+                    </div>
                       <div className="form-group mt-3">
                           <h5>Seleziona orari apertura (pranzo/cena)</h5>
                           <div>
@@ -679,6 +680,7 @@ export default function RestaurantRegistration() {
                               />
                           </div>
                       </div>
+                  </div>
                   )}
               <div className="form-group mt-4">
                   <label>Seleziona una nazione</label>

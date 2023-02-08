@@ -159,7 +159,7 @@ export default function Order(props) {
                                 Società di consegna: {details.deliverer ? (<>{details.deliverer.name}</>):(<>Non ancora selezionata</>)}
                             </p>
                             <p>
-                                Cliente: {details.user.name} {details.user.surname}
+                                Cliente: {details.deliverer ? (<>{details.user.name} {details.user.surname}</>) : (<>Nessun dettaglio</>)}
                             </p>
                             {details.contents ? (
                             <Panel>

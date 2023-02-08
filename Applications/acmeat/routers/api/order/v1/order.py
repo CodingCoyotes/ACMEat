@@ -77,6 +77,9 @@ async def create_order(restaurant_id: str, order_data: acmeat.schemas.edit.Order
     :return: acmeat.schemas.read.OrderRead, l'ordine
     """
     # Verifica validità indirizzo
+    restaurant = quick_retrieve(db, models.Restaurant, id=restaurant_id)
+    if restaurant.closed:
+        raise errors.Forbidden
     if not check_address({"nation": order_data.nation, "city": order_data.city, "roadname": order_data.address,
                       "number": order_data.number}):
         raise errors.ResourceNotFound

@@ -1251,7 +1251,7 @@ Tutti i dialoghi fra i backends, incluso quello fra Jolie ed il BPMS, avvengono 
 
 \subsection{Diagramma di processo BPMN di ACMEat}
 
- Parte delle capabilities del servizio centrale ACMEat sono state rese accessibili attraverso il BPMS Camunda. Come già riportato nella Sez.\~ref{sez:documentazione}, si è scelto di non rendere eseguibili le pool del modello BPMN in Fig.~\ref{bpmn} ma di riferirsi a questo solo a scopo documentativo e sviluppare invece un nuovo modello BPMN eseguibile attraverso BPMS, il cui export è riportato in Fig.~\ref{bpms}. Questo modello è tuttavia del tutto consistente con la modellazione a scopo documentativo precedentemente realizzata.
+ Parte delle capabilities del servizio centrale ACMEat sono state rese accessibili attraverso il BPMS Camunda. Come già riportato nella Sez.~\ref{sez:documentazione}, si è scelto di non rendere eseguibili le pool del modello BPMN in Fig.~\ref{bpmn} ma di riferirsi a questo solo a scopo documentativo e sviluppare invece un nuovo modello BPMN eseguibile attraverso BPMS, il cui export è riportato in Fig.~\ref{bpms}. Questo modello è tuttavia del tutto consistente con la modellazione a scopo documentativo precedentemente realizzata.
 
 \begin{figure}[H]
 \fbox{\includegraphics[width=\textwidth]{bpms}}
@@ -1268,8 +1268,15 @@ Come per il modello documentativo, di seguito riportiamo il modello in fig.~\ref
 
 \clearpage
 
-\begin{figure}[p]
-\fbox{\includegraphics[width=\textwidth]{bpms2}}
+\begin{figure}[H]
+\centering
+\fbox{\includegraphics[width=0.65\textwidth]{bpms_closings}}
+\caption{Gestione reset chiusure dei ristoranti a fine giornata}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\includegraphics[width=0.86\textwidth]{bpms2}}
 \caption{Gestione e verifica pagamento dell'ordine da parte dell'utente}
 \end{figure}
 
@@ -1695,8 +1702,7 @@ Intermediario per superare il blocco CORS di Jolie, si limita a inoltrare le ric
 \subsubsection{Parametri di configurazione}
 
 Al fine di poter operare, è necessario che ai backend vengano fornite le corrette variabili d'ambiente. Queste sono riportate di seguito.
-\begin{itemize}
-\item \textbf{acmeat}
+\paragraph{acmeat}
 \begin{itemize}
 \item \verb|JWT_KEY=pippo| - la password con cui i JWT vengono cifrati;
 \item \verb|DB_URI=postgresql://postgres:password@localhost/acmeat| - l'uri del database di acmeat;
@@ -1705,22 +1711,24 @@ Al fine di poter operare, è necessario che ai backend vengano fornite le corret
 \item \verb|BANK_URI=http://127.0.0.1:2000| - l'indirizzo a cui contattare la banca;
 \item \verb|BANK_USERNAME=acmeat| - l'username per l'accesso alla banca;
 \item \verb|BANK_PASSWORD=password| - la password per l'accesso alla banca.
+\item \verb |GEOLOCATE_URL=http://127.0.0.1:8001| - l'indirizzo a cui contattare il servizio di geo-localizzazione.
 \end{itemize}
-\item \textbf{acmedeliver}
+\paragraph{acmedeliver}
 \begin{itemize}
 \item \verb|JWT_KEY=pippo| - la password con cui i JWT vengono cifrati;
 \item \verb|DB_URI=postgresql://postgres:password@localhost/acmedeliver| - l'uri del database di acmedeliver;
 \item \verb|BIND_IP=127.0.0.1| - l'indirizzo ip su cui eseguire il binding del socket;
 \item \verb|BIND_PORT=8003| - la porta su cui eseguire il binding del socket;
 \item \verb|PRICE_PER_KM=2| - il costo per chilometro della società di spedizioni;
-\item \verb|GEOLOCATE_URL=http://127.0.0.1:8001| - l'indirizzo a cui contattare il servizio di geo-localizzazione.
+\item \verb|GEOLOCATE_URL=http://127.0.0.1:8001| - l'indirizzo a cui contattare il servizio di geo-localizzazione;
+\item \verb|MAX_DISTANCE=10| - la distanza massima in km del cliente dal locale.
 \end{itemize}
-\item \textbf{acmegeolocatee}
+\paragraph{acmegeolocate}
 \begin{itemize}
 \item \verb|BIND_IP=127.0.0.1| - l'indirizzo ip su cui eseguire il binding del socket;
 \item \verb|BIND_PORT=8001| - la porta su cui eseguire il binding del socket.
 \end{itemize}
-\item \textbf{acmerestaurant}
+\paragraph{acmerestaurant}
 \begin{itemize}
 \item \verb|JWT_KEY=pippo| - la password con cui i JWT vengono cifrati;
 \item \verb|DB_URI=postgresql://postgres:password@localhost/acmerestaurant| - l'uri del database di acmerestaurant;
@@ -1731,12 +1739,11 @@ Al fine di poter operare, è necessario che ai backend vengano fornite le corret
 \item \verb|ACME_RESTAURANT_ID=59294bd6-f61b-48a2-9f53-f76d378b95d9| - l'id del ristorante su ACMEat;
 \item \verb|ACME_URL=http://127.0.0.1:8004| - l'indirizzo a cui contattare ACMEat.
 \end{itemize}
-\item \textbf{bank\_intermediary}
+\paragraph{bank\_intermediary}
 \begin{itemize}
 \item \verb|BIND_IP=127.0.0.1| - l'indirizzo ip su cui eseguire il binding del socket;
 \item \verb|BIND_PORT=8006| - la porta su cui eseguire il binding del socket;
 \item \verb|BANK_URI=http://127.0.0.1:2000| - l'indirizzo a cui contattare la banca.
-\end{itemize}
 \end{itemize}
 
 \clearpage

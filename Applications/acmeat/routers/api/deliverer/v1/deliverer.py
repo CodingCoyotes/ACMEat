@@ -111,7 +111,7 @@ async def edit_deliverer_delivery(edits: acmeat.schemas.edit.DelivererDeliveryEd
     return target_order
 
 
-@router.get("/delivery/{order_id}", response_model=acmeat.schemas.read.OrderRead)
+@router.post("/delivery/{order_id}", response_model=acmeat.schemas.read.OrderRead)
 async def deliverer_get_data(data: acmeat.schemas.edit.DelivererDeliveryEdit,
                              order_id: UUID,
                              db: Session = Depends(dep_dbsession)):

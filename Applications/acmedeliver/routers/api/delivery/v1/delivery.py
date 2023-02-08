@@ -113,7 +113,7 @@ async def create_delivery(delivery_request: acmedeliver.schemas.edit.ClientDeliv
     if len(users) == 0:
         raise errors.ResourceNotFound
     distance = calculate_distance(delivery_request.request.source, delivery_request.request.receiver)
-    if distance > MAX_DISTANCE:
+    if distance > float(MAX_DISTANCE):
         raise errors.ResourceNotFound
     user = random.choice(users)
     return quick_create(db, models.Delivery(
@@ -138,7 +138,7 @@ async def preview_delivery(delivery_request: acmedeliver.schemas.edit.ClientDeli
     target = quick_retrieve(db, models.Client, api_key=delivery_request.api_key)
     users = db.query(models.User).filter_by(kind=UserType.worker).all()
     distance = calculate_distance(delivery_request.request.source, delivery_request.request.receiver)
-    if not target or len(users) == 0 or distance > MAX_DISTANCE:
+    if not target or len(users) == 0 or distance > float(MAX_DISTANCE):
         raise errors.Forbidden
     return acmedeliver.schemas.edit.DeliveryPreviewCost(
         cost=round(distance, 2))

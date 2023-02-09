@@ -36,6 +36,7 @@ export default function Dashboard() {
 
     async function exit() {
         setToken(null);
+        navigator("/login")
     }
 
     async function getUserData() {

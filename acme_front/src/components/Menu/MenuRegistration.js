@@ -99,9 +99,11 @@ export default function MenuRegistration() {
             else {
                 console.log("non ho il menu id")
                 const response = await registerNewMenu(restaurantId, info, token);
-                if (response.status === 200) {
-                    let values = await response.json()
+                if (!response.hasOwnProperty("error_code")) {
                     navigate("/dashmenu",{ state: { param: restaurantId }});
+                }
+                else{
+                    alert("Errore, verificare i dati.")
                 }
             }
         }

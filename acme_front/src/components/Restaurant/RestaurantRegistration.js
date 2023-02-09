@@ -300,8 +300,8 @@ export default function RestaurantRegistration() {
         };
         console.log(obj);
         const response = await registerNewRestaurant(token,obj);
-        if (response.status === 200) {
-            let values = await response.json()
+        console.debug(response)
+        if (!response.hasOwnProperty("error_code")) {
             navigate("/dashboard");
         }
         else{

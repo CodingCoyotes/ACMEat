@@ -78,16 +78,6 @@ export default function AdminPanel() {
     return (
         <div style={{minWidth: "unset"}}>
             <Heading level={3}>Pannello amministrativo</Heading>
-            <Form>
-                <Form.Row>
-                    <Form.Field onSimpleChange={e => setId(e)} value={id} required={true}
-                                placeholder={"UUID"}>
-                    </Form.Field>
-                    <Button onClick={event => {
-                        search()
-                    }}>Cerca</Button>
-                </Form.Row>
-            </Form>
             {result ? (
                 <div>
                     <Delivery delivery={result}/>
